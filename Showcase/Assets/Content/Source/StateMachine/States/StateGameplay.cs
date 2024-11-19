@@ -16,7 +16,7 @@ public class StateGameplay : StateBase
     {
         using (InputManager.Instance.LockInputSystem())
         {
-            var sceneLoadParams = new SceneLoadParams.Builder(SceneNames.GAME_SCENE)
+            var sceneLoadParams = new SceneLoadParams.Builder(ConstSceneNames.GAME_SCENE)
                                   .SetPrompt("SceneGameplay")
                                   .SetActiveOnLoad(true)
                                   .Build();
@@ -28,7 +28,7 @@ public class StateGameplay : StateBase
         }
     }
 
-    public override async UniTask Exit() => await UnloadingContent(SceneNames.GAME_SCENE);
+    public override async UniTask Exit() => await UnloadingContent(ConstSceneNames.GAME_SCENE);
 
 #endregion
 }

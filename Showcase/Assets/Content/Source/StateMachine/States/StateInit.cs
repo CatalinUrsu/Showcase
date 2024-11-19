@@ -35,7 +35,7 @@ public class StateInit : IStateEnter
 
     public async UniTask Exit()
     {
-        await _sceneLoaderService.UnloadScene(SceneNames.INIT_SCENE);
+        await _sceneLoaderService.UnloadScene(ConstSceneNames.INIT_SCENE);
         await Resources.UnloadUnusedAssets();
     }
 
@@ -45,7 +45,7 @@ public class StateInit : IStateEnter
 
     async UniTask LoadAndShowSplashScreen()
     {
-        var splashScreenLoadParams = new SceneLoadParams.Builder(SceneNames.LOADING_SCENE)
+        var splashScreenLoadParams = new SceneLoadParams.Builder(ConstSceneNames.LOADING_SCENE)
                                      .SetTrackProgress(false)
                                      .Build();
 

@@ -16,7 +16,7 @@ public class StateMenu : StateBase
     {
         using (InputManager.Instance.LockInputSystem())
         {
-            var sceneLoadParams = new SceneLoadParams.Builder(SceneNames.MENU_SCENE)
+            var sceneLoadParams = new SceneLoadParams.Builder(ConstSceneNames.MENU_SCENE)
                                   .SetPrompt("SceneMenu")
                                   .SetActiveOnLoad(true)
                                   .Build();
@@ -28,7 +28,7 @@ public class StateMenu : StateBase
         }
     }
 
-    public override async UniTask Exit() => await UnloadingContent(SceneNames.MENU_SCENE);
+    public override async UniTask Exit() => await UnloadingContent(ConstSceneNames.MENU_SCENE);
 
 #endregion
 }
