@@ -1,0 +1,9 @@
+[submodule "Showcase/Packages/Helpers"]
+	path = Showcase/Packages/Helpers
+	url = git@github.com:CatalinUrsu/Tool_Helpers.git
+[submodule "Showcase/Packages/StateMachine"]
+	path = Showcase/Packages/StateMachine
+	url = git@github.com:CatalinUrsu/Tool_StateMachine.git
+[submodule "Showcase/Packages/IdleNumber"]
+	path = Showcase/Packages/IdleNumber
+	url = git@github.com:CatalinUrsu/Tool_IdleNumber.git
