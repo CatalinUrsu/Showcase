@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{93864b0b-aaeb-4e31-9871-1384fb889acf}">
+		<property name="color">
+			<value>Yellow Light 2</value>
+		</property>
+		<property name="assetPath">
+			<value>UI/button_item_select.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.75679166666666664</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{e46de09a-6a99-44e4-9561-328b5cfd4533}</destination>
+		</relationship>
+	</object>
+</objects>

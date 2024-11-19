@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{9067ff34-6440-4ae7-91fb-eb31c1f26b21}">
+		<property name="name">
+			<value>MusicState</value>
+		</property>
+		<relationship name="folder">
+			<destination>{ae3858c9-131f-4cf7-ba62-fed8f2cdc4ee}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{c3a808fc-60b1-4e77-8a9d-649152bd3cc2}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{c3a808fc-60b1-4e77-8a9d-649152bd3cc2}">
+		<property name="parameterType">
+			<value>2</value>
+		</property>
+		<property name="maximum">
+			<value>2</value>
+		</property>
+		<property name="enumerationLabels">
+			<value>Idle</value>
+			<value>Gameplay</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>
