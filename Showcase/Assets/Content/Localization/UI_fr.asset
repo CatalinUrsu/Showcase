@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UI_fr
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: fr
+  m_SharedData: {fileID: 11400000, guid: a23dffdb58641b148be757afdae80d80, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 1055864685975568662
+  m_TableData:
+  - m_Id: 319927926308864
+    m_Localized: "<color=#{1}>{0}%</color> pi\xE8ces suppl\xE9mentaires"
+    m_Metadata:
+      m_Items:
+      - rid: 1055864685975568662
+  - m_Id: 8305297997611008
+    m_Localized: Victoire
+    m_Metadata:
+      m_Items:
+      - rid: 1055864685975568662
+  - m_Id: 8305302447767552
+    m_Localized: Vrac
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8330765396262912
+    m_Localized: "Collect\xE9es: {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 1055864685975568662
+  - m_Id: 107319464225587200
+    m_Localized: "R\xE9initialiser la progression\r\n\nObtenez {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 1055864685975568662
+  - m_Id: 107326279223001088
+    m_Localized: 'Requis
+
+
+      Niveau minimum {0}.'
+    m_Metadata:
+      m_Items:
+      - rid: 1055864685975568662
+  - m_Id: 143968669880262656
+    m_Localized: FR
+    m_Metadata:
+      m_Items: []
+  - m_Id: 144235418609491968
+    m_Localized: chargement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 153280487844978688
+    m_Localized: "{0:c(SceneMenu|SceneGameplay|ContentMenu|ContentGameplay):Chargement
+      de la sc\xE8ne du menu|Chargement de la sc\xE8ne de jeu|Chargement du contenu
+      du menu|Chargement du contenu du jeu|Chargement}"
+    m_Metadata:
+      m_Items:
+      - rid: 1055864685975568662
+  references:
+    version: 2
+    RefIds:
+    - rid: 1055864685975568662
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 319927926308864
+        - id: 8330765396262912
+        - id: 8305297997611008
+        - id: 107319464225587200
+        - id: 107326279223001088
+        - id: 153280487844978688
