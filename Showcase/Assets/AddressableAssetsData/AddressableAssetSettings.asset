@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: d2fed1e6d0646a345986e00539602d7f
   m_currentHash:
     serializedVersion: 2
-    Hash: eed1f04f35ed730913aec40296805512
+    Hash: 9e531b538f4764ea722c199736a11faa
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -24,11 +24,11 @@ MonoBehaviour:
   m_InternalBundleIdMode: 1
   m_AssetLoadMode: 0
   m_BundledAssetProviderType:
-    m_AssemblyName: 
-    m_ClassName: 
+    m_AssemblyName: Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    m_ClassName: UnityEngine.ResourceManagement.ResourceProviders.BundledAssetProvider
   m_AssetBundleProviderType:
-    m_AssemblyName: 
-    m_ClassName: 
+    m_AssemblyName: Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    m_ClassName: UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider
   m_IgnoreUnsupportedFilesInBuild: 0
   m_UniqueBundleIds: 0
   m_EnableJsonCatalog: 0
@@ -53,7 +53,7 @@ MonoBehaviour:
     m_Id: 
   m_RemoteCatalogLoadPath:
     m_Id: 
-  m_ContentStateBuildPathProfileVariableName: 
+  m_ContentStateBuildPathProfileVariableName: <default settings path>
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 0
@@ -62,9 +62,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 180271e18d6606a4f8674ce3bb43d927, type: 2}
   - {fileID: 11400000, guid: 176d00429d62bc84f9543df3ce34f6e8, type: 2}
   - {fileID: 11400000, guid: 25459c98dca2bfa4eb798f5b87270430, type: 2}
+  - {fileID: 11400000, guid: b2ec0c6478b47aa43be85509347e455d, type: 2}
   - {fileID: 11400000, guid: e8935978048c7f34b81136b1b71b671e, type: 2}
   - {fileID: 11400000, guid: 9fd4f0cd58f6a54408d5428f757fd0bb, type: 2}
   - {fileID: 11400000, guid: 7cac777886e26214e8189db7e27eaab7, type: 2}
+  - {fileID: 11400000, guid: d6726523c069c56449f0bdf8357fd4c3, type: 2}
+  - {fileID: 11400000, guid: f9b33121fc6b98240b91033bea5a0138, type: 2}
   - {fileID: 11400000, guid: cbf6244ed62b3f045ad007b99b64992a, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1

@@ -14,7 +14,72 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Default Local Group
   m_GUID: d2fed1e6d0646a345986e00539602d7f
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 387937c35c3ee12479692b99ffc3fdd8
+    m_Address: Assets/Content/Data/Weapons/Appearence_Weapon_2.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 41dc6a57b67c85045a37e5fdc690aff0
+    m_Address: Assets/Content/Data/Weapons/Appearence_Weapon_1.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5d905110ca8421749816889002f3e425
+    m_Address: Assets/Content/Data/Weapons/Appearence_Weapon_5.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 64c200b9a84e01d4791704914bd195c6
+    m_Address: Assets/Content/Data/Weapons/Appearence_Weapon_7.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 64fd9374640ddb3478ce751e8acb8ad0
+    m_Address: Assets/Content/Data/Ships/Appearence_Ship_6.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 872b7104afc784247b40f724a9ffe20a
+    m_Address: Assets/Content/Data/Weapons/Appearence_Weapon_4.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8d03d45173f53e9478ed94c6f1657a1c
+    m_Address: Assets/Content/Data/Weapons/Appearence_Weapon_6.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 96e9c5e6049f36e4abd3785a18f2e74b
+    m_Address: Assets/Content/Data/Weapons/Appearence_Weapon_3.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ac9838c70954a5c4a82e3559228175fb
+    m_Address: Assets/Content/Data/Ships/Appearence_Ship_2.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ae2ae88cbb33f864bb37593fba5d468e
+    m_Address: Assets/Content/Data/Ships/Appearence_Ship_5.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b54209d06bdfab946a497d83a8541a63
+    m_Address: Assets/Content/Data/Ships/Appearence_Ship_4.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c8c4becb570baf9478df3c85c67618a6
+    m_Address: Assets/Content/Data/Ships/Appearence_Ship_1.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: efcfa7e68329470428966faaa2a8f41a
+    m_Address: Assets/Content/Data/Ships/Appearence_Ship_3.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 218f58cd0c56da84d8c3ecae58ad98c7, type: 2}
   m_SchemaSet:
