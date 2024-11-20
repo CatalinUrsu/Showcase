@@ -12,8 +12,8 @@ public class ProjectInstaller : MonoInstaller
         IServiceSceneLoader sceneLoaderService = new SceneLoaderService(loadingProgressService);
         IServiceSplashScreen splashScreenService = new SplashScreenService(loadingProgressService);
         
-        Container.BindInterfacesTo<CameraService>().AsSingle();
-        Container.BindInterfacesTo<AudioService>().AsSingle();
+        Container.Bind<IAudioService>().FromInstance(new AudioService()).AsSingle();
+        Container.Bind<IServiceCamera>().FromInstance(new CameraService()).AsSingle();
         Container.Bind<IServiceLoadingProgress>().FromInstance(loadingProgressService).AsSingle();
         Container.Bind<IServiceSceneLoader>().FromInstance(sceneLoaderService).AsSingle();
         Container.Bind<IServiceSplashScreen>().FromInstance(splashScreenService).AsSingle();
