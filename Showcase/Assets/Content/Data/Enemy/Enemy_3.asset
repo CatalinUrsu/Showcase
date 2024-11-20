@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad0fdc91e0504dada3af0295d53352ef, type: 3}
+  m_Name: Enemy_3
+  m_EditorClassIdentifier: 
+  Coin:
+    Value: 57.84
+    Lvl: 0
+  HP:
+    Value: 100
+    Lvl: 0
+  RewardPoints: 1.5
+  SpeedRadius: {x: 3, y: 5}
+  EnemyAppearence: {fileID: 21300000, guid: f7ca877f1d3aecd4b879f01a8318cb5c, type: 3}
