@@ -80,7 +80,7 @@ public class EnemyMovement : MonoBehaviour
 
     void MoveOnHit(Vector2 impulseDirection)
     {
-        _rb.AddForce(impulseDirection * 5, ForceMode2D.Impulse);
+        _rb.AddForce(impulseDirection * 3, ForceMode2D.Impulse);
         _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Clamp(_rb.linearVelocity.y, -10, -.1f));
         _speedDirection = _rb.linearVelocity * 1.5f;
 

@@ -17,7 +17,6 @@ public class EnemyFacade : PooledObject
 
     [SerializeField] SpriteRenderer _spriteRenderer;
     [SerializeField] LayerMask _wallHitLayer;
-    [SerializeField] ParticleSystem _deathEffect;
 
     [Space] 
     [SerializeField] EnemyHitTrigger _hitTrigger;
