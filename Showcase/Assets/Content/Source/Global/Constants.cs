@@ -4,7 +4,7 @@ namespace Source
 {
 public static class ConstSceneNames
 {
-    public const string INIT_SCENE = "InitScene";
+    public const string INIT_SCENE = "Init";
     public const string LOADING_SCENE = "Loading";
     public const string MENU_SCENE = "Menu";
     public const string GAME_SCENE = "Gameplay";
