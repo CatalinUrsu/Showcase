@@ -121,8 +121,6 @@ public class PlayerFacadeGameplay : MonoBehaviour
         Instantiate(_deathEffect, transform.position, Quaternion.identity);
 
         FmodEvents.Instance.PlayerDeath.PlayOneShot();
-        if (SessionManager.Current.Settings.Vibration.Value)
-            Vibration.VibratePop();
     }
     
     async UniTaskVoid EnableShield()
