@@ -10,18 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Fmod_Master
+  m_Name: Loading
   m_EditorClassIdentifier: 
-  m_GroupName: Fmod_Master
-  m_GUID: 3e2e3e7a29006134da256989047897bb
+  m_GroupName: Loading
+  m_GUID: 28e018bcc616cc345be1f941ef9bc730
   m_SerializeEntries:
-  - m_GUID: 3dfb5fbf6f7c74246a5094358ae818a7
-    m_Address: Master.strings
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 84e4dce360368b0409162adf8bcbf656
-    m_Address: Master
+  - m_GUID: e3db8b12141d7d44685728c204acbd1e
+    m_Address: Loading
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -29,5 +24,5 @@ MonoBehaviour:
   m_Settings: {fileID: 11400000, guid: 218f58cd0c56da84d8c3ecae58ad98c7, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: a8e348ef7b2317344ba4fd6b74f93ffb, type: 2}
-    - {fileID: 11400000, guid: 814f80e05a4eb1e49ae46572b8e5cd7d, type: 2}
+    - {fileID: 11400000, guid: 491bd945fdc8a9b4dad9e8a270f3a731, type: 2}
+    - {fileID: 11400000, guid: 004b0e276d18cdb46927325d36da9e09, type: 2}

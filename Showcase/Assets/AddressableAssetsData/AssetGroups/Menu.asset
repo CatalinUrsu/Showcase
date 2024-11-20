@@ -10,23 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Scenes
+  m_Name: Menu
   m_EditorClassIdentifier: 
-  m_GroupName: Scenes
-  m_GUID: 28e018bcc616cc345be1f941ef9bc730
+  m_GroupName: Menu
+  m_GUID: f802e1169d73bc6448fcf922f10fd7fa
   m_SerializeEntries:
   - m_GUID: 5b1d36f1f77cd3d4f8c1d0825d920cc5
     m_Address: Menu
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 849d1160e313c8049a5e6bce25bfc7c5
-    m_Address: Gameplay
+  - m_GUID: b2c7ec5de8045364aa1b19abec9d959d
+    m_Address: Menu
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e3db8b12141d7d44685728c204acbd1e
-    m_Address: Loading
+  - m_GUID: ce7dd97e3ecea6b48829b3a6d8026166
+    m_Address: A_ui_menu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e94c2bab7438a624eac5fcd22e03163c
+    m_Address: T_ui_reset_pattern
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -34,5 +39,5 @@ MonoBehaviour:
   m_Settings: {fileID: 11400000, guid: 218f58cd0c56da84d8c3ecae58ad98c7, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 491bd945fdc8a9b4dad9e8a270f3a731, type: 2}
-    - {fileID: 11400000, guid: 004b0e276d18cdb46927325d36da9e09, type: 2}
+    - {fileID: 11400000, guid: 7896b3e2ae51700469c461b6ed6b3002, type: 2}
+    - {fileID: 11400000, guid: 79128c575fe8dfc4c94924227f4dd732, type: 2}

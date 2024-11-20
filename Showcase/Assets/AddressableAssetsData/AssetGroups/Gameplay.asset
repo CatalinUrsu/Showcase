@@ -20,10 +20,26 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 661cb48ad2d22164d9fbb8f6e5a182ff
+    m_Address: Gameplay
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6e1acc8ef6e21cc48a05085a72379ff1
     m_Address: M_Trail_Spirit
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 849d1160e313c8049a5e6bce25bfc7c5
+    m_Address: Gameplay
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d3c42c8249bc4fa4f9109d83afc2b85d
+    m_Address: P_Enemy
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Enemy
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e7912d15146fcf145afaaedec646b781
     m_Address: M_Explosion
