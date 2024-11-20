@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: 3dfb5fbf6f7c74246a5094358ae818a7
+labels:
+- FMOD
 TextScriptImporter:
   externalObjects: {}
   userData: 
