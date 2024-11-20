@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Gameplay
+  m_EditorClassIdentifier: 
+  m_GroupName: Gameplay
+  m_GUID: 958d59bf695a10b4cb7348f6f47d7021
+  m_SerializeEntries:
+  - m_GUID: 411a57aa1bb0d064ba95c92d343a2d5e
+    m_Address: A_Gameplay
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6e1acc8ef6e21cc48a05085a72379ff1
+    m_Address: M_Trail_Spirit
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e7912d15146fcf145afaaedec646b781
+    m_Address: M_Explosion
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 218f58cd0c56da84d8c3ecae58ad98c7, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 1b27a9204107a2049b9afc1589bcf0b3, type: 2}
+    - {fileID: 11400000, guid: dfca722599f5dae44a972b4a1ad629d0, type: 2}
