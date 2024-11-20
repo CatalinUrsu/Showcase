@@ -11,7 +11,8 @@ public class ButtonBase : ButtonHelper
 
     [SerializeField] bool _playButtonSound = true;
 
-    RectTransform _rt;
+    protected RectTransform _rt;
+    
     Tween _clickTween;
 
 #endregion

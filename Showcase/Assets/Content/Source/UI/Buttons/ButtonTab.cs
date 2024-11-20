@@ -14,8 +14,6 @@ public class ButtonTab : ButtonBase
     [SerializeField] CanvasGroup _canvasGroup;
 
     public RectTransform _rtRef => _rt ??= GetComponent<RectTransform>();
-    
-    RectTransform _rt;
 
 #endregion
 
