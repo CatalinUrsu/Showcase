@@ -127,8 +127,7 @@ public class PlayerFacadeGameplay : MonoBehaviour
     {
         if (!_collider.enabled)
         {
-            _shieldCTS.Cancel();
-            _shieldCTS.Dispose();
+            CancelShieldCTS();
             _shieldCTS = new CancellationTokenSource();
         }
 
@@ -146,11 +145,9 @@ public class PlayerFacadeGameplay : MonoBehaviour
 
     void CancelShieldCTS()
     {
-        if (_shieldCTS != null)
-        {
-            _shieldCTS.Cancel();
-            _shieldCTS.Dispose();
-        }
+        if (_shieldCTS == null) return;
+        _shieldCTS.Cancel();
+        _shieldCTS.Dispose();
     }
 
 #endregion
