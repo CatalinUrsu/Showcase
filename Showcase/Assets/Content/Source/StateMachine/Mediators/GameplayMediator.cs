@@ -2,7 +2,7 @@
 using Source.MVP;
 using UnityEngine;
 using FMOD.Studio;
-using StateMachine;
+using Helpers.StateMachine;
 using Source.Audio;
 using Source.Player;
 using Source.UI.Gameplay;

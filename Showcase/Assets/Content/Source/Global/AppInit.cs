@@ -2,7 +2,7 @@ using Zenject;
 using Helpers;
 using System.Linq;
 using UnityEngine;
-using StateMachine;
+using Helpers.StateMachine;
 using Source.Audio;
 using Source.StateMachine;
 using Cysharp.Threading.Tasks;

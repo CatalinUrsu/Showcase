@@ -31,7 +31,6 @@ Showcase
 
 # Submodules 🧰
 Because some of the scripts, prefabs and other assets can be used in other projects, I decided to create several submodules and use them as packages.
-- <i><b><a href="https://github.com/CatalinUrsu/Tool_StateMachine">StateMachine</a></b></i>
 - <i><b><a href="https://github.com/CatalinUrsu/Tool_Helpers">Helpers</a></b></i>
 - <i><b><a href="https://github.com/CatalinUrsu/Tool_IdleNumber">IdleNumber</a></b></i>
 

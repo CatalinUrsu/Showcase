@@ -1,6 +1,6 @@
 ﻿using Helpers;
 using UnityEngine;
-using StateMachine;
+using Helpers.StateMachine;
 using Source.Audio;
 using Cysharp.Threading.Tasks;
 
@@ -61,7 +61,7 @@ public abstract class StateBase : IStateEnter
 
     protected async UniTask UnloadingContent(string sceneName)
     {
-        await _serviceSplashScreen.ShowPage();
+        await _serviceSplashScreen.ShowPage(new SplashScreenInfo());
 
         FmodExtensions.ReleaseInstanceByScene(sceneName);
         var unloadingTasks = _entryPoint.Exit().ContinueWith(() => _sceneLoaderService.UnloadScene(sceneName));

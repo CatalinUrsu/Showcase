@@ -1,7 +1,7 @@
 using System;
 using Helpers;
 using UnityEngine;
-using StateMachine;
+using Helpers.StateMachine;
 using Cysharp.Threading.Tasks;
 
 namespace Source.StateMachine

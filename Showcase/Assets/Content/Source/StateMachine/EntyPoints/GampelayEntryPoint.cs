@@ -1,7 +1,7 @@
 using System;
 using Helpers;
 using UnityEngine;
-using StateMachine;
+using Helpers.StateMachine;
 using Source.Session;
 using Source.Gameplay;
 using Cysharp.Threading.Tasks;

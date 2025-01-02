@@ -4,7 +4,7 @@ using Zenject;
 using Helpers;
 using FMOD.Studio;
 using UnityEngine;
-using StateMachine;
+using Helpers.StateMachine;
 using UniRx.Triggers;
 
 namespace Source.Player

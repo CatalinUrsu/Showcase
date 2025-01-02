@@ -1,6 +1,6 @@
 using Zenject;
 using Source.Audio;
-using StateMachine;
+using Helpers.StateMachine;
 
 namespace Source
 {
