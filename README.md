@@ -17,7 +17,7 @@ Showcase
     - [MenuState & GameplayState 🎮](#menustate-and-gameplaystate-)
   - [Zenject 💉](#zenject-)
   - [UniTask 🚦](#unitask-)
-  - [UniRx 🚀](#unirx-)
+  - [R3 🚀](#r3-)
 - [Localization 🌐](#localization-)
 - [Addressables 📦](#addressables-)
 - [Optimization 🔧](#optimization-)
@@ -167,8 +167,8 @@ Here are the key benefits and purposes of using Zenject:
 ```
 
 
-## UniRx 🚀
-- UniRx provides a set of powerful LINQ-style query operators, which makes it easy to perform complex operations on collections of data or
+## R3 🚀
+- R3 provides a set of powerful LINQ-style query operators, which makes it easy to perform complex operations on collections of data or
   event streams, such as filtering, mapping, and aggregating
 ```csharp
     playerInputHanler.AddComponent<ObservableDragTrigger>()
