@@ -14,7 +14,7 @@ SpriteAtlasImporter:
     crunchedCompression: 0
     sRGB: 0
   platformSettings:
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: Android
     maxTextureSize: 1024
     resizeAlgorithm: 0
