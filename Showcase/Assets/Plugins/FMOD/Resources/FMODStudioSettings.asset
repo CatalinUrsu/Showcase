@@ -399,7 +399,7 @@ MonoBehaviour:
   BankLoadType: 0
   AutomaticSampleLoading: 1
   EncryptionKey: 
-  ImportType: 1
+  ImportType: 0
   TargetAssetPath: Content/FMODBanks
   TargetBankFolder: 
   EventLinkage: 0

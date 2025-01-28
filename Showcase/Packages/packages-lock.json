@@ -43,7 +43,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "242f30ec55ef9c34f1e9953126e6e8350ec3f4c0"
+      "hash": "5764d44d4232c8ea628549137559050ea6f6dc10"
     },
     "com.innogames.asset-relations-viewer": {
       "version": "https://github.com/innogames/asset-relations-viewer.git",
@@ -51,13 +51,6 @@
       "source": "git",
       "dependencies": {},
       "hash": "53c38aa1fe43c68b60cf5d48b148d678697ed732"
-    },
-    "com.neuecc.unirx": {
-      "version": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "6baeccf6c544c155497164327cca72f28163a578"
     },
     "com.unity.2d.animation": {
       "version": "10.1.3",
