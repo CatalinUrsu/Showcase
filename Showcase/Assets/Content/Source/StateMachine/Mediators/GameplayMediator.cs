@@ -2,11 +2,11 @@
 using Source.MVP;
 using UnityEngine;
 using FMOD.Studio;
-using Helpers.StateMachine;
 using Source.Audio;
 using Source.Player;
 using Source.UI.Gameplay;
 using Source.StateMachine;
+using Helpers.StateMachine;
 using Cysharp.Threading.Tasks;
 
 namespace Source.Gameplay

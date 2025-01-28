@@ -1,11 +1,10 @@
-﻿using System;
-using UniRx;
+﻿using R3;
 using Zenject;
 using Helpers;
-using FMOD.Studio;
 using UnityEngine;
-using Helpers.StateMachine;
-using UniRx.Triggers;
+using FMOD.Studio;
+using R3.Triggers;
+using Helpers.Audio;
 
 namespace Source.Player
 {
@@ -64,7 +63,7 @@ public class PlayerMovement : MonoBehaviour
 
     void SetPlayerControll(Rigidbody2D rb, GameObject playerInputHanler)
     {
-        Observable.EveryFixedUpdate()
+        Observable.EveryUpdate(UnityFrameProvider.FixedUpdate)
                   .Where(_ => _isClicked)
                   .Subscribe(_ => MovePlayer(rb))
                   .AddTo(gameObject);

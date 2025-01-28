@@ -1,4 +1,5 @@
 using System;
+using Helpers;
 using Constants;
 using Source.MVP;
 using Source.Datas;
@@ -17,7 +18,6 @@ public class SessionManager
     public static SessionManager Current => _currentSessionManager ??= new SessionManager();
 
     static SessionManager _currentSessionManager;
-    SaveSystem _saveSystem;
 
 #endregion
 
@@ -25,11 +25,9 @@ public class SessionManager
 
     public SessionManager()
     {
-        _saveSystem = new SaveSystem();
-        
-        Items = _saveSystem.Load<SessionItems>(ConstSavesPaths.ITEMS_PATH) ?? new SessionItems();
-        Progress = _saveSystem.Load<SessionProgress>(ConstSavesPaths.PROGRESS_PATH) ?? new SessionProgress();
-        Settings = _saveSystem.Load<SessionSettings>(ConstSavesPaths.SETTINGS_PATH)?? new SessionSettings();
+        Items = SaveSystem.Load<SessionItems>(ConstSavesPaths.ITEMS_PATH) ?? new SessionItems();
+        Progress = SaveSystem.Load<SessionProgress>(ConstSavesPaths.PROGRESS_PATH) ?? new SessionProgress();
+        Settings = SaveSystem.Load<SessionSettings>(ConstSavesPaths.SETTINGS_PATH)?? new SessionSettings();
     }
 
     public void Save(ESaveFileType saveFileType)
@@ -37,18 +35,18 @@ public class SessionManager
         switch (saveFileType)
         {
             case ESaveFileType.All:
-                _saveSystem.Save(ConstSavesPaths.ITEMS_PATH, Items);
-                _saveSystem.Save(ConstSavesPaths.PROGRESS_PATH, Progress);
-                _saveSystem.Save(ConstSavesPaths.SETTINGS_PATH, Settings);
+                SaveSystem.Save(ConstSavesPaths.ITEMS_PATH, Items);
+                SaveSystem.Save(ConstSavesPaths.PROGRESS_PATH, Progress);
+                SaveSystem.Save(ConstSavesPaths.SETTINGS_PATH, Settings);
                 break;
             case ESaveFileType.Items:
-                _saveSystem.Save(ConstSavesPaths.ITEMS_PATH, Items);
+                SaveSystem.Save(ConstSavesPaths.ITEMS_PATH, Items);
                 break;
             case ESaveFileType.Progress:
-                _saveSystem.Save(ConstSavesPaths.PROGRESS_PATH, Progress);
+                SaveSystem.Save(ConstSavesPaths.PROGRESS_PATH, Progress);
                 break;
             case ESaveFileType.Settings:
-                _saveSystem.Save(ConstSavesPaths.SETTINGS_PATH, Settings);
+                SaveSystem.Save(ConstSavesPaths.SETTINGS_PATH, Settings);
                 break;
         }
     }

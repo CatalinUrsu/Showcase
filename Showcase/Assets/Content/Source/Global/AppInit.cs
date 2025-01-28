@@ -2,9 +2,10 @@ using Zenject;
 using Helpers;
 using System.Linq;
 using UnityEngine;
-using Helpers.StateMachine;
 using Source.Audio;
+using Helpers.Audio;
 using Source.StateMachine;
+using Helpers.StateMachine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
@@ -103,10 +104,10 @@ public class AppInit : MonoBehaviour
 
     async UniTask SetSingletons()
     {
-        var singletons = new List<ISingleton>();
+        var singletons = new List<Singleton<Component>>();
         foreach (Transform child in _singletonParent.transform)
         {
-            if (child.TryGetComponent<ISingleton>(out var singleton))
+            if (child.TryGetComponent<Singleton<Component>>(out var singleton))
                 singletons.Add(singleton);
         }
 

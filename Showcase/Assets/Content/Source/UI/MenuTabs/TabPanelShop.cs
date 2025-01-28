@@ -1,4 +1,4 @@
-using UniRx;
+using R3;
 using System;
 using Source.MVP;
 using UnityEngine;
@@ -65,7 +65,7 @@ public class TabPanelShop : TabPanel
 
         Observable.Interval(TimeSpan.FromSeconds(2))
                   .Where(_ => gameObject.activeSelf)
-                  .Finally(() => _shineTween.Kill())
+                  .Do(onDispose: () => _shineTween.Kill())
                   .Subscribe(_ => _shineTween.Restart())
                   .AddTo(this);
     }

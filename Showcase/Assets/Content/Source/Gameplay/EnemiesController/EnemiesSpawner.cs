@@ -1,9 +1,8 @@
-﻿using UniRx;
+﻿using R3;
 using System;
 using Zenject;
 using UnityEngine;
 using System.Linq;
-using Helpers.StateMachine;
 using Helpers.PoolSystem;
 using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
@@ -31,7 +30,7 @@ public class EnemiesSpawner : MonoBehaviour
     Vector2 _enemySpawnPosition;
     TimeSpan _spawnInterval;
     AsyncOperationHandle<GameObject> _enemyAssetOpHandle;
-    IPool<PooledObject> _pool;
+    Pool<PooledObject> _pool;
     IServiceCamera _serviceCamera;
     
     readonly CompositeDisposable _disposable = new();
@@ -82,9 +81,9 @@ public class EnemiesSpawner : MonoBehaviour
     {
         var enemyFacade = _enemyAssetOpHandle.Result.GetComponent<EnemyFacade>();
         _pool = new FactoryGO.Builder(enemyFacade)
-                .WithParents(_poolActive, _poolInactive)
-                .WithPreloadCount(ConstGameplay.ENEMIES_SPAWN_COUNT)
-                .WithItemInitConfig(_enemyInitConfig)
+                .SetParents(_poolActive, _poolInactive)
+                .SetPreloadCount(ConstGameplay.ENEMIES_SPAWN_COUNT)
+                .SetItemInitConfig(_enemyInitConfig)
                 .Build();
     }
 

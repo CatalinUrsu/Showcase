@@ -2,15 +2,15 @@
 using Zenject;
 using DG.Tweening;
 using UnityEngine;
-using Helpers.StateMachine;
 using UnityEngine.UI;
+using Helpers.StateMachine;
 using Cysharp.Threading.Tasks;
 using UnityEngine.Localization.Components;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
 
 namespace Source.UI
 {
-public class SplashScreen : MonoBehaviour, ISplashScreen<SplashScreenInfo>
+public class SplashScreen : MonoBehaviour, ISplashScreen<ISplashScreenInfo>
 {
 #region Fields
 
@@ -50,7 +50,7 @@ public class SplashScreen : MonoBehaviour, ISplashScreen<SplashScreenInfo>
         _serviceLoadingProgress.OnUpdateLoadingPrompt += OnUpdateLoadingPrompt_handler;
     }
 
-    public async UniTask ShowPanel(SplashScreenInfo config)
+    public async UniTask ShowPanel(ISplashScreenInfo config)
     {
         var duration = config.SkipAnimation ? 0 : ConstUIAnimation.SPLASH_SCREEN_ANIM_DUR;
         _splashScreenTween.CheckAndEnd(false);

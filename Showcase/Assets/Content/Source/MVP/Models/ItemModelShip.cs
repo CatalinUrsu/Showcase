@@ -1,6 +1,6 @@
-﻿using System;
+﻿using R3;
+using System;
 using Source.Datas;
-using UniRx;
 
 namespace Source.MVP
 {

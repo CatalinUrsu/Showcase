@@ -1,4 +1,4 @@
-﻿using UniRx;
+﻿using R3;
 using System;
 using IdleNumbers;
 using UnityEngine;
@@ -21,9 +21,9 @@ public class PlayerWeapons : MonoBehaviour
     
     public bool ShootIsEnable { get; set; }
     
-    IPool<PooledObject> _bulletsPool;
-    IPool<PooledObject> _shootFxPool;
-    IPool<EventInstance> _shootingSoundsPool;
+    Pool<PooledObject> _bulletsPool;
+    Pool<PooledObject> _shootFxPool;
+    Pool<EventInstance> _shootingSoundsPool;
     CompositeDisposable _disposable = new();
 
 #endregion
@@ -55,22 +55,22 @@ public class PlayerWeapons : MonoBehaviour
     void CreatePools(IdleNumber firePower)
     {
         _bulletsPool = new FactoryGO.Builder(_bullet)
-                       .WithParents(_poolActive, _poolInactive)
-                       .WithPreloadCount(ConstGameplay.BULLETS_SPAWN_COUNT)
-                       .WithMaxCount(ConstGameplay.BULLETS_SPAWN_COUNT + 5)
-                       .WithItemInitConfig(firePower)
+                       .SetParents(_poolActive, _poolInactive)
+                       .SetPreloadCount(ConstGameplay.BULLETS_SPAWN_COUNT)
+                       .SetMaxCount(ConstGameplay.BULLETS_SPAWN_COUNT + 5)
+                       .SetItemInitConfig(firePower)
                        .Build();
 
         _shootFxPool = new FactoryGO.Builder(_shootFx)
-                       .WithParents(_poolActive, _poolInactive)
-                       .WithPreloadCount(ConstGameplay.BULLETS_SPAWN_COUNT)
-                       .WithMaxCount(ConstGameplay.BULLETS_SPAWN_COUNT + 5)
-                       .WithItemInitConfig(firePower)
+                       .SetParents(_poolActive, _poolInactive)
+                       .SetPreloadCount(ConstGameplay.BULLETS_SPAWN_COUNT)
+                       .SetMaxCount(ConstGameplay.BULLETS_SPAWN_COUNT + 5)
+                       .SetItemInitConfig(firePower)
                        .Build();
 
         _shootingSoundsPool = new FactoryFmodEvents.Builder(FmodEvents.Instance.Shoot)
-                              .WithPreloadCount(3)
-                              .WithMaxCount(5)
+                              .SetPreloadCount(3)
+                              .SetMaxCount(5)
                               .Build();
     }
 

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using Helpers.StateMachine;
 using Source.Audio;
+using Helpers.StateMachine;
 using Cysharp.Threading.Tasks;
 
 namespace Source.StateMachine
@@ -50,7 +50,7 @@ public class StateInit : IStateEnter
                                      .Build();
 
         await _sceneLoaderService.LoadScene(splashScreenLoadParams);
-        await _serviceSplashScreen.ShowPage(new SplashScreenInfo(true));
+        await _serviceSplashScreen.ShowPage(new SimpleSplashScreenInfo(true));
     }
 
 #endregion

@@ -1,4 +1,4 @@
-﻿using UniRx;
+﻿using R3;
 using Helpers;
 using UnityEngine;
 using DG.Tweening;
@@ -73,7 +73,7 @@ public class EnemyMovement : MonoBehaviour
     {
         _disposable.Clear();
         _enemyRotation = Random.Range(-ConstEnemy.IDLE_ROTATION, ConstEnemy.IDLE_ROTATION);
-        Observable.EveryFixedUpdate()
+        Observable.EveryUpdate(UnityFrameProvider.FixedUpdate)
                   .Subscribe(_ => _spriteTransform.Rotate(0, 0, _enemyRotation))
                   .AddTo(_disposable);
     }
