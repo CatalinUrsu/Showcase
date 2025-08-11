@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="MixerGroup" id="{812abfb6-1f4b-4ef1-9d3d-6ae317e4b5b3}">
 		<property name="name">
 			<value>SoundBus</value>

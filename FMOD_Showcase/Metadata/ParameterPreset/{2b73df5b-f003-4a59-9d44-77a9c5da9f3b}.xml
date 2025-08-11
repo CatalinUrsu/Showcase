@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="ParameterPreset" id="{2b73df5b-f003-4a59-9d44-77a9c5da9f3b}">
 		<property name="name">
 			<value>ItemAppearPitch</value>

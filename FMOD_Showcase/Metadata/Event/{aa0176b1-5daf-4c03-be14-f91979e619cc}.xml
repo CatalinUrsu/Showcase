@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{aa0176b1-5daf-4c03-be14-f91979e619cc}">
 		<property name="name">
 			<value>Popup_Close</value>

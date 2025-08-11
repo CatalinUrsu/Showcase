@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="EventFolder" id="{a9cf4f8d-b7f7-4551-b6e0-4fc884c19a8c}">
 		<property name="name">
 			<value>Menu</value>

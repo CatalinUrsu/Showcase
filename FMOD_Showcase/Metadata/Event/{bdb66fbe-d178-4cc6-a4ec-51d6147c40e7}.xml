@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{bdb66fbe-d178-4cc6-a4ec-51d6147c40e7}">
 		<property name="name">
 			<value>Item_Appear</value>
@@ -129,17 +129,9 @@
 			<destination>{e04a16dd-f69b-4a40-9e8b-5157e23715e9}</destination>
 		</relationship>
 		<relationship name="automationPoints">
-			<destination>{7cd53d2b-8c52-472f-bada-3add1abcbbdf}</destination>
 			<destination>{ed095ef1-0748-4952-81e2-58bfb7b7af7b}</destination>
+			<destination>{7cd53d2b-8c52-472f-bada-3add1abcbbdf}</destination>
 		</relationship>
-	</object>
-	<object class="AutomationPoint" id="{7cd53d2b-8c52-472f-bada-3add1abcbbdf}">
-		<property name="position">
-			<value>0</value>
-		</property>
-		<property name="value">
-			<value>0.5</value>
-		</property>
 	</object>
 	<object class="AutomationPoint" id="{ed095ef1-0748-4952-81e2-58bfb7b7af7b}">
 		<property name="position">
@@ -147,6 +139,14 @@
 		</property>
 		<property name="value">
 			<value>2</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{7cd53d2b-8c52-472f-bada-3add1abcbbdf}">
+		<property name="position">
+			<value>0</value>
+		</property>
+		<property name="value">
+			<value>0.5</value>
 		</property>
 	</object>
 </objects>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{a5fabf0b-5cb7-4562-a74e-559a78ecb53b}">
 		<property name="color">
 			<value>Red</value>
