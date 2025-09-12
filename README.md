@@ -1,51 +1,94 @@
   <h1 align="center">
 Showcase
 </h1>
-<h3>This is a showcase project, created purely to demonstrate some of my skills related to architecture and unity stuffs, so making it visually beautiful was not the goal :) 
-<br>- Unity version - Unity 6
-<br>- I was using FMOD to manage all audio, so to check all audio settings , download FMOD app
-<br>- To start play-mode, just go to Intro scene and press Play
+<h3>Showcase project, created purely to demonstrate some of my skills related to architecture and unity stuffs, so making it visually beautiful was not the goal :)
+<br>- Unity version - Unity 6.1.8f1
+<br>- FMOD Engine for audio control
+<br>- To start -> open Init Scene
 </h3>
+
+<div align="center">
 <img src="https://i.postimg.cc/pLkfvypN/Showcase-Rec-ezgif-com-video-to-gif-converter.gif" alt="Game Capture" width="250">
+</div>
 
 
 # Contents:
-- [Submodules 🧰](#submodules-)
-- [Architecture ⚙️](#achitecture-)
-  - [State Machine ↔️](#state-machine-)
-    - [InitState 📍](#initstate-)
-    - [MenuState & GameplayState 🎮](#menustate-and-gameplaystate-)
-  - [Zenject 💉](#zenject-)
-  - [UniTask 🚦](#unitask-)
-  - [UniRx 🚀](#unirx-)
-- [Localization 🌐](#localization-)
-- [Addressables 📦](#addressables-)
-- [Optimization 🔧](#optimization-)
-  - [UI 📺](#ui-)
-  - [Textures 🖼️](#textures-)
-  - [Audio 🎚️](#audio-)
-  - [Profiling 🎛️](#profiling-)
-- [Extra 🗃️](#extra-)
-- [Notes 📜](#notes-)
+- [1. Submodules 🧰](#1-submodules-)
+- [2. Architecture ⚙️](#2-architecture-)
+  - [2.1 State Machine ↔️](#21-state-machine-)
+    - [2.1.1 InitState 📍](#211-initstate-)
+    - [2.1.2 MenuState & GameplayState 🎮](#212-menustate-and-gameplaystate-)
+  - [2.2 Zenject 💉](#22-zenject-)
+  - [2.3 UniTask 🚦](#2-3-unitask-)
+  - [2.4 UniRx 🚀](#2-4-unirx-)
+- [3. Localization 🌐](#3-localization-)
+- [4. Addressables 📦](#4-addressables-)
+- [5. Optimization 🔧](#5-optimization-)
+  - [5.1 UI 📺](#5-1-ui-)
+  - [5.2 Textures 🖼️](#5-2-textures-)
+  - [5.3 Audio 🎚️](#5-3-audio-)
+  - [5.4 Profiling 🎛️](#5-4-profiling-)
+- [6. Extra 🗃️](#6-extra-)
+- [7. Notes 📜](#7-notes-)
 
 
-# Submodules 🧰
+# 1. Submodules 🧰
 Because some of the scripts, prefabs and other assets can be used in other projects, I decided to create several submodules and use them as packages.
 - <i><b><a href="https://github.com/CatalinUrsu/Tool_Helpers">Helpers</a></b></i>
 - <i><b><a href="https://github.com/CatalinUrsu/Tool_IdleNumber">IdleNumber</a></b></i>
 
-# Architecture ⚙️
-I built the architecture of the application on several pillars. Naturally, a project of such a small scale can do without them and this may seem excessive,
-but this is still a demonstration project.
+
+# 2. Architecture ⚙️
+The project architecture is based on several pillars <i>(StateMachine, DI, MVP, Async Implementation)</i>
+Naturally, a project of such a small scale can do without them and this may seem excessive,but this is still a demonstration project.
+<br><br>App starts from [AppInit](Showcase/Assets/Content/Source/Global/AppInit.cs), this is a single entry point,
+which allows you to control the order of execution of subsequent logic.
+```csharp
+    async void Awake()
+    {
+#if !UNITY_EDITOR
+        Application.targetFrameRate = 60;
+#endif
+
+        _initValuesForSaves.LoadSavedItems();
+        _serviceCamera.RegisterMainCamera(_cameraMain);
+        _serviceCamera.RegisterCamera(ConstCameras.CAMERA_UI, _cameraUI);
+        SetDebugViews();
+
+        await UniTask.WhenAll(LoadFMODBanks(),
+                              SetSingletons());
+
+        SetStateMachine();
+    }
+```
 
 
-## State Machine ↔️
-Basic application control. App has several states driven by StateMachine. There are two types of states - default and with preload. For more control during
-state changing, I made state changing to be async.
+## 2.1 State Machine ↔️
+App has several states driven by StateMachine.
+For more control during state changing, the process is async
+```csharp
+    public async UniTask Enter<TState>();
+    public async UniTask Enter<TState, TPayload>(TPayload payload)
+```
 
+<br>There are two types of states - <b>[Simple](Showcase/Packages/Helpers/StateMachine/Interfaces/IStateEnter.cs)</b> and
+<b>[Payload](Showcase/Packages/Helpers/StateMachine/Interfaces/IStateEnterPayload.cs)</b> with two main methods - <b>Enter()</b> and <b>Exit()</b>
+```csharp
+    public interface IStateEnter
+    {
+        UniTask Enter();
+        UniTask Exit();
+    }
 
-### InitState 📍
-used to load and show Loading Screen, init AudioService, after that app is going to MenuState
+    public interface IStateEnterPayload<TPayload>
+    {
+        UniTask Enter(TPayload payload);
+        UniTask Exit();
+    }
+```
+
+### 2.1.1 InitState 📍
+When StateMachine is created, it firstly will enter [InitState](Showcase/Assets/Content/Source/StateMachine/States/StateInit.cs). 
 ```csharp
     public async UniTaskVoid Enter()
     {
@@ -56,16 +99,16 @@ used to load and show Loading Screen, init AudioService, after that app is going
 ```
 
 
-### MenuState And GameplayState 🎮
-it happened that way they are almost the same, both of them need to load scene and content on it, unload scene, set music state, so I decided to move the similar
-functionality to the base class -[BaseState](Showcase/Assets/Content/Source/StateMachine/States/StateBase.cs).
+### 2.1.2 MenuState And GameplayState 🎮
+Since [MenuState](Showcase/Assets/Content/Source/StateMachine/States/StateMenu.cs). and
+[GameplayState](Showcase/Assets/Content/Source/StateMachine/States/StateGameplay.cs). have similar logic <i>(Load scene and content, unload scene, set music state)</i> so I decided to move the similar
+functionality to the base class - [BaseState](Showcase/Assets/Content/Source/StateMachine/States/StateBase.cs).
 
-
-<h4>OnEnterState</h4>
-Set the loadings counts to track on Loading Screen. Set Music state via FMOD. Load needed scene and init content on it. If it is needed, wait for some
-content to unload. Show scene content and hide Loading Screen
-
-<i><b><br>[MenuState](Showcase/Assets/Content/Source/StateMachine/States/StateMenu.cs)</b></i>
+<br><h4>OnEnterState</h4>
+- Set music state.
+- Show Loading screen.
+- Load scene using [SceneLoaderService](Showcase/Packages/Helpers/Services/SceneLoaderService.cs) and [SceneLoadParams](Showcase/Packages/Helpers/Services/SceneLoadInfo/SceneLoadParams.cs).
+- Load content from the scene using [EntryPoint](Showcase/Packages/Helpers/StateMachine/Interfaces/IEntryPoint.cs).
 ```csharp 
     public override async UniTaskVoid Enter()
     {
@@ -83,26 +126,6 @@ content to unload. Show scene content and hide Loading Screen
         }
     }
 ```
-
-<i><b><br>[StateGameplay](Showcase/Assets/Content/Source/StateMachine/States/StateGameplay.cs)</b></i>
-```csharp 
-    public override async UniTaskVoid Enter()
-    {
-        using (InputManager.Instance.LockInputSystem())
-        {
-            var sceneLoadParams = new SceneLoadParams.Builder(ConstSceneNames.GAME_SCENE)
-                                  .SetPrompt("SceneGameplay")
-                                  .SetActiveOnLoad(true)
-                                  .Build();
-
-            SetMusicState(EMusicStates.Gameplay);
-
-            await LoadingContent(sceneLoadParams, "ContentGameplay");
-            await ShowingContent();
-        }
-    }
-```
-
 
 <br><h4>OnExitState</h4>
 - Show Loading screen.
