@@ -49,7 +49,7 @@ public abstract class StateBase : IStateEnter
         _entryPoint = sceneResult.LoadedScene.FindEntryPoint();
 
         //Simultaneously wait content unloading and load another (ex: unload menu scene, init EntryPoint)
-        await UniTask.WhenAll(InitEntyPoint(sceneResult.SceneLoadProgress, initContentPrompt),
+        await UniTask.WhenAll(InitEntryPoint(sceneResult.SceneLoadProgress, initContentPrompt),
                               UniTask.WaitUntil(() => _loadingProgressService.UnloadsAreFinished)
                                      .ContinueWith(() => Resources.UnloadUnusedAssets().ToUniTask()));
     }
@@ -69,9 +69,9 @@ public abstract class StateBase : IStateEnter
         _loadingProgressService.RegisterUnloadProcesses(unloadingTasks);
     }
 
-    async UniTask InitEntyPoint(SceneLoadProgress sceneLoadProgress, string InitContentPrompt)
+    async UniTask InitEntryPoint(SceneLoadProgress sceneLoadProgress, string initContentPrompt)
     {
-        _loadingProgressService.UpdateLoadingTip(InitContentPrompt);
+        _loadingProgressService.UpdateLoadingTip(initContentPrompt);
 
         await _entryPoint.Init(StatesMachine, UpdateInitProgress);
 

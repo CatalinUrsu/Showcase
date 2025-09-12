@@ -26,7 +26,6 @@ public class GameProgressPresenter
 
     public void Init()
     {
-        _disposable.Clear();
         _gameProgressModel.Progress.Value = 0;
         _gameProgressModel.CollectedCoins.Value = 0;
         _gameProgressModel.PlayerIsAlive = true;
@@ -40,7 +39,7 @@ public class GameProgressPresenter
 
     public void Deinit()
     {
-        _disposable.Dispose();
+        _disposable.Clear();
         _gameProgressModel.PlayerIsAlive = false;
     }
 
