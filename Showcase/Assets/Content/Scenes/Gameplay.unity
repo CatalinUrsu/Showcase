@@ -2056,8 +2056,8 @@ MonoBehaviour:
   _fmodAssetRef:
     m_AssetGUID: 661cb48ad2d22164d9fbb8f6e5a182ff
     m_SubObjectName: 
-    m_SubObjectGUID: 
     m_SubObjectType: 
+    m_SubObjectGUID: 
     m_EditorAssetChanged: 0
 --- !u!114 &1037429167
 MonoBehaviour:
@@ -2071,7 +2071,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1115e27ebc9441a9827c21d16a6bb4f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gampelayEntryPoint: {fileID: 1037429168}
+  _gameplayEntryPoint: {fileID: 1037429168}
   _gameplayView: {fileID: 2078231597}
   _uiController: {fileID: 1132835775}
   _playerFacadeGameplay: {fileID: 1093649785}
@@ -3069,10 +3069,10 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5925032991112842164, guid: c1bb39b52fb032147885241423845f05, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1674830441}
+      addedObject: {fileID: 1037429165}
     - targetCorrespondingSourceObject: {fileID: 5925032991112842164, guid: c1bb39b52fb032147885241423845f05, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1037429165}
+      addedObject: {fileID: 1674830441}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4643210783151171430, guid: c1bb39b52fb032147885241423845f05, type: 3}
       insertIndex: -1
