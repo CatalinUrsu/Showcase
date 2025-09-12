@@ -31,12 +31,10 @@ public class SplashScreen : MonoBehaviour, ISplashScreen
     {
         _rt = GetComponent<RectTransform>();
         _panelHeight = _rt.rect.height;
-        
-        _localizedLoadingProgress.StringReference.Arguments= new object[] { new StringVariable() };
     }
 
 #endregion
-    
+
 #region Public methods
 
     [Inject]
@@ -54,14 +52,16 @@ public class SplashScreen : MonoBehaviour, ISplashScreen
     {
         var duration = skipAnimation ? 0 : ConstUIAnimation.SPLASH_SCREEN_ANIM_DUR;
         _splashScreenTween.CheckAndEnd(false);
-        _splashScreenTween = _rt.DOAnchorPosY(0, duration).SetUpdate(true);;
+        _splashScreenTween = _rt.DOAnchorPosY(0, duration).SetUpdate(true);
+        ;
         await _splashScreenTween;
     }
 
     public async UniTask HidePanel()
     {
         _splashScreenTween.CheckAndEnd(false);
-        _splashScreenTween = _rt.DOAnchorPosY(_panelHeight, ConstUIAnimation.SPLASH_SCREEN_ANIM_DUR).SetUpdate(true);;
+        _splashScreenTween = _rt.DOAnchorPosY(_panelHeight, ConstUIAnimation.SPLASH_SCREEN_ANIM_DUR).SetUpdate(true);
+        ;
         await _splashScreenTween;
     }
 
@@ -71,7 +71,7 @@ public class SplashScreen : MonoBehaviour, ISplashScreen
 
     void OnUpdateProgress_handler(float progress) => _imgLoadingBar.fillAmount = Mathf.Clamp(progress, 0, 1);
 
-    void OnUpdateLoadingTip_handler(string target) => (_localizedLoadingProgress.StringReference.Arguments[0] as StringVariable)!.Value = target;
+    void OnUpdateLoadingTip_handler(string tip) => (_localizedLoadingProgress.StringReference["0"] as StringVariable)!.Value = tip;
 
 #endregion
 }
