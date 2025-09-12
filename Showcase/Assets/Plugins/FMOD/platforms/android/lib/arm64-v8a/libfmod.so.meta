@@ -1,18 +1,14 @@
-fileFormatVersion: 2
+fileFormatVersion: 1
 guid: 159cb3726937c6c498fa49eb627b0d96
 PluginImporter:
-  externalObjects: {}
-  serializedVersion: 3
+  serializedVersion: 1
   iconMap: {}
   executionOrder: {}
-  defineConstraints: []
   isPreloaded: 0
   isOverridable: 0
-  isExplicitlyReferenced: 0
-  validateReferences: 1
   platformData:
     Android:
-      enabled: 0
+      enabled: 1
       settings:
         CPU: ARM64
     Any:
