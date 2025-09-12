@@ -3,14 +3,14 @@ using Zenject;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
-using Helpers.StateMachine;
+using Helpers.Services;
 using Cysharp.Threading.Tasks;
 using UnityEngine.Localization.Components;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
 
 namespace Source.UI
 {
-public class SplashScreen : MonoBehaviour, ISplashScreen<ISplashScreenInfo>
+public class SplashScreen : MonoBehaviour, ISplashScreen
 {
 #region Fields
 
@@ -18,7 +18,7 @@ public class SplashScreen : MonoBehaviour, ISplashScreen<ISplashScreenInfo>
     [SerializeField] Image _imgLoadingBar;
 
     IServiceSplashScreen _serviceSplashScreen;
-    IServiceLoadingProgress _serviceLoadingProgress;
+    IServiceProgressTracking _serviceLoadingProgress;
     float _panelHeight;
     RectTransform _rt;
     Tween _splashScreenTween;
@@ -40,19 +40,19 @@ public class SplashScreen : MonoBehaviour, ISplashScreen<ISplashScreenInfo>
 #region Public methods
 
     [Inject]
-    public void Construct(IServiceSplashScreen serviceSplashScreen, IServiceLoadingProgress serviceLoadingProgress)
+    public void Construct(IServiceSplashScreen serviceSplashScreen, IServiceProgressTracking serviceLoadingProgress)
     {
         _serviceLoadingProgress = serviceLoadingProgress;
         _serviceSplashScreen = serviceSplashScreen;
-        _serviceSplashScreen.RegisterSplashScreen(this);
+        _serviceSplashScreen.RegisterSplashScreen(ConstSceneNames.LOADING_SCENE, this);
 
         _serviceLoadingProgress.OnUpdateProgress += OnUpdateProgress_handler;
-        _serviceLoadingProgress.OnUpdateLoadingPrompt += OnUpdateLoadingPrompt_handler;
+        _serviceLoadingProgress.OnUpdateLoadingTip += OnUpdateLoadingTip_handler;
     }
 
-    public async UniTask ShowPanel(ISplashScreenInfo config)
+    public async UniTask ShowPanel(bool skipAnimation)
     {
-        var duration = config.SkipAnimation ? 0 : ConstUIAnimation.SPLASH_SCREEN_ANIM_DUR;
+        var duration = skipAnimation ? 0 : ConstUIAnimation.SPLASH_SCREEN_ANIM_DUR;
         _splashScreenTween.CheckAndEnd(false);
         _splashScreenTween = _rt.DOAnchorPosY(0, duration).SetUpdate(true);;
         await _splashScreenTween;
@@ -71,7 +71,7 @@ public class SplashScreen : MonoBehaviour, ISplashScreen<ISplashScreenInfo>
 
     void OnUpdateProgress_handler(float progress) => _imgLoadingBar.fillAmount = Mathf.Clamp(progress, 0, 1);
 
-    void OnUpdateLoadingPrompt_handler(string target) => (_localizedLoadingProgress.StringReference.Arguments[0] as StringVariable)!.Value = target;
+    void OnUpdateLoadingTip_handler(string target) => (_localizedLoadingProgress.StringReference.Arguments[0] as StringVariable)!.Value = target;
 
 #endregion
 }

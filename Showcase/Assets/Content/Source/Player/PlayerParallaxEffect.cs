@@ -1,6 +1,7 @@
 using R3;
 using Zenject;
 using UnityEngine;
+using Helpers.Services;
 
 namespace Source.Player
 {
@@ -12,7 +13,7 @@ public class PlayerParallaxEffect : MonoBehaviour
     Transform _cameraTransform;
     Vector3 _lastPlayerPosition;
     Vector3 _cameraInitPos;
-    CompositeDisposable _disposables = new CompositeDisposable();
+    readonly CompositeDisposable _disposables = new CompositeDisposable();
 
     [Inject]
     public void Construct(IServiceCamera _serviceCamera)

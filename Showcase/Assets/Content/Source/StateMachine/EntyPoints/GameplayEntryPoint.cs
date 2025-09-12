@@ -22,7 +22,7 @@ public class GameplayEntryPoint : MonoBehaviour, IEntryPoint
 #endregion
 
 #region Public methods
-    
+
     public async UniTask Init(StatesMachine statesMachine, Action<float> onUpdateProgress)
     {
         _statesMachine = statesMachine;
@@ -48,10 +48,10 @@ public class GameplayEntryPoint : MonoBehaviour, IEntryPoint
         Time.timeScale = 1;
         SessionManager.Current.Save(ESaveFileType.Progress);
         InputManager.Instance.OnToggleInputLock -= OnToggleInputLock_handler;
-        
+
         await UniTask.CompletedTask;
     }
-    
+
     public async UniTask GoToMenu()
     {
         using (InputManager.Instance.LockInputSystem())

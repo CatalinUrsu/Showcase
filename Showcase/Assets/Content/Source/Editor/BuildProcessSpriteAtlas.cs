@@ -6,7 +6,7 @@ namespace Source.Editor
 {
 public class BuildProcessSpriteAtlas : IPreprocessBuildWithReport, IPostprocessBuildWithReport
 {
-    public int callbackOrder { get; } = 0;
+    public int callbackOrder { get; }
 
     public void OnPreprocessBuild(BuildReport report)
     {

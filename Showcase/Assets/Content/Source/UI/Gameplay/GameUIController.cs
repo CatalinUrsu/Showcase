@@ -3,6 +3,7 @@ using Zenject;
 using System.Linq;
 using UnityEngine;
 using Source.Gameplay;
+using Helpers.Services;
 using Cysharp.Threading.Tasks;
 
 namespace Source.UI.Gameplay
@@ -16,7 +17,7 @@ public class GameUIController : MonoBehaviour
     
     public void Init()
     {
-        _canvas.worldCamera = _serviceCamera.GetCameraByName("Camera_UI");
+        _canvas.worldCamera = _serviceCamera.GetCameraByKey(ConstCameras.CAMERA_UI);
         _canvas.planeDistance = 1;
         
         foreach (var panelByType in _panelsByTypes) 

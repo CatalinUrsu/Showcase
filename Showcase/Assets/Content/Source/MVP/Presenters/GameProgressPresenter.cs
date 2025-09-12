@@ -9,9 +9,9 @@ public class GameProgressPresenter
 #region Fields
 
     bool _startNewSession;
-    GameProgressModel _gameProgressModel;
-    CompositeDisposable _disposable;
-    IViewGameplay _viewGameplay;
+    readonly CompositeDisposable _disposable;
+    readonly GameProgressModel _gameProgressModel;
+    readonly IViewGameplay _viewGameplay;
 
 #endregion
 
@@ -21,13 +21,14 @@ public class GameProgressPresenter
     {
         _viewGameplay = viewGameplay;
         _gameProgressModel = model;
+        _disposable = new CompositeDisposable();
     }
 
     public void Init()
     {
-        _disposable = new CompositeDisposable();
+        _disposable.Clear();
         _gameProgressModel.Progress.Value = 0;
-        _gameProgressModel.CollectedCoins.Value *= 0;
+        _gameProgressModel.CollectedCoins.Value = 0;
         _gameProgressModel.PlayerIsAlive = true;
 
         _gameProgressModel.Progress.Skip(1).Subscribe(OnProgressChange_handler).AddTo(_disposable);

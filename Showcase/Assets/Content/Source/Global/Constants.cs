@@ -18,6 +18,11 @@ public static class ConstSpriteAssets
     public const string SPRITE_TEXT_FIRE_RATE = "<sprite=\"S_ui_TextSprites\" name=\"Fire_Rate\" tint=1>";
 }
 
+public static class ConstCameras
+{
+    public const string CAMERA_UI = "Camera_UI";
+}
+
 public static class ConstUIAnimation
 {
     public const float SPLASH_SCREEN_ANIM_DUR = .5f;

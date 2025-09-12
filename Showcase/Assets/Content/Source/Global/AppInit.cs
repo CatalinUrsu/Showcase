@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Source.Audio;
 using Helpers.Audio;
+using Helpers.Services;
 using Source.StateMachine;
 using Helpers.StateMachine;
 using Cysharp.Threading.Tasks;
@@ -34,7 +35,7 @@ public class AppInit : MonoBehaviour
     StatesMachine _stateMachine;
     IServiceSceneLoader _serviceSceneLoader;
     IServiceSplashScreen _serviceSplashScreen;
-    IServiceLoadingProgress _serviceLoadingProgress;
+    IServiceProgressTracking _serviceLoadingProgress;
     IServiceCamera _serviceCamera;
     IAudioService _audioService;
 
@@ -44,7 +45,7 @@ public class AppInit : MonoBehaviour
 
     [Inject]
     public void Construct(IServiceSceneLoader serviceSceneLoader, IServiceSplashScreen serviceSplashScreen,
-                          IServiceLoadingProgress serviceLoadingProgress, IServiceCamera serviceCamera,
+                          IServiceProgressTracking serviceLoadingProgress, IServiceCamera serviceCamera,
                           IAudioService audioService)
     {
         _audioService = audioService;
@@ -62,7 +63,7 @@ public class AppInit : MonoBehaviour
 
         _initValuesForSaves.LoadSavedItems();
         _serviceCamera.RegisterMainCamera(_cameraMain);
-        _serviceCamera.RegisterCamera(_cameraUI);
+        _serviceCamera.RegisterCamera(ConstCameras.CAMERA_UI, _cameraUI);
         SetDebugViews();
 
         await UniTask.WhenAll(LoadFMODBanks(),
