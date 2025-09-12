@@ -5,10 +5,10 @@
       "depth": 0,
       "source": "embedded",
       "dependencies": {
+        "com.unity.2d.sprite": "1.0.0",
         "com.unity.addressables": "1.21.8",
-        "com.unity.nuget.newtonsoft-json": "3.0.2",
-        "com.unity.memoryprofiler": "1.1.3",
-        "com.unity.feature.2d": "2.0.1"
+        "com.unity.localization": "1.5.4",
+        "com.unity.nuget.newtonsoft-json": "3.0.2"
       }
     },
     "com.cat.idle_number": {
@@ -16,13 +16,6 @@
       "depth": 0,
       "source": "embedded",
       "dependencies": {}
-    },
-    "com.cysharp.memorypack": {
-      "version": "https://github.com/Cysharp/MemoryPack.git?path=src/MemoryPack.Unity/Assets/MemoryPack.Unity",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "ca28202a65b22b6fd3ea66b4c75eab252255a097"
     },
     "com.cysharp.r3": {
       "version": "https://github.com/Cysharp/R3.git?path=src/R3.Unity/Assets/R3.Unity",
@@ -40,6 +33,13 @@
       "dependencies": {},
       "hash": "f9fd769be7c634610f2a61aa914a1a55f34740e1"
     },
+    "com.dbrizov.naughtyattributes": {
+      "version": "https://github.com/dbrizov/NaughtyAttributes.git#upm",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "8a8fa5a9659a6d63f196391c71e06c4286c8acd7"
+    },
     "com.github-glitchenzo.nugetforunity": {
       "version": "https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity",
       "depth": 0,
@@ -53,6 +53,13 @@
       "source": "git",
       "dependencies": {},
       "hash": "53c38aa1fe43c68b60cf5d48b148d678697ed732"
+    },
+    "com.svermeulen.extenject": {
+      "version": "https://github.com/Mathijs-Bakker/Extenject.git?path=UnityProject/Assets/Plugins/Zenject/Source",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "a417e7b7bb52e300cac29d960dce2bc0b3dfe1b8"
     },
     "com.unity.2d.animation": {
       "version": "11.0.0",
