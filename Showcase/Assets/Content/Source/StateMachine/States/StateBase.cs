@@ -1,6 +1,7 @@
 using UnityEngine;
 using Source.Audio;
 using Helpers.Audio;
+using Helpers.Services;
 using Helpers.StateMachine;
 using Cysharp.Threading.Tasks;
 
@@ -12,10 +13,10 @@ public abstract class StateBase : IStateEnter
 
     public StatesMachine StatesMachine { get; set; }
 
-    protected readonly IServiceSceneLoader _sceneLoaderService;
-    protected readonly IServiceSplashScreen _serviceSplashScreen;
-    protected readonly IServiceLoadingProgress _loadingProgressService;
-    protected readonly IAudioService _audioService;
+    readonly IServiceSceneLoader _sceneLoaderService;
+    readonly IServiceSplashScreen _serviceSplashScreen;
+    readonly IServiceProgressTracking _loadingProgressService;
+    readonly IAudioService _audioService;
 
     IEntryPoint _entryPoint;
 
@@ -23,7 +24,7 @@ public abstract class StateBase : IStateEnter
 
 #region Public methods
 
-    public StateBase(IServiceSceneLoader sceneLoaderService, IServiceSplashScreen serviceSplashScreen, IServiceLoadingProgress loadingProgressService, IAudioService audioService)
+    public StateBase(IServiceSceneLoader sceneLoaderService, IServiceSplashScreen serviceSplashScreen, IServiceProgressTracking loadingProgressService, IAudioService audioService)
     {
         _audioService = audioService;
         _loadingProgressService = loadingProgressService;
@@ -31,7 +32,7 @@ public abstract class StateBase : IStateEnter
         _sceneLoaderService = sceneLoaderService;
     }
 
-    public abstract UniTaskVoid Enter();
+    public abstract UniTask Enter();
 
     public abstract UniTask Exit();
 
@@ -41,14 +42,14 @@ public abstract class StateBase : IStateEnter
 
     protected void SetMusicState(EMusicStates state) => _audioService.MusicInstance.SetParameter(ConstFMOD.MUSIC_STATE, state.ToString());
 
-    protected async UniTask LoadingContent(SceneLoadParams sceneLoadParams, string InitContentPrompt)
+    protected async UniTask LoadingContent(SceneLoadParams sceneLoadParams, string initContentPrompt)
     {
         _loadingProgressService.LoadProgressCount = 1;
         var sceneResult = await _sceneLoaderService.LoadScene(sceneLoadParams);
         _entryPoint = sceneResult.LoadedScene.FindEntryPoint();
 
         //Simultaneously wait content unloading and load another (ex: unload menu scene, init EntryPoint)
-        await UniTask.WhenAll(InitEntyPoint(sceneResult.SceneLoadProgress, InitContentPrompt),
+        await UniTask.WhenAll(InitEntyPoint(sceneResult.SceneLoadProgress, initContentPrompt),
                               UniTask.WaitUntil(() => _loadingProgressService.UnloadsAreFinished)
                                      .ContinueWith(() => Resources.UnloadUnusedAssets().ToUniTask()));
     }
@@ -61,16 +62,16 @@ public abstract class StateBase : IStateEnter
 
     protected async UniTask UnloadingContent(string sceneName)
     {
-        await _serviceSplashScreen.ShowPage(new SimpleSplashScreenInfo());
+        await _serviceSplashScreen.ShowPage(ConstSceneNames.LOADING_SCENE);
 
         FmodExtensions.ReleaseInstanceByScene(sceneName);
         var unloadingTasks = _entryPoint.Exit().ContinueWith(() => _sceneLoaderService.UnloadScene(sceneName));
-        _loadingProgressService.RegisterUnloadingTasks(unloadingTasks).Forget();
+        _loadingProgressService.RegisterUnloadProcesses(unloadingTasks);
     }
 
     async UniTask InitEntyPoint(SceneLoadProgress sceneLoadProgress, string InitContentPrompt)
     {
-        _loadingProgressService.UpdateLoadingPrompt(InitContentPrompt);
+        _loadingProgressService.UpdateLoadingTip(InitContentPrompt);
 
         await _entryPoint.Init(StatesMachine, UpdateInitProgress);
 

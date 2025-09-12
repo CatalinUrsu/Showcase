@@ -15,7 +15,7 @@ public class GameplayMediator : MonoBehaviour, IGameplayMediator
 {
 #region Fields
 
-    [SerializeField] GampelayEntryPoint gampelayEntryPoint;
+    [SerializeField] GameplayEntryPoint _gameplayEntryPoint;
 
     [Space]
     [SerializeField] GamePanelGameplay _gameplayView;
@@ -60,22 +60,23 @@ public class GameplayMediator : MonoBehaviour, IGameplayMediator
 
     public void SetGameState(EGameplayState state)
     {
+        // Sets the game state by transitioning between states. It could be separate state for each state, but I wanted to show payload state in work
         switch (state)
         {
             case EGameplayState.Play:
-                _gameplayStateMachine.Enter<StateGameplay_Play, bool>(false).GetAwaiter();
+                _gameplayStateMachine.Enter<SubStateGameplayPlay, bool>(false).GetAwaiter();
                 break;
             case EGameplayState.NewGame:
-                _gameplayStateMachine.Enter<StateGameplay_Play, bool>(true).GetAwaiter();
+                _gameplayStateMachine.Enter<SubStateGameplayPlay, bool>(true).GetAwaiter();
                 break;
             case EGameplayState.Pause:
-                _gameplayStateMachine.Enter<StateGameplay_Pause, bool>(false).GetAwaiter();
+                _gameplayStateMachine.Enter<SubStateGameplayPause, bool>(false).GetAwaiter();
                 break;
             case EGameplayState.Loose:
-                _gameplayStateMachine.Enter<StateGameplay_Pause, bool>(true).GetAwaiter();
+                _gameplayStateMachine.Enter<SubStateGameplayPause, bool>(true).GetAwaiter();
                 break;
             case EGameplayState.Leave:
-                gampelayEntryPoint.GoToMenu().GetAwaiter();
+                _gameplayEntryPoint.GoToMenu().GetAwaiter();
                 break;
         }
     }
@@ -90,8 +91,8 @@ public class GameplayMediator : MonoBehaviour, IGameplayMediator
 
         var states = new IState[]
         {
-            new StateGameplay_Pause(_uiController, _enemiesSpawner, _playerFacadeGameplay, _progressPresenter, _audioService),
-            new StateGameplay_Play(_uiController, _enemiesSpawner, _playerFacadeGameplay, _progressPresenter),
+            new SubStateGameplayPause(_uiController, _enemiesSpawner, _playerFacadeGameplay, _progressPresenter, _audioService),
+            new SubStateGameplayPlay(_uiController, _enemiesSpawner, _playerFacadeGameplay, _progressPresenter),
         };
 
         _gameplayStateMachine = new StatesMachine(states);

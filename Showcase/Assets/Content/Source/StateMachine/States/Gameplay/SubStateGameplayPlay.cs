@@ -8,14 +8,14 @@ using Cysharp.Threading.Tasks;
 
 namespace Source.StateMachine
 {
-public class StateGameplay_Play : StateGameplay_Base
+public class SubStateGameplayPlay : SubStateGameplay
 {
 #region Public methods
 
-    public StateGameplay_Play(GameUIController uiController, EnemiesSpawner enemiesSpawner, PlayerFacadeGameplay playerFacadeGameplay, GameProgressPresenter progressPresenter)
+    public SubStateGameplayPlay(GameUIController uiController, EnemiesSpawner enemiesSpawner, PlayerFacadeGameplay playerFacadeGameplay, GameProgressPresenter progressPresenter)
         : base(uiController, enemiesSpawner, playerFacadeGameplay, progressPresenter) { }
 
-    public override async UniTaskVoid Enter(bool payload)
+    public override async UniTask Enter(bool payload)
     {
         if (payload)
             StartNewGame();
@@ -34,6 +34,13 @@ public class StateGameplay_Play : StateGameplay_Base
 
 #region Private methods
 
+    void StartNewGame()
+    {
+        _progressPresenter.Init();
+        _playerFacadeGameplay.ShowPlayer().Forget();
+        PlayGame().Forget();
+    }
+
     async UniTaskVoid PlayGame()
     {
         using (InputManager.Instance.LockInputSystem())
@@ -46,14 +53,6 @@ public class StateGameplay_Play : StateGameplay_Base
         }
     }
 
-    void StartNewGame()
-    {
-        _progressPresenter.Init();
-        _playerFacadeGameplay.ShowPlayer().Forget();
-        PlayGame().Forget();
-    }
-
-    
 #endregion
 }
 }

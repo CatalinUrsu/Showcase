@@ -11,18 +11,18 @@ using Cysharp.Threading.Tasks;
 
 namespace Source.StateMachine
 {
-public class StateGameplay_Pause : StateGameplay_Base
+public class SubStateGameplayPause : SubStateGameplay
 {
 #region Fields
 
     bool _isLoose;
-    IAudioService _audioService;
+    readonly IAudioService _audioService;
 
 #endregion
 
 #region Public methods
 
-    public StateGameplay_Pause(GameUIController uiController,
+    public SubStateGameplayPause(GameUIController uiController,
                                EnemiesSpawner enemiesSpawner,
                                PlayerFacadeGameplay playerFacadeGameplay,
                                GameProgressPresenter progressPresenter,
@@ -32,7 +32,7 @@ public class StateGameplay_Pause : StateGameplay_Base
         _audioService = audioService;
     }
 
-    public override async UniTaskVoid Enter(bool payload)
+    public override async UniTask Enter(bool payload)
     {
         _isLoose = payload;
         if (_isLoose)

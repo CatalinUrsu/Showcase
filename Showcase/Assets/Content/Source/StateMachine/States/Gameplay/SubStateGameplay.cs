@@ -7,7 +7,7 @@ using Cysharp.Threading.Tasks;
 
 namespace Source.StateMachine
 {
-public abstract class StateGameplay_Base : IStateEnterPayload<bool>
+public abstract class SubStateGameplay : IStateEnterPayload<bool>
 {
 #region Fields
 
@@ -22,7 +22,7 @@ public abstract class StateGameplay_Base : IStateEnterPayload<bool>
 
 #region Public methods
 
-    public StateGameplay_Base(GameUIController uiController, EnemiesSpawner enemiesSpawner, PlayerFacadeGameplay playerFacadeGameplay, GameProgressPresenter progressPresenter)
+    protected SubStateGameplay(GameUIController uiController, EnemiesSpawner enemiesSpawner, PlayerFacadeGameplay playerFacadeGameplay, GameProgressPresenter progressPresenter)
     {
         _playerFacadeGameplay = playerFacadeGameplay;
         _progressPresenter = progressPresenter;
@@ -30,7 +30,7 @@ public abstract class StateGameplay_Base : IStateEnterPayload<bool>
         _uiController = uiController;
     }
 
-    public abstract UniTaskVoid Enter(bool payload);
+    public abstract UniTask Enter(bool payload);
 
     public abstract UniTask Exit();
 

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Source.Audio;
+using Helpers.Services;
 using Helpers.StateMachine;
 using Cysharp.Threading.Tasks;
 
@@ -26,7 +27,7 @@ public class StateInit : IStateEnter
         _sceneLoaderService = sceneLoaderService;
     }
 
-    public async UniTaskVoid Enter()
+    public async UniTask Enter()
     {
         _audioService.Init();
         await LoadAndShowSplashScreen();
@@ -47,10 +48,11 @@ public class StateInit : IStateEnter
     {
         var splashScreenLoadParams = new SceneLoadParams.Builder(ConstSceneNames.LOADING_SCENE)
                                      .SetTrackProgress(false)
+                                     .SetIsAddressable(true)
                                      .Build();
 
         await _sceneLoaderService.LoadScene(splashScreenLoadParams);
-        await _serviceSplashScreen.ShowPage(new SimpleSplashScreenInfo(true));
+        await _serviceSplashScreen.ShowPage(ConstSceneNames.LOADING_SCENE, true);
     }
 
 #endregion

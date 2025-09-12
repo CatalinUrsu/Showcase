@@ -9,7 +9,7 @@ using Cysharp.Threading.Tasks;
 
 namespace Source.StateMachine
 {
-public class GampelayEntryPoint : MonoBehaviour, IEntryPoint
+public class GameplayEntryPoint : MonoBehaviour, IEntryPoint
 {
 #region Fields
 
@@ -54,7 +54,7 @@ public class GampelayEntryPoint : MonoBehaviour, IEntryPoint
     
     public async UniTask GoToMenu()
     {
-        using (InputManager.Instance.LockInputSystem()) 
+        using (InputManager.Instance.LockInputSystem())
             await _statesMachine.Enter<StateMenu>();
     }
 
