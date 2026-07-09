@@ -6,7 +6,6 @@ using Source.Audio;
 using Helpers.Audio;
 using Helpers.Services;
 using Source.StateMachine;
-using Helpers.StateMachine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
@@ -33,9 +32,9 @@ public class AppInit : MonoBehaviour
     [SerializeField] GameObject _graphyObj;
 
     StatesMachine _stateMachine;
-    IServiceSceneLoader _serviceSceneLoader;
-    IServiceSplashScreen _serviceSplashScreen;
-    IServiceProgressTracking _serviceLoadingProgress;
+    ISceneLoaderService _sceneLoaderService;
+    ISplashScreenService _splashScreenService;
+    IProgressTrackingService progressTrackingService;
     IServiceCamera _serviceCamera;
     IAudioService _audioService;
 
@@ -44,14 +43,14 @@ public class AppInit : MonoBehaviour
 #region Monobehaviour
 
     [Inject]
-    public void Construct(IServiceSceneLoader serviceSceneLoader, IServiceSplashScreen serviceSplashScreen,
-                          IServiceProgressTracking serviceLoadingProgress, IServiceCamera serviceCamera,
+    public void Construct(ISceneLoaderService sceneLoaderService, ISplashScreenService splashScreenService,
+                          IProgressTrackingService progressTrackingService, IServiceCamera serviceCamera,
                           IAudioService audioService)
     {
         _audioService = audioService;
-        _serviceSceneLoader = serviceSceneLoader;
-        _serviceSplashScreen = serviceSplashScreen;
-        _serviceLoadingProgress = serviceLoadingProgress;
+        _sceneLoaderService = sceneLoaderService;
+        _splashScreenService = splashScreenService;
+        this.progressTrackingService = progressTrackingService;
         _serviceCamera = serviceCamera;
     }
 
@@ -87,9 +86,9 @@ public class AppInit : MonoBehaviour
     {
         var states = new IState[]
         {
-            new StateInit(_serviceSceneLoader, _serviceSplashScreen, _audioService),
-            new StateMenu(_serviceSceneLoader, _serviceSplashScreen, _serviceLoadingProgress, _audioService),
-            new StateGameplay(_serviceSceneLoader, _serviceSplashScreen, _serviceLoadingProgress, _audioService)
+            new StateInit(_sceneLoaderService, _splashScreenService, _audioService),
+            new StateMenu(_sceneLoaderService, _splashScreenService, progressTrackingService, _audioService),
+            new StateGameplay(_sceneLoaderService, _splashScreenService, progressTrackingService, _audioService)
         };
 
         _stateMachine = new StatesMachine(states);
@@ -99,8 +98,8 @@ public class AppInit : MonoBehaviour
 
     async UniTask LoadFMODBanks()
     {
-        (await _masterAssetRef.LoadTextAsset()).LoadBank();
-        (await _masterStringAssetRef.LoadTextAsset()).LoadBank();
+        await _masterAssetRef.LoadBank();
+        await _masterStringAssetRef.LoadBank();
     }
 
     async UniTask SetSingletons()

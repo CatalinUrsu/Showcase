@@ -9,8 +9,8 @@ public class StateMenu : StateBase
 {
 #region Public methods
     
-    public StateMenu(IServiceSceneLoader sceneLoaderService, IServiceSplashScreen serviceSplashScreen, IServiceProgressTracking loadingProgressService, IAudioService audioService)
-        : base(sceneLoaderService, serviceSplashScreen, loadingProgressService, audioService) { }
+    public StateMenu(ISceneLoaderService sceneLoaderService, ISplashScreenService splashScreenService, IProgressTrackingService progressTrackingService, IAudioService audioService)
+        : base(sceneLoaderService, splashScreenService, progressTrackingService, audioService) { }
 
     public override async UniTask Enter()
     {

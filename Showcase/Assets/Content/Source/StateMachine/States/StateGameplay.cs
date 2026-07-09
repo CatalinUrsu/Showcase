@@ -9,8 +9,8 @@ public class StateGameplay : StateBase
 {
 #region Public methods
 
-    public StateGameplay(IServiceSceneLoader sceneLoaderService, IServiceSplashScreen serviceSplashScreen, IServiceProgressTracking loadingProgressService, IAudioService audioService)
-        : base(sceneLoaderService, serviceSplashScreen, loadingProgressService, audioService) { }
+    public StateGameplay(ISceneLoaderService sceneLoaderService, ISplashScreenService splashScreenService, IProgressTrackingService progressTrackingService, IAudioService audioService)
+        : base(sceneLoaderService, splashScreenService, progressTrackingService, audioService) { }
 
     public override async UniTask Enter()
     {

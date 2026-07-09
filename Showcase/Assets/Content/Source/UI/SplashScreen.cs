@@ -17,8 +17,8 @@ public class SplashScreen : MonoBehaviour, ISplashScreen
     [SerializeField] LocalizeStringEvent _localizedLoadingProgress;
     [SerializeField] Image _imgLoadingBar;
 
-    IServiceSplashScreen _serviceSplashScreen;
-    IServiceProgressTracking _serviceLoadingProgress;
+    ISplashScreenService _splashScreenService;
+    IProgressTrackingService progressTrackingService;
     float _panelHeight;
     RectTransform _rt;
     Tween _splashScreenTween;
@@ -38,14 +38,14 @@ public class SplashScreen : MonoBehaviour, ISplashScreen
 #region Public methods
 
     [Inject]
-    public void Construct(IServiceSplashScreen serviceSplashScreen, IServiceProgressTracking serviceLoadingProgress)
+    public void Construct(ISplashScreenService splashScreenService, IProgressTrackingService progressTrackingService)
     {
-        _serviceLoadingProgress = serviceLoadingProgress;
-        _serviceSplashScreen = serviceSplashScreen;
-        _serviceSplashScreen.RegisterSplashScreen(ConstSceneNames.LOADING_SCENE, this);
+        this.progressTrackingService = progressTrackingService;
+        _splashScreenService = splashScreenService;
+        _splashScreenService.RegisterSplashScreen(ConstSceneNames.LOADING_SCENE, this);
 
-        _serviceLoadingProgress.OnUpdateProgress += OnUpdateProgress_handler;
-        _serviceLoadingProgress.OnUpdateLoadingTip += OnUpdateLoadingTip_handler;
+        this.progressTrackingService.OnUpdateProgress += OnUpdateProgress_handler;
+        this.progressTrackingService.OnUpdateLoadingTip += OnUpdateLoadingTip_handler;
     }
 
     public async UniTask ShowPanel(bool skipAnimation)

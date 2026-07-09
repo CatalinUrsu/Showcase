@@ -4,9 +4,9 @@ using UnityEngine;
 using FMOD.Studio;
 using Source.Audio;
 using Source.Player;
+using Helpers.Services;
 using Source.UI.Gameplay;
 using Source.StateMachine;
-using Helpers.StateMachine;
 using Cysharp.Threading.Tasks;
 
 namespace Source.Gameplay

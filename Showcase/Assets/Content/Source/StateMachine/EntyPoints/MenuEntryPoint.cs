@@ -2,12 +2,12 @@ using System;
 using Helpers;
 using UnityEngine;
 using Helpers.Audio;
-using Helpers.StateMachine;
+using Helpers.Services;
 using Cysharp.Threading.Tasks;
 
 namespace Source.StateMachine
 {
-public class MenuEntryPoint : MonoBehaviour, IEntryPoint
+public class MenuEntryPoint : MonoBehaviour
 {
 #region Fields
 

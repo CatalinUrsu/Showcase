@@ -81,11 +81,11 @@ public class EnemiesSpawner : MonoBehaviour
     void InitPool(AsyncOperationHandle<GameObject> opHandle)
     {
         var enemyFacade = _enemyAssetOpHandle.Result.GetComponent<EnemyFacade>();
-        _pool = new FactoryGO.Builder(enemyFacade)
-                .SetParents(_poolActive, _poolInactive)
-                .SetPreloadCount(ConstGameplay.ENEMIES_SPAWN_COUNT)
-                .SetItemInitConfig(_enemyInitConfig)
-                .Build();
+        _pool = new Factory.Builder(enemyFacade)
+                             .SetConfig(_enemyInitConfig)
+                             .SetParents(_poolActive, _poolInactive)
+                             .SetPreloadCount(ConstGameplay.ENEMIES_SPAWN_COUNT)
+                             .Build();
     }
 
     void SetSpawnChance()

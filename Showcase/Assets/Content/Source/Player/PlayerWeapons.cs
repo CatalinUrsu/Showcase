@@ -4,6 +4,7 @@ using IdleNumbers;
 using UnityEngine;
 using FMOD.Studio;
 using Source.Audio;
+using Helpers.Audio;
 using Source.Gameplay;
 using Helpers.PoolSystem;
 
@@ -54,19 +55,18 @@ public class PlayerWeapons : MonoBehaviour
 
     void CreatePools(IdleNumber firePower)
     {
-        _bulletsPool = new FactoryGO.Builder(_bullet)
-                       .SetParents(_poolActive, _poolInactive)
-                       .SetPreloadCount(ConstGameplay.BULLETS_SPAWN_COUNT)
-                       .SetMaxCount(ConstGameplay.BULLETS_SPAWN_COUNT + 5)
-                       .SetItemInitConfig(firePower)
-                       .Build();
+        _bulletsPool = new Factory.Builder(_bullet)
+                          .SetConfig(firePower)
+                          .SetParents(_poolActive, _poolInactive)
+                          .SetPreloadCount(ConstGameplay.BULLETS_SPAWN_COUNT)
+                          .SetMaxCount(ConstGameplay.BULLETS_SPAWN_COUNT + 5)
+                          .Build();
 
-        _shootFxPool = new FactoryGO.Builder(_shootFx)
-                       .SetParents(_poolActive, _poolInactive)
-                       .SetPreloadCount(ConstGameplay.BULLETS_SPAWN_COUNT)
-                       .SetMaxCount(ConstGameplay.BULLETS_SPAWN_COUNT + 5)
-                       .SetItemInitConfig(firePower)
-                       .Build();
+        _shootFxPool = new Factory.Builder(_shootFx)
+                          .SetParents(_poolActive, _poolInactive)
+                          .SetPreloadCount(ConstGameplay.BULLETS_SPAWN_COUNT)
+                          .SetMaxCount(ConstGameplay.BULLETS_SPAWN_COUNT + 5)
+                          .Build();
 
         _shootingSoundsPool = new FactoryFmodEvents.Builder(FmodEvents.Instance.Shoot)
                               .SetPreloadCount(3)

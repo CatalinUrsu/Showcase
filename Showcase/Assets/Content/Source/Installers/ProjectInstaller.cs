@@ -8,15 +8,15 @@ public class ProjectInstaller : MonoInstaller
 {
     public override void InstallBindings()
     {
-        IServiceProgressTracking loadingProgressService = new ProgressTrackingService();
-        IServiceSceneLoader sceneLoaderService = new SceneLoaderService(loadingProgressService);
-        IServiceSplashScreen splashScreenService = new SplashScreenService(loadingProgressService);
+        IProgressTrackingService progressTrackingService = new ProgressTrackingService();
+        ISceneLoaderService sceneLoaderService = new SceneLoaderService(progressTrackingService);
+        ISplashScreenService splashScreenService = new SplashScreenService(progressTrackingService);
         
         Container.Bind<IAudioService>().FromInstance(new AudioService()).AsSingle();
         Container.Bind<IServiceCamera>().FromInstance(new CameraService()).AsSingle();
-        Container.Bind<IServiceProgressTracking>().FromInstance(loadingProgressService).AsSingle();
-        Container.Bind<IServiceSceneLoader>().FromInstance(sceneLoaderService).AsSingle();
-        Container.Bind<IServiceSplashScreen>().FromInstance(splashScreenService).AsSingle();
+        Container.Bind<IProgressTrackingService>().FromInstance(progressTrackingService).AsSingle();
+        Container.Bind<ISceneLoaderService>().FromInstance(sceneLoaderService).AsSingle();
+        Container.Bind<ISplashScreenService>().FromInstance(splashScreenService).AsSingle();
     }
 }
 }

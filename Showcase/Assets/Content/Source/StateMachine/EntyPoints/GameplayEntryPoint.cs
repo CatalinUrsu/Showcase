@@ -4,12 +4,12 @@ using UnityEngine;
 using Helpers.Audio;
 using Source.Session;
 using Source.Gameplay;
-using Helpers.StateMachine;
+using Helpers.Services;
 using Cysharp.Threading.Tasks;
 
 namespace Source.StateMachine
 {
-public class GameplayEntryPoint : MonoBehaviour, IEntryPoint
+public class GameplayEntryPoint : MonoBehaviour
 {
 #region Fields
 

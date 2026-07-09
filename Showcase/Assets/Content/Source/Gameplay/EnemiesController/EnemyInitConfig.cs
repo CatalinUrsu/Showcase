@@ -1,6 +1,7 @@
 ﻿using FMOD.Studio;
 using UnityEngine;
 using Source.Audio;
+using Helpers.Audio;
 using Helpers.PoolSystem;
 
 namespace Source.Gameplay
@@ -26,13 +27,13 @@ public class EnemyInitConfig
                          .Set3DAttributes(true)
                          .Build();
 
-        HitFxPool = new FactoryGO.Builder(hitFxPrefab)
+        HitFxPool = new Factory.Builder(hitFxPrefab)
                     .SetParents(poolActive,poolInactive)
                     .SetPreloadCount(6)
                     .SetMaxCount(10)
                     .Build();
 
-        DeathFxPool = new FactoryGO.Builder(deathFxPrefab)
+        DeathFxPool = new Factory.Builder(deathFxPrefab)
                       .SetParents(poolActive,poolInactive)
                       .SetPreloadCount(3)
                       .SetMaxCount(5)

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using Source.Audio;
 using Helpers.Services;
-using Helpers.StateMachine;
 using Cysharp.Threading.Tasks;
 
 namespace Source.StateMachine
@@ -12,18 +11,18 @@ public class StateInit : IStateEnter
 
     public StatesMachine StatesMachine { get; set; }
 
-    readonly IServiceSceneLoader _sceneLoaderService;
-    readonly IServiceSplashScreen _serviceSplashScreen;
+    readonly ISceneLoaderService _sceneLoaderService;
+    readonly ISplashScreenService _splashScreenService;
     readonly IAudioService _audioService;
 
 #endregion
 
 #region Public methods
 
-    public StateInit(IServiceSceneLoader sceneLoaderService, IServiceSplashScreen serviceSplashScreen, IAudioService audioService)
+    public StateInit(ISceneLoaderService sceneLoaderService, ISplashScreenService splashScreenService, IAudioService audioService)
     {
         _audioService = audioService;
-        _serviceSplashScreen = serviceSplashScreen;
+        _splashScreenService = splashScreenService;
         _sceneLoaderService = sceneLoaderService;
     }
 
@@ -52,7 +51,7 @@ public class StateInit : IStateEnter
                                      .Build();
 
         await _sceneLoaderService.LoadScene(splashScreenLoadParams);
-        await _serviceSplashScreen.ShowPage(ConstSceneNames.LOADING_SCENE, true);
+        await _splashScreenService.Show(ConstSceneNames.LOADING_SCENE, true);
     }
 
 #endregion
