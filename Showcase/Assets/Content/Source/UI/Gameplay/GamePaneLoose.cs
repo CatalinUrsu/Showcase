@@ -1,11 +1,10 @@
 ﻿using TMPro;
 using Zenject;
-using Source.MVP;
 using UnityEngine;
 using IdleNumbers;
-using Source.Session;
 using Source.Gameplay;
 using Cysharp.Threading.Tasks;
+using Source.Data;
 using UnityEngine.Localization.Components;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
 
@@ -20,7 +19,7 @@ public class GamePaneLoose : GamePanel
     [SerializeField] ButtonBase _buttonRestart;
     [SerializeField] ButtonBase _buttonHome;
 
-    [Inject] GameProgressModel _gameProgressModel;
+    [Inject] GameRunModel _gameRunModel;
 
 #endregion
 
@@ -38,8 +37,8 @@ public class GamePaneLoose : GamePanel
 
     public override async UniTask Show()
     {
-        (_localizedStringCollected.StringReference["0"] as StringVariable)!.Value = $"{_gameProgressModel.CollectedCoins.Value.AsString()} {ConstSpriteAssets.SPRITE_TEXT_COIN}";
-        _txtTotal.SetText($"{SessionManager.Current.Progress.Coins.Value.AsString()}  {ConstSpriteAssets.SPRITE_TEXT_COIN}");
+        (_localizedStringCollected.StringReference["0"] as StringVariable)!.Value = $"{_gameRunModel.CollectedCoins.Value.AsString()} {ConstSpriteAssets.SPRITE_TEXT_COIN}";
+        _txtTotal.SetText($"{SessionService.Current.Progress.Coins.Value.AsString()}  {ConstSpriteAssets.SPRITE_TEXT_COIN}");
         
         await base.Show();
     }

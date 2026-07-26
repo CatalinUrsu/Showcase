@@ -1,0 +1,27 @@
+{
+    "name": "Source.Boot",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f52b90c4f9d38b54da9dff0bc8b21f8f",
+        "GUID:db203b4872c78914f8a2898480aa07de",
+        "GUID:28e9a60ae3339d546892de36f570dc26",
+        "GUID:b13ee48ac5c4653498a98fdbcbcaa139",
+        "GUID:3b8cd479f1b9e684695a15beb0f55791",
+        "GUID:16aa32b06da7c104a994d22b81c651b2",
+        "GUID:e0282ed01d5ae0344a1a6b6951d32e7c",
+        "GUID:a63dc12529f7e9942aa0087783d37585",
+        "GUID:c86a2e045efb7ad46809adfc258c5046",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4",
+        "GUID:0c752da273b17c547ae705acf0f2adf2"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

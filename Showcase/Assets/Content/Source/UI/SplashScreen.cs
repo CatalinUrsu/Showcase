@@ -17,16 +17,24 @@ public class SplashScreen : MonoBehaviour, ISplashScreen
     [SerializeField] LocalizeStringEvent _localizedLoadingProgress;
     [SerializeField] Image _imgLoadingBar;
 
-    ISplashScreenService _splashScreenService;
-    IProgressTrackingService progressTrackingService;
     float _panelHeight;
     RectTransform _rt;
     Tween _splashScreenTween;
+    IProgressTrackingService _progressTrackingService;
 
 #endregion
 
 #region Monobeh
 
+    [Inject]
+    public void Construct(IProgressTrackingService progressTrackingService)
+    {
+        _progressTrackingService = progressTrackingService;
+
+        _progressTrackingService.OnUpdateProgress += OnUpdateProgress_handler;
+        _progressTrackingService.OnUpdateLoadingTip += OnUpdateLoadingTip_handler;
+    }
+    
     void Awake()
     {
         _rt = GetComponent<RectTransform>();
@@ -37,31 +45,20 @@ public class SplashScreen : MonoBehaviour, ISplashScreen
 
 #region Public methods
 
-    [Inject]
-    public void Construct(ISplashScreenService splashScreenService, IProgressTrackingService progressTrackingService)
-    {
-        this.progressTrackingService = progressTrackingService;
-        _splashScreenService = splashScreenService;
-        _splashScreenService.RegisterSplashScreen(ConstSceneNames.LOADING_SCENE, this);
-
-        this.progressTrackingService.OnUpdateProgress += OnUpdateProgress_handler;
-        this.progressTrackingService.OnUpdateLoadingTip += OnUpdateLoadingTip_handler;
-    }
-
-    public async UniTask ShowPanel(bool skipAnimation)
+    public async UniTask Show(bool skipAnimation)
     {
         var duration = skipAnimation ? 0 : ConstUIAnimation.SPLASH_SCREEN_ANIM_DUR;
         _splashScreenTween.CheckAndEnd(false);
         _splashScreenTween = _rt.DOAnchorPosY(0, duration).SetUpdate(true);
-        ;
+
         await _splashScreenTween;
     }
 
-    public async UniTask HidePanel()
+    public async UniTask Hide()
     {
         _splashScreenTween.CheckAndEnd(false);
         _splashScreenTween = _rt.DOAnchorPosY(_panelHeight, ConstUIAnimation.SPLASH_SCREEN_ANIM_DUR).SetUpdate(true);
-        ;
+
         await _splashScreenTween;
     }
 

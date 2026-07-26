@@ -1,7 +1,6 @@
 using Helpers;
 using DG.Tweening;
 using UnityEngine;
-using Source.Audio;
 using Cysharp.Threading.Tasks;
 
 namespace Source.UI.Gameplay

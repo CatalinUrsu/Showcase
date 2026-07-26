@@ -1,15 +1,14 @@
 ﻿using TMPro;
 using System;
 using Helpers;
-using Source.MVP;
 using UnityEngine;
 using DG.Tweening;
 using IdleNumbers;
-using Source.Audio;
 using Helpers.Audio;
 using UnityEngine.UI;
 using Source.Gameplay;
 using Cysharp.Threading.Tasks;
+using Source.Data;
 
 namespace Source.UI.Gameplay
 {
@@ -93,7 +92,7 @@ public class GamePanelGameplay : GamePanel, IViewGameplay
                                                  .SetLoops(2, LoopType.Yoyo)
                                                  .OnStart(() =>
                                                  {
-                                                     FmodEvents.Instance.LvlUp.PlayOneShot();
+                                                     FmodEventsSo.Instance.LvlUp.PlayOneShot();
                                                      PlayNewLvlEffects().Forget();
                                                  })
                                                  .OnComplete(() => _txtLvlCurrent.SetText($"{newLvl}")))

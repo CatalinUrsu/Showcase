@@ -13,11 +13,11 @@ public class GameUIController : MonoBehaviour
     [SerializeField] PanelByType[] _panelsByTypes;
     [SerializeField] Canvas _canvas;
 
-    [Inject] IServiceCamera _serviceCamera;
+    [Inject] ICameraService _cameraService;
     
     public void Init()
     {
-        _canvas.worldCamera = _serviceCamera.GetCameraByKey(ConstCameras.CAMERA_UI);
+        _canvas.worldCamera = _cameraService.GetCameraByKey(ConstCameras.CAMERA_UI);
         _canvas.planeDistance = 1;
         
         foreach (var panelByType in _panelsByTypes) 

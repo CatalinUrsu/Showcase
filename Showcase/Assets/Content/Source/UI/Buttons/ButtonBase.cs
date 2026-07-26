@@ -1,41 +1,32 @@
 using Helpers;
 using Helpers.UI;
-using UnityEngine;
 using DG.Tweening;
-using Source.Audio;
-using Helpers.Audio;
+using UnityEngine;
 
 namespace Source.UI
 {
 public class ButtonBase : ButtonHelper
 {
-#region Fields
-
-    [SerializeField] bool _playButtonSound = true;
-
-    protected RectTransform _rt;
-    
     Tween _clickTween;
-
-#endregion
-
-    public virtual void Init()
+    
+    public override void Init()
     {
-        _rt = GetComponent<RectTransform>();
+        base.Init();
 
-        OnTouchDown += () => OnTouch_handler(true);
-        OnTouchUp += () => OnTouch_handler(false);
-
-        if (_playButtonSound)
-            onClick.AddListener(() => FmodEvents.Instance.BtnClick.PlayOneShot());
+        OnPointerDown += OnPointerDown_handler;
+        OnPointerUp += OnPointerUp_handler;
     }
+    
+    void OnPointerDown_handler() => PlayPointerAnim(-ConstUIAnimation.ITEM_ANIM_SIZE);
 
-    void OnTouch_handler(bool isPressed)
+    void OnPointerUp_handler() => PlayPointerAnim(ConstUIAnimation.ITEM_ANIM_SIZE);
+
+    void PlayPointerAnim(Vector2 sizeDelta)
     {
         _clickTween?.CheckAndEnd();
-        _clickTween = _rt.DOSizeDelta(isPressed ? -ConstUIAnimation.ITEM_ANIM_SIZE : ConstUIAnimation.ITEM_ANIM_SIZE, ConstUIAnimation.UI_ANIM_DUR)
-                         .SetRelative()
-                         .SetUpdate(true);
+        _clickTween = RT.DOSizeDelta(sizeDelta, ConstUIAnimation.UI_ANIM_DUR)
+                        .SetRelative()
+                        .SetUpdate(true);
     }
 }
 }

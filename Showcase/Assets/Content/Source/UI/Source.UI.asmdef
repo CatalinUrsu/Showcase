@@ -1,0 +1,31 @@
+{
+    "name": "Source.UI",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f52b90c4f9d38b54da9dff0bc8b21f8f",
+        "GUID:db203b4872c78914f8a2898480aa07de",
+        "GUID:a4c8c8a2b89dd7748844668af4cb3e47",
+        "GUID:16aa32b06da7c104a994d22b81c651b2",
+        "GUID:e0282ed01d5ae0344a1a6b6951d32e7c",
+        "GUID:c86a2e045efb7ad46809adfc258c5046",
+        "GUID:a63dc12529f7e9942aa0087783d37585",
+        "GUID:0c752da273b17c547ae705acf0f2adf2",
+        "GUID:77221876cc6b8244180b96e320b1bcd4",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:029c1c1b674aaae47a6841a0b89ad80e",
+        "GUID:bf37d909809ae6d4da6641d5f09030c8",
+        "GUID:febaf25a60dafbd44941357b21678606",
+        "GUID:8c1bf034ed3e51743a791c7766c75ce2",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

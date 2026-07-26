@@ -1,0 +1,79 @@
+﻿using R3;
+using System;
+
+namespace Source.Data
+{
+public class WeaponPresenter : ItemPresenterBase
+{
+#region Fields
+
+    readonly IWeaponView _view;
+    readonly IWeaponModel _weaponModel;
+
+#endregion
+
+#region Public methods
+
+    public WeaponPresenter(IWeaponView view,
+                           ISessionService sessionService,
+                           IItemsModelController itemsModelController,
+                           IProgressModelController progressModelController,
+                           FmodEventsSo fmodEventsSo,
+                           Guid key) :
+        base(sessionService, itemsModelController, progressModelController, fmodEventsSo, key)
+    {
+        _view = view;
+        _weaponModel = _itemsController.GetWeaponModel(key);
+        _idx = _itemsController.GetWeaponIdx(_key);
+        _itemModel = _weaponModel;
+
+        // Subscribe to Properties value changing
+        _weaponModel.IsBoughtRef.Subscribe(isBought => _view.UpdateBoughtState(isBought, GetPrice())).AddTo(_disposables);
+        _weaponModel.IsSelectedRef.Subscribe(isSelect => _view.UpdateSelectState(_weaponModel.IsBoughtRef.CurrentValue, isSelect)).AddTo(_disposables);
+        _weaponModel.UpgradePriceRef.Subscribe(_ => _view.SetWeaponsStats(GetPrice(), _weaponModel.FirePowerRef.CurrentValue, _weaponModel.FireRateRef.CurrentValue)).AddTo(_disposables);
+
+        _progressModel.CoinsRef.Subscribe(_ => _view.UpdateSolvency(HasEnoughCurrency())).AddTo(_disposables);
+        _progressModel.UsedWeaponIdxRef.Subscribe(DeselectOnSelectOtherItem).AddTo(_disposables);
+    }
+
+    public override void SelectItem()
+    {
+        if (!CanSelectItem()) return;
+
+        _itemsController.SelectWeapon(_key);
+        _progressController.SetUsedWeaponIdx(_idx);
+
+        base.SelectItem();
+    }
+
+#endregion
+
+#region Private methods
+
+    protected override void BuyItem()
+    {
+        _itemsController.BuyWeapon(_key);
+        _progressController.SpendCoins(_weaponModel.BuyPriceRef.CurrentValue);
+
+        base.BuyItem();
+        SelectItem();
+    }
+
+    protected override void UpgradeItem()
+    {
+        _itemsController.UpdateWeapon(_key);
+        _progressController.SpendCoins(_weaponModel.UpgradePriceRef.CurrentValue);
+
+        base.UpgradeItem();
+    }
+
+    protected override void DeselectOnSelectOtherItem(int selectedItemIdx)
+    {
+        if (selectedItemIdx == _idx) return;
+
+        _itemsController.DeselectWeapon(_key);
+    }
+
+#endregion
+}
+}

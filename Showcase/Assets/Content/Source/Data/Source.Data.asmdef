@@ -1,0 +1,20 @@
+{
+    "name": "Source.Data",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f52b90c4f9d38b54da9dff0bc8b21f8f",
+        "GUID:a4c8c8a2b89dd7748844668af4cb3e47",
+        "GUID:e0282ed01d5ae0344a1a6b6951d32e7c",
+        "GUID:77221876cc6b8244180b96e320b1bcd4",
+        "GUID:0c752da273b17c547ae705acf0f2adf2"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
