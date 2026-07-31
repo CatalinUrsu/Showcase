@@ -61,17 +61,15 @@ public abstract class StateBase : IStateEnter
         sceneLoadResult.SceneLoadProgress.SetupProgress = 1;
     }
 
-    protected virtual async UniTask UnloadScene(string sceneName)
+    protected void UnloadScene(string sceneName)
     {
         var unloadSceneTask = _sceneLoaderService.UnloadScene(sceneName);
-        FmodExtensions.ReleaseSceneInstances(sceneName);
         _progressTrackingService.RegisterUnloadProcesses(unloadSceneTask);
-
-        await unloadSceneTask;
     }
 
     protected virtual async UniTask InitSceneContext(SceneLoadProgress sceneLoadProgress) { }
-    protected virtual async UniTask DeInitSceneContext() { }
+
+    protected virtual async UniTask DeInitSceneContext(string sceneName) => FmodExtensions.ReleaseSceneInstances(sceneName);
 
 #endregion
 }

@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 
 namespace Source.Player
 {
-public class PlayerAppearenceGameplay : PlayerAppearenceBase
+public class PlayerAppearanceGameplay : PlayerAppearenceBase
 {
 #region Fields
 
@@ -33,9 +33,9 @@ public class PlayerAppearenceGameplay : PlayerAppearenceBase
         _shieldOutTransform = _shieldOutSprite.transform;
     }
 
-    public void Deinit() => _shieldSequence.CheckAndEnd(false);
+    public override void Deinit() => _shieldSequence.CheckAndEnd(false);
 
-    public async UniTask AnimateShield(CancellationToken token)
+    public override async UniTask AnimateShield(CancellationToken token)
     {
         _shieldSequence.CheckAndEnd();
         _shieldInTransform.gameObject.SetActive(true);
@@ -66,7 +66,7 @@ public class PlayerAppearenceGameplay : PlayerAppearenceBase
             await _shieldSequence.Play().ToUniTask().AttachExternalCancellation(token);
     }
 
-    public void ToggleAppearence(bool enable)
+    public override void ToggleAppearance(bool enable)
     {
         _imgShip.enabled = enable;
         _imgWeaponL.enabled = enable;

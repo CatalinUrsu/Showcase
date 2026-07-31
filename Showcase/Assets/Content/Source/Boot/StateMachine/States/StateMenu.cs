@@ -22,15 +22,13 @@ public class StateMenu : StateBase
 
     public override async UniTask Enter()
     {
-        using (InputManager.Instance.LockInputSystem())
-        {
-            SetMusicState(EMusicStates.Idle);
-            _menuContext.UIMenuFacade.OnClickStartGame += GoToGameplay;
+        SetMusicState(EMusicStates.Idle);
+        _menuContext.UIMenuFacade.OnClickStartGame += GoToGameplay;
 
-            await LoadMenuScene();
-            await HideSplashScreen();
-            await _menuContext.PlayerFacade.ShowPlayer();
-        }
+        await LoadMenuScene();
+        await HideSplashScreen();
+        _menuContext.PlayerFacade.Init();
+        await _menuContext.PlayerFacade.ShowPlayer();
     }
 
     public override async UniTask Exit()
@@ -39,8 +37,8 @@ public class StateMenu : StateBase
             _menuContext.UIMenuFacade.OnClickStartGame -= GoToGameplay;
 
         await ShowSplashScreen();
-        await DeInitSceneContext();
-        await UnloadScene(ConstSceneNames.MENU_SCENE);
+        await DeInitSceneContext(ConstSceneNames.MENU_SCENE);
+        UnloadScene(ConstSceneNames.MENU_SCENE);
     }
 
 #endregion
@@ -72,13 +70,13 @@ public class StateMenu : StateBase
         }
     }
 
-    protected override async UniTask DeInitSceneContext()
+    protected override async UniTask DeInitSceneContext(string sceneName)
     {
-        _menuContext.UIMenuFacade.Deinit();
+        await base.DeInitSceneContext(sceneName);
+
         _menuContext.BankLoader.Deinit();
         _menuContext.PlayerFacade.Deinit();
-
-        await UniTask.CompletedTask;
+        await _menuContext.UIMenuFacade.Deinit();
     }
 
     void GoToGameplay()

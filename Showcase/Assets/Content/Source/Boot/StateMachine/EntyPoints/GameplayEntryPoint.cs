@@ -27,10 +27,13 @@ public class GameplayEntryPoint : MonoBehaviour
         _statesMachine = statesMachine;
         InputManager.Instance.OnToggleInputLock += OnToggleInputLock_handler;
 
-        await _bankLoader.Init();
+        //await _bankLoader.Init();
         await UniTask.WhenAll(_gameplayMediator.Init(_canvasInputHandler.gameObject));
 
         onUpdateProgress.Invoke(1);
+        
+        _gameplayMediator.SetGameState(EGameplayState.NewGame);
+        await UniTask.CompletedTask;
     }
 
     public async UniTask Enter()

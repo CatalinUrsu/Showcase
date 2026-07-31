@@ -1,6 +1,7 @@
-﻿using R3;
-using Source.Data;
+﻿using Source.Data;
 using UnityEngine;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 
 namespace Source.Player
 {
@@ -15,13 +16,19 @@ public class PlayerAppearenceBase : MonoBehaviour
     [SerializeField] protected SpriteRenderer _imgWeaponR;
 
 #endregion
-    
+
     public virtual void Init()
     {
         SessionService.Current.Progress.UsedShipIdx.Subscribe(SetShipSprite).AddTo(gameObject);
         SessionService.Current.Progress.UsedWeaponIdx.Subscribe(SetWeaponSprite).AddTo(gameObject);
     }
     
+    public virtual void Deinit() {}
+
+    public virtual void ToggleAppearance(bool enable) { }
+
+    public virtual UniTask AnimateShield(CancellationToken token) => UniTask.CompletedTask;
+
     void SetShipSprite(int shpiIdx)
     {
         _imgShip.sprite = _shipsSkins[shpiIdx].ItemSprite;

@@ -9,7 +9,7 @@ namespace Source.Boot
 public class MenuInstaller : MonoInstaller
 {
     [SerializeField] BankLoader _bankLoader;
-    [SerializeField] PlayerFacadeMenu _playerFacade;
+    [SerializeField] PlayerFacade _playerFacade;
     [SerializeField] UIMenuFacade _uiMenuFacade;
     
     IMenuContext _menuContext;

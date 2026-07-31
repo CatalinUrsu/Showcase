@@ -12,23 +12,19 @@ using Source.Data;
 
 namespace Source.Player
 {
-public class PlayerFacadeGameplay : MonoBehaviour
+public class PlayerFacadeGameplay : PlayerFacade
 {
 #region Fields
 
-    [SerializeField] PlayerEmergence _playerEmergence;
     [SerializeField] PlayerMovement _playerMovement;
-    [SerializeField] PlayerAppearenceGameplay _playerAppearence;
     [SerializeField] PlayerWeapons _playerWeapons;
     [SerializeField] PlayerParallaxEffect _playerParallaxEffect;
 
     [Space] 
-    [SerializeField] Rigidbody2D _rb;
     [SerializeField] Collider2D _collider;
     [SerializeField] GameObject _deathEffect;
 
-    IGameplayMediator _gameplayMediator;
-    IAudioService _audioService;
+    [Inject] IGameplayMediator _gameplayMediator;
     CancellationTokenSource _shieldCTS;
 
 #endregion
@@ -45,52 +41,46 @@ public class PlayerFacadeGameplay : MonoBehaviour
         }
     }
 
-    [Inject]
-    public void Construct(IGameplayMediator gameplayMediator, IAudioService audioService)
-    {
-        _gameplayMediator = gameplayMediator;
-        _audioService = audioService;
-    }
-
     public void Init(GameObject playerInputHandler)
     {
+        base.Init();
         SessionService.Current.Progress.Lvl.Skip(1).Subscribe(_ => EnableShield().Forget()).AddTo(this);
 
         _shieldCTS = new CancellationTokenSource();
         _audioService.FlyInstance.start();
-        _playerAppearence.Init();
+        _playerAppearance.Init();
         _playerEmergence.Init(_rb);
         _playerMovement.Init(_rb, _audioService.FlyInstance, playerInputHandler);
         InitWeapons();
     }
 
-    public void Deinit()
+    public override void Deinit()
     {
+        base.Deinit();
         _playerWeapons.Deinit();
-        _playerAppearence.Deinit();
+        _playerAppearance.Deinit();
         _playerParallaxEffect.Deinit();
-        _audioService.FlyInstance.stop(STOP_MODE.IMMEDIATE);
 
         CancelShieldCTS();
     }
 
-    public void ToggleControl(bool enable)
-    {
-        _playerMovement.ControllIsEnable = enable;
-        _playerWeapons.ShootIsEnable = enable;
-    }
-
-    public async UniTaskVoid ShowPlayer()
+    public override async UniTask ShowPlayer()
     {
         _playerEmergence.Init(_rb);
         await UniTask.Yield();
 
-        _playerAppearence.ToggleAppearence(true);
+        _playerAppearance.ToggleAppearance(true);
         _playerMovement.SetOnSpawn();
         EnableShield().Forget();
         await _playerEmergence.ShowPlayer(_rb);
 
         _playerParallaxEffect.EnableParalax();
+    }
+
+    public override void ToggleControl(bool enable)
+    {
+        _playerMovement.ControllIsEnable = enable;
+        _playerWeapons.ShootIsEnable = enable;
     }
 
 #endregion
@@ -109,7 +99,7 @@ public class PlayerFacadeGameplay : MonoBehaviour
     {
         _collider.enabled = false;
         _playerParallaxEffect.DisableParallax();
-        _playerAppearence.ToggleAppearence(false);
+        _playerAppearance.ToggleAppearance(false);
         _playerMovement.SetOnDespawn();
         ToggleControl(false);
         PlayDeathEffects();
@@ -133,7 +123,7 @@ public class PlayerFacadeGameplay : MonoBehaviour
         try
         {
             _collider.enabled = false;
-            await _playerAppearence.AnimateShield(_shieldCTS.Token);
+            await _playerAppearance.AnimateShield(_shieldCTS.Token);
             _collider.enabled = true;
         }
         catch (OperationCanceledException)
