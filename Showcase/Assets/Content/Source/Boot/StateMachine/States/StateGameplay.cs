@@ -1,6 +1,7 @@
-using Cysharp.Threading.Tasks;
 using Helpers;
+using UnityEngine;
 using Helpers.Services;
+using Cysharp.Threading.Tasks;
 
 namespace Source.Boot
 {
@@ -33,7 +34,9 @@ public class StateGameplay : StateBase
 
     public override async UniTask Exit()
     {
-        await UnloadScene(ConstSceneNames.GAME_SCENE);
+        await ShowSplashScreen();
+        await DeInitSceneContext(ConstSceneNames.GAME_SCENE);
+        UnloadScene(ConstSceneNames.GAME_SCENE);
     }
 
 #endregion
@@ -55,20 +58,47 @@ public class StateGameplay : StateBase
     {
         _progressTrackingService.UpdateLoadingTip("Setup Gameplay Scene");
 
+        InputManager.Instance.OnToggleInputLock += OnToggleInputLock_handler;
         await UniTask.WhenAll(_gameplayContext.BankLoader.Init(),
                               _menuContext.UIMenuFacade.Init(UpdateProgress));
-        await UniTask.WhenAll(_gameplayMediator.Init(_canvasInputHandler.gameObject));
+        
+        _uiController.Init();
+        _gameplayContext.PlayerFacade.Init(canvasInputHandler);
+        _progressPresenter = new GameRunPresenter(_gameplayView, _gameRunModel);
+        InitGameplayStateMachine();
+        await _enemiesSpawner.Init();
 
         sceneLoadProgress.SetupProgress = 1;
     }
 
-    protected override async UniTask DeInitSceneContext()
+    protected override async UniTask DeInitSceneContext(string sceneName)
     {
-        _menuContext.UIMenuFacade.Deinit();
-        _menuContext.BankLoader.Deinit();
-        _menuContext.PlayerFacade.Deinit();
+        Time.timeScale = 1;
+        _gameplayContext.BankLoader.Deinit();
+        _gameplayContext.PlayerFacade.Deinit();
+        _gameplayContext.UIMenuFacade.Deinit();
+        
+        _uiController.Deinit();
+        _enemiesSpawner.Deinit();
+        _progressPresenter.Deinit();
+        _audioService.PauseSnapshot.stop(STOP_MODE.ALLOWFADEOUT);
+
+        SessionService.Current.Save(ESaveFileType.Progress);
+        InputManager.Instance.OnToggleInputLock -= OnToggleInputLock_handler;
 
         await UniTask.CompletedTask;
+    }
+    
+    void GoToMenu()
+    {
+        GoToMenu_Async().Forget();
+        return;
+
+        async UniTaskVoid GoToMenu_Async()
+        {
+            using (InputManager.Instance.LockInputSystem())
+                await StatesMachine.Enter<StateMenu>();
+        }
     }
 
 #endregion

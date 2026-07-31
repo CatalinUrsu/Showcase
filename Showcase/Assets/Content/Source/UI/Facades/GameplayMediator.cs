@@ -14,8 +14,6 @@ public class GameplayMediator : MonoBehaviour, IGameplayMediator
 {
 #region Fields
 
-    [SerializeField] GameplayEntryPoint _gameplayEntryPoint;
-
     [Space]
     [SerializeField] GamePanelGameplay _gameplayView;
     [SerializeField] GameUIController _uiController;
