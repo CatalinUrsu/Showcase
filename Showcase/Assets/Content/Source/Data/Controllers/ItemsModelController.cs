@@ -31,8 +31,9 @@ public class ItemsModelController: IItemsModelController
 
 #endregion
 
-#region Public methods (Weapons)
+#region Public methods
 
+    //----------Weapons methods----------
     public IWeaponModel GetWeaponModel(Guid key) => Model.WeaponsData[key];
     
     public int GetWeaponIdx(Guid key) => Array.IndexOf(_weaponsOrderedIds, key);
@@ -45,25 +46,28 @@ public class ItemsModelController: IItemsModelController
 
     public void UpdateWeapon(Guid key) => UpdateWeapon(Model.WeaponsData[key]);
 
-    public void ResetWeapon(Guid key) => ResetWeapon(Model.WeaponsData[key], _initWeaponsData[key]);
 
-#endregion
-
-#region Public Methods (Ship)
-
+    //----------Ships methods----------
     public IShipModel GetShipModel(Guid key) => Model.ShipsData[key];
     
     public int GetShipIdx(Guid key) => Array.IndexOf(_shipsOrderedIds, key);
 
-    public void BuyShip(Guid key) => BuyItem(Model.WeaponsData[key]);
+    public void BuyShip(Guid key) => BuyItem(Model.ShipsData[key]);
 
-    public void SelectShip(Guid key) => SelectItem(Model.WeaponsData[key]);
+    public void SelectShip(Guid key) => SelectItem(Model.ShipsData[key]);
 
-    public void DeselectShip(Guid key) => DeselectItem(Model.WeaponsData[key]);
+    public void DeselectShip(Guid key) => DeselectItem(Model.ShipsData[key]);
 
     public void UpdateShip(Guid key) => UpdateShip(Model.ShipsData[key]);
 
-    public void ResetShip(Guid key) => ResetShip(Model.ShipsData[key], _initShipsData[key]);
+    public void ResetItems()
+    {
+        foreach (var pair in _initWeaponsData) 
+            ResetWeapon(Model.WeaponsData[pair.Key], pair.Value);
+        
+        foreach (var pair in _initShipsData) 
+            ResetShip(Model.ShipsData[pair.Key], pair.Value);
+    }
 
 #endregion
 

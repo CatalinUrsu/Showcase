@@ -2,11 +2,10 @@ using R3;
 using System;
 using UnityEngine;
 using DG.Tweening;
-using FMOD.Studio;
+using Source.Data;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
-using Source.Data;
 
 namespace Source.UI
 {
@@ -25,14 +24,14 @@ public class TabPanelShop : MenuTabsPanel
 
 #region Public methods
 
-    public override async UniTask InitContent(Action onFinishInit, EventInstance elementShowSound, CancellationTokenSource cts)
+    public override async UniTask Init(CancellationToken cancelToken, object config = null)
     {
-        await base.InitContent(onFinishInit, elementShowSound, cts);
-        
+        await base.Init(cancelToken, config);
+
         InitItems();
         SetItemsShineEffect();
-        
-        await SetLayoutComponents(onFinishInit, cts);
+
+        await SetLayoutComponents(cancelToken);
     }
 
 #endregion
@@ -43,11 +42,12 @@ public class TabPanelShop : MenuTabsPanel
     {
         for (var i = 0; i < _itemAppearenceSO.Length; i++)
         {
-            var itemAppearence = _itemAppearenceSO[i];
-            var item = Instantiate(_item, _itemsContainer);
-            item.Init(itemAppearence, i);
-            _items.Add(item);
-            _elemntsAnimations.Add(item.GetComponent<MenuElementAnimation>());
+            var itemAppearance = _itemAppearenceSO[i];
+            var itemView = Instantiate(_item, _itemsContainer);
+
+            itemView.Init(itemAppearance);
+            _items.Add(itemView);
+            _elemntsAnimations.Add(itemView.GetComponent<MenuElementAnimation>());
         }
     }
 
@@ -57,7 +57,7 @@ public class TabPanelShop : MenuTabsPanel
                              .SetAutoKill(false)
                              .OnUpdate(() =>
                              {
-                                 foreach (var item in _items) 
+                                 foreach (var item in _items)
                                      item.UpdateShineEffect(_effectLocation);
                              })
                              .Pause();

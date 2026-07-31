@@ -8,7 +8,7 @@ public interface IUIMenuFacade
     event Action OnClickStartGame;
     
     UniTask Init(Action<float> onUpdateProgress);
-    void Deinit();
+    UniTask Deinit();
 
     void ClickStartGame_raise();
 }

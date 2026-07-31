@@ -1,5 +1,7 @@
+using System;
 using Helpers;
 using Zenject;
+using FMODUnity;
 using UnityEngine;
 using System.Linq;
 using Source.Data;
@@ -12,12 +14,15 @@ public class ProjectInstaller : MonoInstaller
 {
     [SerializeField] ItemInfoWeaponSO[] _weaponsSO;
     [SerializeField] ItemInfoShipSO[] _ShipsSO;
+    [SerializeField] FmodEventsSo _fmodEventsSO;
 
     public override void InstallBindings()
     {
         BindSessionModelsControllers();
+        BindSoData();
         BindServices();
         BindSceneContexts();
+        BindFactories();
     }
 
     void BindSessionModelsControllers()
@@ -46,6 +51,12 @@ public class ProjectInstaller : MonoInstaller
 
         // Bind SessionService
         Container.Bind<ISessionService>().FromInstance(sessionService).AsSingle();
+        
+    }
+
+    void BindSoData()
+    {
+        Container.Bind<FmodEventsSo>().FromInstance(_fmodEventsSO).AsSingle();
     }
 
     void BindServices()
@@ -53,7 +64,7 @@ public class ProjectInstaller : MonoInstaller
         IProgressTrackingService progressTrackingService = new ProgressTrackingService();
         ISceneLoaderService sceneLoaderService = new SceneLoaderService(progressTrackingService);
         
-        Container.Bind<IAudioService>().FromInstance(new AudioService()).AsSingle();
+        Container.Bind<IAudioService>().To<AudioService>().AsSingle();
         Container.Bind<ICameraService>().FromInstance(new CameraService()).AsSingle();
         Container.Bind<IProgressTrackingService>().FromInstance(progressTrackingService).AsSingle();
         Container.Bind<ISceneLoaderService>().FromInstance(sceneLoaderService).AsSingle();
@@ -64,6 +75,13 @@ public class ProjectInstaller : MonoInstaller
         Container.Bind<IMenuContext>().FromInstance(new MenuContext()).AsSingle();
         Container.Bind<ILoadingContext>().FromInstance(new LoadingContext()).AsSingle();
         Container.Bind<IGameplayContext>().FromInstance(new GameplayContext()).AsSingle();
+    }
+
+    void BindFactories()
+    {
+        Container.BindFactory<IShipView, Guid, ShipPresenter, ShipPresenter.Factory>().AsTransient();
+        Container.BindFactory<IWeaponView, Guid, WeaponPresenter, WeaponPresenter.Factory>().AsTransient();
+        Container.BindFactory<IResetProgressView, ResetProgressPresenter, ResetProgressPresenter.Factory>().AsTransient();
     }
 }
 }

@@ -10,7 +10,6 @@ public interface IItemsModelController
     void SelectWeapon(Guid key);
     void DeselectWeapon(Guid key);
     void UpdateWeapon(Guid key);
-    void ResetWeapon(Guid key);
 
     IShipModel GetShipModel(Guid key);
     int GetShipIdx(Guid key);
@@ -18,6 +17,7 @@ public interface IItemsModelController
     void SelectShip(Guid key);
     void DeselectShip(Guid key);
     void UpdateShip(Guid key);
-    void ResetShip(Guid key);
+
+    void ResetItems();
 }
 }

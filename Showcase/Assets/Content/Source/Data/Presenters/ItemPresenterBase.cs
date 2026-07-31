@@ -24,11 +24,11 @@ public abstract class ItemPresenterBase : IPresenterItemBase
 
 #region Public methods
 
-    protected ItemPresenterBase(ISessionService sessionService,
+    protected ItemPresenterBase(Guid key,
+                                ISessionService sessionService,
                                 IItemsModelController itemsModelController,
                                 IProgressModelController progressModelController,
-                                FmodEventsSo fmodEventsSo,
-                                Guid key)
+                                FmodEventsSo fmodEventsSo)
     {
         _key = key;
         _fmodEventsSo = fmodEventsSo;

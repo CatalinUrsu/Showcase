@@ -38,8 +38,8 @@ public class ProgressModelController : IProgressModelController
     public void ResetProgress()
     {
         Model.Lvl.Value = 1;
-        Model.Coins.Value = new IdleNumber();
-        Model.Diamonds.Value = new IdleNumber();
+        Model.Coins.Value = 0;
+        Model.Diamonds.Value = 0;
         Model.UsedShipIdx.Value = 0;
         Model.UsedWeaponIdx.Value = 0;
     }

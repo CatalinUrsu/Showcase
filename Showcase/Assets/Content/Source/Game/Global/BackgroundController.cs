@@ -9,6 +9,8 @@ namespace Source
 {
 public class BackgroundController : MonoBehaviour
 {
+#region Fields
+
     [SerializeField] Sprite[] _bgSprites;
     [SerializeField] Material _bgMaterial;
 
@@ -23,6 +25,8 @@ public class BackgroundController : MonoBehaviour
     int _secondTexIndex;
     Tween _bgChangeTween;
     TimeSpan _bgChangeInterval = TimeSpan.FromSeconds(50);
+
+#endregion
 
     void Awake()
     {

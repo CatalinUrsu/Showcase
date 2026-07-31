@@ -1,6 +1,9 @@
 using Helpers;
+using Zenject;
 using Helpers.UI;
 using DG.Tweening;
+using Helpers.Audio;
+using Source.Data;
 using UnityEngine;
 
 namespace Source.UI
@@ -8,11 +11,13 @@ namespace Source.UI
 public class ButtonBase : ButtonHelper
 {
     Tween _clickTween;
+    [Inject] FmodEventsSo _fmodEvents;
     
     public override void Init()
     {
         base.Init();
 
+        Btn.onClick.AddListener(PlayClickSound);
         OnPointerDown += OnPointerDown_handler;
         OnPointerUp += OnPointerUp_handler;
     }
@@ -28,5 +33,7 @@ public class ButtonBase : ButtonHelper
                         .SetRelative()
                         .SetUpdate(true);
     }
+
+    void PlayClickSound() => _fmodEvents.BtnClick.PlayOneShot();
 }
 }

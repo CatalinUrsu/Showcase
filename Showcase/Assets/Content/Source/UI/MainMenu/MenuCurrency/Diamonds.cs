@@ -15,8 +15,8 @@ public class Diamonds : Currency
 
     void Awake()
     {
-        _currentDiamondsCount = Session.SessionService.Current.Progress.Diamonds.Value;
-        Session.SessionService.Current.Progress.Diamonds.Subscribe(UpdateDiamonsCount).AddTo(gameObject);
+        _currentDiamondsCount = _progressModel.DiamondsRef.CurrentValue;
+        _progressModel.DiamondsRef.Subscribe(UpdateDiamonsCount).AddTo(gameObject);
     }
 
     void OnDestroy() => _sequence.CheckAndEnd();
@@ -32,9 +32,9 @@ public class Diamonds : Currency
         }
     }
 
-    void PlayDiamondsIncreaseAnimation(IdleNumber diamonsCount)
+    void PlayDiamondsIncreaseAnimation(IdleNumber diamondsCount)
     {
-        var diamondsPerIteration = (diamonsCount.Value - _currentDiamondsCount.Value) / _increasingIterations;
+        var diamondsPerIteration = (diamondsCount.Value - _currentDiamondsCount.Value) / _increasingIterations;
         _sequence = DOTween.Sequence().Pause();
 
         for (int i = 0; i < _increasingIterations; i++)
@@ -44,7 +44,7 @@ public class Diamonds : Currency
                                                                     .From(Vector3.one)
                                                                     .OnStart(() =>
                                                                     {
-                                                                        _currentDiamondsCount = index == _increasingIterations - 1 ? diamonsCount : _currentDiamondsCount + diamondsPerIteration;
+                                                                        _currentDiamondsCount = index == _increasingIterations - 1 ? diamondsCount : _currentDiamondsCount + diamondsPerIteration;
                                                                         UpdateCurrencyText(_currentDiamondsCount);
                                                                     }));
         }

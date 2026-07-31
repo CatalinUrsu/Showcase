@@ -1,3 +1,4 @@
+using Zenject;
 using IdleNumbers;
 using Source.Data;
 using UnityEngine;
@@ -12,7 +13,9 @@ public class ShipView : ItemView, IShipView
 
     [SerializeField] LocalizeStringEvent _localizeStringEvent;
     [SerializeField] Color _bonusColor;
-
+    
+    [Inject] ShipPresenter.Factory _shipPresenterFactory;
+    
 #endregion
 
 #region Public methods
@@ -31,7 +34,7 @@ public class ShipView : ItemView, IShipView
         (_localizeStringEvent.StringReference["1"] as StringVariable)!.Value = ColorUtility.ToHtmlStringRGBA(_bonusColor);
     }
 
-    protected override void SetItemInfo() => _presenterItem = new ShipPresenter(this, _sessionService, _fmodEvents, _id);
+    protected override void InitPresenter() => _presenterItem = _shipPresenterFactory.Create(this, _id);
     protected override void OnBuyClick_handler() => _presenterItem.BuyOrUpgradeItem();
     protected override void OnSelect_handler() => _presenterItem.SelectItem();
 

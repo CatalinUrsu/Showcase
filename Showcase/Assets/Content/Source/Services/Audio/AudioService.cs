@@ -1,5 +1,4 @@
-﻿using Zenject;
-using FMODUnity;
+﻿using FMODUnity;
 using Source.Data;
 using FMOD.Studio;
 using Helpers.Audio;
@@ -22,9 +21,10 @@ public class AudioService : IAudioService
 
 #region Public methods
 
-    public void Init(DiContainer projectContainer)
+    public AudioService(FmodEventsSo fmodEventsSO) => _fmodEvents = fmodEventsSO;
+
+    public void Init()
     {
-        _fmodEvents = projectContainer.Resolve<FmodEventsSo>();
         PauseSnapshot = ConstFMOD.SNAPSHOT_PAUSE.GetInstance();
         
         InitEventInstances();

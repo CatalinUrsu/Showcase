@@ -1,4 +1,5 @@
 ﻿using TMPro;
+using Zenject;
 using UnityEngine;
 using Source.Data;
 using IdleNumbers;
@@ -13,6 +14,8 @@ public class WeaponView : ItemView, IWeaponView
     [SerializeField] TextMeshProUGUI _txtFirePower;
     [SerializeField] TextMeshProUGUI _txtFireRate;
 
+    [Inject] WeaponPresenter.Factory _weaponPresenterFactory;
+    
 #endregion
 
 #region Public methods
@@ -33,7 +36,7 @@ public class WeaponView : ItemView, IWeaponView
         _txtFireRate.SetText($"{fireRate:F2} {ConstSpriteAssets.SPRITE_TEXT_FIRE_RATE}");
     }
 
-    protected override void SetItemInfo() => _presenterItem = new WeaponPresenter(this, _sessionService, _itemsModelController, _progressModelController, _fmodEvents, _id);
+    protected override void InitPresenter() => _presenterItem = _weaponPresenterFactory.Create(this, _id);
     protected override void OnBuyClick_handler() => _presenterItem.BuyOrUpgradeItem();
     protected override void OnSelect_handler() => _presenterItem.SelectItem();
 

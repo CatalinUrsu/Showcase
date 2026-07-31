@@ -1,6 +1,6 @@
 namespace Source
 {
-public interface IViewResetProgress
+public interface IResetProgressView
 {
     void OnChangeLvl_handler(bool reachedMinBonusLvl, int progressResetBonus);
 }

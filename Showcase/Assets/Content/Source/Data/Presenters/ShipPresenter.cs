@@ -1,10 +1,17 @@
 using R3;
 using System;
+using Zenject;
 
 namespace Source.Data
 {
 public class ShipPresenter : ItemPresenterBase
 {
+#region External Types
+
+    public class Factory : PlaceholderFactory<IShipView, Guid, ShipPresenter> { }
+
+#endregion
+    
 #region Fields
 
     readonly IShipView _view;
@@ -15,12 +22,12 @@ public class ShipPresenter : ItemPresenterBase
 #region Public methods
 
     public ShipPresenter(IShipView view,
+                         Guid key,
                          ISessionService sessionService,
                          IItemsModelController itemsModelController,
                          IProgressModelController progressModelController,
-                         FmodEventsSo fmodEventsSo,
-                         Guid key) :
-        base(sessionService, itemsModelController, progressModelController, fmodEventsSo, key)
+                         FmodEventsSo fmodEventsSo) :
+        base(key, sessionService, itemsModelController, progressModelController, fmodEventsSo)
     {
         _view = view;
         _shipModel = _itemsController.GetShipModel(key);

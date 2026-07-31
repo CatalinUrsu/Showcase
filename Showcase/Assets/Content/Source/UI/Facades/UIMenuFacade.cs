@@ -23,9 +23,10 @@ public class UIMenuFacade : MonoBehaviour, IUIMenuFacade
         await _tabsGroup.Init(onUpdateProgress);
     }
 
-    public void Deinit()
+    public async UniTask Deinit()
     {
         _menuStartButton.Deinit();
+        await _tabsGroup.Deinit();
     }
 
     public void ClickStartGame_raise() => OnClickStartGame?.Invoke();

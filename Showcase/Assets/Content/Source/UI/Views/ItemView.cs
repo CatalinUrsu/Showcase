@@ -34,9 +34,6 @@ public class ItemView : MonoBehaviour, IItemView
     bool _solvency;
     protected Guid _id;
     protected IPresenterItemBase _presenterItem;
-    protected IItemsModelController _itemsModelController;
-    protected IProgressModelController _progressModelController;
-    protected ISessionService _sessionService;
     protected FmodEventsSo _fmodEvents;
 
 #endregion
@@ -44,27 +41,20 @@ public class ItemView : MonoBehaviour, IItemView
 #region Public methods
 
     [Inject]
-    public void Construct(ISessionService sessionService,
-                          IItemsModelController itemsModelController,
-                          IProgressModelController progressModelController,
-                          FmodEventsSo fmodEvents)
-    {
-        _sessionService = sessionService;
-        _itemsModelController = itemsModelController;
-        _progressModelController = progressModelController;
-        _fmodEvents = fmodEvents;
-    }
+    public void Construct(FmodEventsSo fmodEvents) => _fmodEvents = fmodEvents;
+
+    void OnDestroy() => _presenterItem?.Dispose();
 
     public virtual void Init(ItemLookSO itemAppearance)
     {
         _id = itemAppearance.IdSo.GUID;
-        _itemButton.Init(_fmodEvents.BtnClick);
-        _itemButton.AddListener(OnSelect_handler);
+        _itemButton.Init();
+        _itemButton.Btn.onClick.AddListener(OnSelect_handler);
 
         _buyBtn.onClick.AddListener(OnBuyClick_handler);
         _imgItem.sprite = itemAppearance.ItemSprite;
 
-        SetItemInfo();
+        InitPresenter();
     }
 
     public void UpdateShineEffect(float effectLocation)
@@ -104,7 +94,7 @@ public class ItemView : MonoBehaviour, IItemView
 
 #region Private methods
 
-    protected virtual void SetItemInfo() { }
+    protected virtual void InitPresenter() { }
     protected virtual void OnBuyClick_handler() { }
     protected virtual void OnSelect_handler() { }
 

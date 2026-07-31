@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using FMOD.Studio;
+﻿using UnityEngine;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 
@@ -11,9 +9,9 @@ public class TabPanelShopShips : TabPanelShop
     [Space]
     [SerializeField] ResetProgressView _resetButton;
 
-    public override async UniTask InitContent(Action onFinishInit, EventInstance elementShowSound, CancellationTokenSource cts)
+    public override async UniTask Init(CancellationToken cancelToken, object config = null)
     {
-        await base.InitContent(onFinishInit, elementShowSound, cts);
+        await base.Init(cancelToken, config);
 
         _resetButton.Init();
         _elemntsAnimations.Insert(0, _resetButton.GetComponent<MenuElementAnimation>());

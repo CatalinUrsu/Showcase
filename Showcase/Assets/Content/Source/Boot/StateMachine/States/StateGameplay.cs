@@ -6,10 +6,19 @@ namespace Source.Boot
 {
 public class StateGameplay : StateBase
 {
+    IGameplayContext _gameplayContext;
+    
 #region Public methods
 
-    public StateGameplay(ISceneLoaderService sceneLoaderService, ISplashScreen splashScreen, IProgressTrackingService progressTrackingService, IAudioService audioService)
-        : base(sceneLoaderService, splashScreen, progressTrackingService, audioService) { }
+    public StateGameplay(ISceneLoaderService sceneLoaderService,
+                         IProgressTrackingService progressTrackingService,
+                         ISplashScreen splashScreen,
+                         IAudioService audioService,
+                         IGameplayContext gameplayContext)
+        : base(sceneLoaderService, progressTrackingService, splashScreen, audioService)
+    {
+        _gameplayContext = gameplayContext;
+    }
 
     public override async UniTask Enter()
     {

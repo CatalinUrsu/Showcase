@@ -1,7 +1,6 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using UnityEngine;
 using Helpers.Services;
-using UnityEngine;
-using Zenject;
+using Cysharp.Threading.Tasks;
 
 namespace Source.Boot
 {
@@ -15,7 +14,6 @@ public class StateInit : IStateEnter
     readonly ISplashScreen _splashScreen;
     readonly IAudioService _audioService;
     readonly ISettingsModel _settingsModel;
-    readonly DiContainer _projectContainer;
 
 #endregion
 
@@ -24,14 +22,12 @@ public class StateInit : IStateEnter
     public StateInit(ISceneLoaderService sceneLoaderService,
                      ISplashScreen splashScreen,
                      IAudioService audioService,
-                     ISettingsModelController settingsModelController,
-                     DiContainer projectContainer)
+                     ISettingsModelController settingsModelController)
     {
         _sceneLoaderService = sceneLoaderService;
         _splashScreen = splashScreen;
         _audioService = audioService;
         _settingsModel = settingsModelController.IModel;
-        _projectContainer = projectContainer;
     }
 
     public async UniTask Enter()
@@ -49,7 +45,7 @@ public class StateInit : IStateEnter
 
     void InitAudioService()
     {
-        _audioService.Init(_projectContainer);
+        _audioService.Init();
         _audioService.SetSoundVolume(_settingsModel.SoundVolumeRef.CurrentValue);
         _audioService.SetMusicVolume(_settingsModel.MusicVolumeRef.CurrentValue);
     }

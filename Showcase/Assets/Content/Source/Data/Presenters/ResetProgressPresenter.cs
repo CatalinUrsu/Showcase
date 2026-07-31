@@ -1,42 +1,75 @@
+using R3;
+using System;
+using Zenject;
+using FMODUnity;
 using UnityEngine;
+using Helpers.Audio;
 
-namespace Source.Data.MVP.Presenters
+namespace Source.Data
 {
-public class ResetProgressPresenter
+public class ResetProgressPresenter : IDisposable
 {
-    IViewResetProgress _resetProgressView;
+#region External Types
 
-    public ResetProgressPresenter(GameObject resetProgressGO, IViewResetProgress resetProgressView)
+    public class Factory : PlaceholderFactory<IResetProgressView, ResetProgressPresenter> { }
+
+#endregion
+    
+#region Fields
+
+    readonly IResetProgressView _resetProgressView;
+    readonly IProgressModelController _progressModelController;
+    readonly IItemsModelController _itemsModelController;
+    readonly ISessionService _sessionService;
+    readonly EventReference _fmodEvent;
+    readonly CompositeDisposable _disposables = new();
+
+    int LvlBonus => Mathf.RoundToInt(_progressModelController.IModel.LvlRef.CurrentValue * ConstUpgradeItems.RESET_PROGRESS_MULTIPLIER);
+    bool ReachedMinBonusLvl => _progressModelController.IModel.LvlRef.CurrentValue >= ConstUpgradeItems.RESET_PROGRESS_MIN_LVL;
+
+#endregion
+
+#region Public methods
+
+    public ResetProgressPresenter(IResetProgressView resetProgressView,
+                                  IProgressModelController progressModelController,
+                                  IItemsModelController itemsModelController,
+                                  ISessionService sessionService,
+                                  FmodEventsSo fmodEventsSo)
     {
         _resetProgressView = resetProgressView;
+        _progressModelController = progressModelController;
+        _itemsModelController = itemsModelController;
+        _sessionService = sessionService;
+        _fmodEvent = fmodEventsSo.ResetProgress;
 
-        SessionService.Current.Progress.Lvl.Subscribe(OnChangeLvl_handler).AddTo(resetProgressGO);
+        _progressModelController.IModel.LvlRef.Subscribe(OnChangeLvl_handler).AddTo(_disposables);
     }
 
-    public void OnClick_handler()
+    public void Dispose() => _disposables.Dispose();
+
+    public void TryResetProgress()
     {
         if (!ReachedMinBonusLvl) return;
 
-        var itemModelWeapons = SessionService.Current.Items.Weapons;
-
-        FmodEventsSo.Instance.ResetProgress.PlayOneShot();
-        SessionService.Current.Progress.Coins.Value *= 0;
-        SessionService.Current.Progress.Diamonds.Value += LvlBonus;
-        SessionService.Current.Progress.UsedWeaponIdx.Value = 0;
-        foreach (var weaponModel in itemModelWeapons) 
-            weaponModel.Value.ResetModel();
-        
-        SessionService.Current.Progress.Lvl.Value = 1;
-        SessionService.Current.Save(ESaveFileType.Items);
-        SessionService.Current.Save(ESaveFileType.Progress);
+        _fmodEvent.PlayOneShot();
+        _progressModelController.ResetProgress();
+        _itemsModelController.ResetItems();
+        SaveProgress();
     }
 
-    void OnChangeLvl_handler(int lvl)
+#endregion
+
+#region Private methods
+
+    void OnChangeLvl_handler(int lvl) => _resetProgressView.OnChangeLvl_handler(ReachedMinBonusLvl, LvlBonus);
+
+    void SaveProgress()
     {
-        _resetProgressView.OnChangeLvl_handler(ReachedMinBonusLvl, LvlBonus);
+        _sessionService.Save(ESaveFileType.Items);
+        _sessionService.Save(ESaveFileType.Progress);
     }
 
-    int LvlBonus => Mathf.RoundToInt(SessionService.Current.Progress.Lvl.Value * ConstUpgradeItems.RESET_PROGRESS_MULTIPLIER);
-    bool ReachedMinBonusLvl => SessionService.Current.Progress.Lvl.Value >= ConstUpgradeItems.RESET_PROGRESS_MIN_LVL;
+#endregion
 }
 }

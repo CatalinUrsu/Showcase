@@ -1,13 +1,17 @@
-using DG.Tweening;
 using R3;
-using Source.Data.MVP.Presenters;
+using Helpers;
+using DG.Tweening;
+using Source.Data;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Localization.Components;
+using UnityEngine.Localization.SmartFormat.PersistentVariables;
+using Zenject;
 
 namespace Source.UI
 {
 [RequireComponent(typeof(MenuElementAnimation))]
-public class ResetProgressView : MonoBehaviour, IViewResetProgress
+public class ResetProgressView : MonoBehaviour, IResetProgressView
 {
 #region Fields
 
@@ -30,6 +34,8 @@ public class ResetProgressView : MonoBehaviour, IViewResetProgress
     Vector2 _rawImgSpeed;
     Tween _speedChangeTween;
     ResetProgressPresenter _resetProgressPresenter;
+    
+    [Inject] ResetProgressPresenter.Factory _presenterFactory;
 
 #endregion
 
@@ -40,9 +46,9 @@ public class ResetProgressView : MonoBehaviour, IViewResetProgress
     public void Init()
     {
         _itemButton.Init();
-        _itemButton.onClick.AddListener(OnSelect_handler);
+        _itemButton.Btn.onClick.AddListener(OnSelect_handler);
         
-        _resetProgressPresenter = new ResetProgressPresenter(gameObject,this);
+        _resetProgressPresenter = _presenterFactory.Create(this);
         _rawImgSpeed = _inactiveMoveSpeed;
         
         SetRawImageMovement();
@@ -60,7 +66,7 @@ public class ResetProgressView : MonoBehaviour, IViewResetProgress
 
 #region Private methods
 
-    void OnSelect_handler() => _resetProgressPresenter.OnClick_handler();
+    void OnSelect_handler() => _resetProgressPresenter.TryResetProgress();
 
     void SetRawImageSpeed(bool reachedMinBonusLvl)
     {

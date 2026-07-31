@@ -1,10 +1,17 @@
 ﻿using R3;
 using System;
+using Zenject;
 
 namespace Source.Data
 {
 public class WeaponPresenter : ItemPresenterBase
 {
+#region External Types
+
+    public class Factory : PlaceholderFactory<IWeaponView, Guid, WeaponPresenter> { }
+
+#endregion
+    
 #region Fields
 
     readonly IWeaponView _view;
@@ -15,12 +22,12 @@ public class WeaponPresenter : ItemPresenterBase
 #region Public methods
 
     public WeaponPresenter(IWeaponView view,
+                           Guid key,
                            ISessionService sessionService,
                            IItemsModelController itemsModelController,
                            IProgressModelController progressModelController,
-                           FmodEventsSo fmodEventsSo,
-                           Guid key) :
-        base(sessionService, itemsModelController, progressModelController, fmodEventsSo, key)
+                           FmodEventsSo fmodEventsSo) :
+        base(key, sessionService, itemsModelController, progressModelController, fmodEventsSo)
     {
         _view = view;
         _weaponModel = _itemsController.GetWeaponModel(key);
