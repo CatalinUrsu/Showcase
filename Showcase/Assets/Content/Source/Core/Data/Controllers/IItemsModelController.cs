@@ -12,6 +12,7 @@ public interface IItemsModelController
     void UpdateWeapon(Guid key);
 
     IShipModel GetShipModel(Guid key);
+    IShipModel GetShipModel(int idx);
     int GetShipIdx(Guid key);
     void BuyShip(Guid key);
     void SelectShip(Guid key);

@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 
 namespace Source
 {
-public interface IUIMenuFacade
+public interface IMenuUIFacade
 {
     event Action OnClickStartGame;
     

@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 
 namespace Source.UI
 {
-public class UIMenuFacade : MonoBehaviour, IUIMenuFacade
+public class MenuUIFacade : MonoBehaviour, IMenuUIFacade
 {
 #region Fields
     

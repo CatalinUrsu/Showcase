@@ -12,19 +12,34 @@ public class GameplayInstaller : MonoInstaller
 {
     [SerializeField] BankLoader _bankLoader;
     [SerializeField] PlayerFacade _playerFacade;
+    [SerializeField] GameUIFacade uiFacade;
+    [SerializeField] EnemiesController _enemiesController;
+
     [SerializeField] GamePanelGameplay _gameplayView;
-    [SerializeField] GameUIController _uiController;
-    [SerializeField] EnemiesSpawner _enemiesSpawner;
+
+    IGameplayContext _gameplayContext;
 
     public override void InstallBindings()
     {
-        var gameplayContext = Container.Resolve<IGameplayContext>();
-        
-        gameplayContext.RegisterBankLoader(_bankLoader);
-        gameplayContext.RegisterPlayerFacade(_playerFacade);
-        
-        Container.Bind<GameRunModel>().FromInstance(new GameRunModel()).AsSingle();
-        Container.Bind<IGameplayMediator>().FromInstance(_gameplayMediator).AsSingle();
+        var gameRunModelController = GetGameRunModelController();
+
+        _gameplayContext.RegisterBankLoader(_bankLoader);
+        _gameplayContext.RegisterPlayerFacade(_playerFacade);
+        _gameplayContext.RegisterUIController(uiFacade);
+        _gameplayContext.RegisterEnemiesController(_enemiesController);
+        _gameplayContext.RegisterGameRunModelController(gameRunModelController);
+    }
+
+    void OnDestroy() => _gameplayContext.Clear();
+
+    GameRunModelController GetGameRunModelController()
+    {
+        var progressModelController = Container.Resolve<IProgressModelController>();
+        var usedShipIdx = progressModelController.IModel.UsedShipIdxRef.CurrentValue;
+        var shipModel = Container.Resolve<IItemsModelController>()
+                                 .GetShipModel(usedShipIdx);
+        var sessionService = Container.Resolve<ISessionService>();
+        return new GameRunModelController(shipModel, sessionService, progressModelController);
     }
 }
 }

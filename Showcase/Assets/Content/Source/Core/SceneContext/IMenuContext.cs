@@ -6,10 +6,10 @@ public interface IMenuContext: ISceneContext
 {
     IBankLoader BankLoader { get; }
     IPlayerFacade PlayerFacade { get; }
-    IUIMenuFacade UIMenuFacade { get; }
+    IMenuUIFacade UIFacade { get; }
     
     void RegisterBankLoader(IBankLoader bankLoader);
     void RegisterPlayerFacade(IPlayerFacade playerFacade);
-    void RegisterUIMenuFacade(IUIMenuFacade uiMenuFacade);
+    void RegisterUIMenuFacade(IMenuUIFacade menuUIFacade);
 }
 }

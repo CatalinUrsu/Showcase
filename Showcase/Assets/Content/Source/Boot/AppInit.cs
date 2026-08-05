@@ -51,7 +51,7 @@ public class AppInit : MonoBehaviour
 
         await LoadFMODBanks();
 
-        _stateMachine.Enter<StateInit>().GetAwaiter();
+        _stateMachine.Enter<InitState>().GetAwaiter();
     }
 
 #endregion
@@ -69,9 +69,9 @@ public class AppInit : MonoBehaviour
     {
         var states = new IState[]
         {
-            _container.Instantiate<StateInit>(),
-            _container.Instantiate<StateMenu>(),
-            _container.Instantiate<StateGameplay>()
+            _container.Instantiate<InitState>(),
+            _container.Instantiate<MenuState>(),
+            _container.Instantiate<GameplayState>()
         };
             
         _stateMachine = new StatesMachine(states);

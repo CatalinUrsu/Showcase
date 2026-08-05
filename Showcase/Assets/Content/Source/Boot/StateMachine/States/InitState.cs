@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 
 namespace Source.Boot
 {
-public class StateInit : IStateEnter
+public class InitState : IStateEnter
 {
 #region Fields
 
@@ -19,7 +19,7 @@ public class StateInit : IStateEnter
 
 #region Public methods
 
-    public StateInit(ISceneLoaderService sceneLoaderService,
+    public InitState(ISceneLoaderService sceneLoaderService,
                      ISplashScreen splashScreen,
                      IAudioService audioService,
                      ISettingsModelController settingsModelController)
@@ -34,7 +34,7 @@ public class StateInit : IStateEnter
     {
         InitAudioService();
         await LoadAndShowSplashScreen();
-        await StatesMachine.Enter<StateMenu>();
+        await StatesMachine.Enter<MenuState>();
     }
 
     public async UniTask Exit() => await UnloadInitScene();

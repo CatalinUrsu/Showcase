@@ -1,6 +1,5 @@
 ﻿using Zenject;
 using UnityEngine;
-using Source.Gameplay;
 using Cysharp.Threading.Tasks;
 
 namespace Source.UI.Gameplay

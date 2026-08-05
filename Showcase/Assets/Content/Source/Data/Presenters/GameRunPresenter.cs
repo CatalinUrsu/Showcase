@@ -44,12 +44,12 @@ public class GameRunPresenter : IDisposable
 
     void OnReachNewLvl_handler(int lvl)
     {
-        _viewGameplay.PlayNewLvlAnimation(lvl, FinishNewLvlAnimation);
+        // _viewGameplay.PlayNewLvlAnimation(lvl, FinishNewLvlAnimation);
     }
     
     void FinishNewLvlAnimation()
     {
-        OnProgressChange_handler(_gameRunModelController.Progress.Value);
+        // OnProgressChange_handler(_gameRunModelController.Progress.Value);
     }
 
 #endregion

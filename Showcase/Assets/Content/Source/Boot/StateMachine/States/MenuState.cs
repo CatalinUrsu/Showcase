@@ -4,13 +4,13 @@ using Cysharp.Threading.Tasks;
 
 namespace Source.Boot
 {
-public class StateMenu : StateBase
+public class MenuState : StateBase
 {
     readonly IMenuContext _menuContext;
 
 #region Public methods
 
-    public StateMenu(ISceneLoaderService sceneLoaderService,
+    public MenuState(ISceneLoaderService sceneLoaderService,
                      IProgressTrackingService progressTrackingService,
                      ISplashScreen splashScreen,
                      IAudioService audioService,
@@ -23,7 +23,7 @@ public class StateMenu : StateBase
     public override async UniTask Enter()
     {
         SetMusicState(EMusicStates.Idle);
-        _menuContext.UIMenuFacade.OnClickStartGame += GoToGameplay;
+        _menuContext.UIFacade.OnClickStartGame += GoToGameplay;
 
         await LoadMenuScene();
         await HideSplashScreen();
@@ -33,8 +33,8 @@ public class StateMenu : StateBase
 
     public override async UniTask Exit()
     {
-        if (_menuContext.UIMenuFacade != null)
-            _menuContext.UIMenuFacade.OnClickStartGame -= GoToGameplay;
+        if (_menuContext.UIFacade != null)
+            _menuContext.UIFacade.OnClickStartGame -= GoToGameplay;
 
         await ShowSplashScreen();
         await DeInitSceneContext(ConstSceneNames.MENU_SCENE);
@@ -60,7 +60,7 @@ public class StateMenu : StateBase
         _progressTrackingService.UpdateLoadingTip("Setup Menu Scene");
 
         await UniTask.WhenAll(_menuContext.BankLoader.Init(),
-                              _menuContext.UIMenuFacade.Init(UpdateProgress));
+                              _menuContext.UIFacade.Init(UpdateProgress));
         return;
 
         void UpdateProgress(float progress)
@@ -76,7 +76,7 @@ public class StateMenu : StateBase
 
         _menuContext.BankLoader.Deinit();
         _menuContext.PlayerFacade.Deinit();
-        await _menuContext.UIMenuFacade.Deinit();
+        await _menuContext.UIFacade.Deinit();
     }
 
     void GoToGameplay()
@@ -87,7 +87,7 @@ public class StateMenu : StateBase
         async UniTaskVoid GoToGameplay_Async()
         {
             using (InputManager.Instance.LockInputSystem())
-                await StatesMachine.Enter<StateGameplay>();
+                await StatesMachine.Enter<GameplayState>();
         }
     }
 

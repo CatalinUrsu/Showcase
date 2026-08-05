@@ -1,33 +1,63 @@
 ﻿using R3;
+using System;
 using IdleNumbers;
 
 namespace Source.Data
 {
 public class GameRunModelController : IGameRunModelController
 {
+#region Fields
+
     public IGameRunModel IModel => _model;
+    public event Action OnClickPause;
+    public event Action OnClickGoHome;
+    public event Action OnClickReturnToGame;
+    public event Action OnPlayerLoose;
 
-    readonly GameRunModel _model;
-    readonly IProgressModelController _progressModelController;
-    readonly float _shipCoinBonus;
-    readonly CompositeDisposable _disposables = new();
-    
     float _lvlCoinBonus;
+    
+    readonly float _shipCoinBonus;
+    readonly ISessionService _sessionService;
+    readonly IProgressModelController _progressModelController;
+    readonly GameRunModel _model;
+    readonly CompositeDisposable _disposables = new();
 
-    public GameRunModelController(IProgressModelController progressModelController, IShipModel shipModel)
+#endregion
+
+#region Public methods
+
+    public GameRunModelController(IShipModel shipModel, 
+                                  ISessionService sessionService,
+                                  IProgressModelController progressModelController)
     {
         _model = new GameRunModel();
-        _progressModelController = progressModelController;
+        
         _shipCoinBonus = shipModel.EnemyCoinBonusRef.CurrentValue / 100 + 1;
+        _sessionService = sessionService;
+        _progressModelController = progressModelController;
 
-        _progressModelController.IModel.LvlRef.Subscribe(SetLvlCoinBonus).AddTo(_disposables);
-        _progressModelController.IModel.LvlRef.Skip(1).Subscribe(OnReachNewLvl_handler).AddTo(_disposables);
+        SetLvlCoinBonus(progressModelController.IModel.LvlRef.CurrentValue);
+        
         _model.ProgressRef.Skip(1).Subscribe(OnProgressChange_handler).AddTo(_disposables);
+        progressModelController.IModel.LvlRef.Skip(1).Subscribe(OnReachNewLvl_handler).AddTo(_disposables);
     }
 
-    public void AddKillReward(float rewardPoints, IdleNumber coins)
+    public void StartRun()
     {
-        if (!_model.PlayerIsAlive) return;
+        _model.Progress.Value = 0;
+        _model.CollectedCoins.Value = 0;
+        _model.PlayerIsKilled.Value = false;
+    }
+
+    public void KillPlayer(bool alive)
+    {
+        _model.PlayerIsKilled.Value = true;
+        OnPlayerLoose?.Invoke();
+    }
+
+    public void AddCoinsReward(float rewardPoints, IdleNumber coins)
+    {
+        if (_model.PlayerIsKilledRef.CurrentValue) return;
 
         var rewardCoins = (_lvlCoinBonus * coins + coins) * _shipCoinBonus;
 
@@ -36,29 +66,42 @@ public class GameRunModelController : IGameRunModelController
         _model.Progress.Value += rewardPoints;
     }
 
-    public void StartRun()
+    public void OnClickPause_raise()
     {
-        _model.PlayerIsAlive = true;
-        _model.Progress.Value = 0;
-        _model.CollectedCoins.Value = 0;
+        if (CanOpenPauseMenu())
+            OnClickPause?.Invoke();
     }
+
+    public void OnClickGoHome_raise() => OnClickGoHome?.Invoke();
+    public void OnClickReturnToGame_raise() => OnClickReturnToGame?.Invoke();
     
-    public void KillPlayer(bool alive) => _model.PlayerIsAlive = false;
+    public void StartNewLvlAnim() => _model.IsPlayingNewLvlAnim.Value = true;
+    public void FinishNewLvlAnim() => _model.IsPlayingNewLvlAnim.Value = false;
 
     public void Dispose() => _disposables.Dispose();
 
-    void SetLvlCoinBonus(int lvl) => _lvlCoinBonus = lvl * ConstGameplay.COINS_LVL_BONUS_MULTIPLIER;
+#endregion
+
+#region Private methods
 
     void OnReachNewLvl_handler(int lvl)
     {
+        SetLvlCoinBonus(lvl);
         _model.Progress.Value = 0;
-        SessionService.Current.Save(ESaveFileType.Progress);
+        _sessionService.Save(ESaveFileType.Progress);
     }
-    
+
     void OnProgressChange_handler(float progress)
     {
         if (progress >= ConstGameplay.PROGRESS_TARGET)
             _progressModelController.AddLevel();
     }
+
+
+    bool CanOpenPauseMenu() => !_model.PlayerIsKilledRef.CurrentValue && !_model.IsPlayingNewLvlAnimRef.CurrentValue;
+
+    void SetLvlCoinBonus(int lvl) => _lvlCoinBonus = lvl * ConstGameplay.COINS_LVL_BONUS_MULTIPLIER;
+
+#endregion
 }
 }

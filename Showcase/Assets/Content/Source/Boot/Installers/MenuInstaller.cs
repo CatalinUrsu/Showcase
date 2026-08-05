@@ -10,7 +10,7 @@ public class MenuInstaller : MonoInstaller
 {
     [SerializeField] BankLoader _bankLoader;
     [SerializeField] PlayerFacade _playerFacade;
-    [SerializeField] UIMenuFacade _uiMenuFacade;
+    [SerializeField] MenuUIFacade _menuUIFacade;
     
     IMenuContext _menuContext;
 
@@ -20,7 +20,7 @@ public class MenuInstaller : MonoInstaller
         
         _menuContext.RegisterBankLoader(_bankLoader);
         _menuContext.RegisterPlayerFacade(_playerFacade);
-        _menuContext.RegisterUIMenuFacade(_uiMenuFacade);
+        _menuContext.RegisterUIMenuFacade(_menuUIFacade);
     }
 
     void OnDestroy() => _menuContext.Clear();

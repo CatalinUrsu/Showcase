@@ -20,6 +20,9 @@ public class PlayerFacadeGameplay : PlayerFacade
     [SerializeField] PlayerWeapons _playerWeapons;
     [SerializeField] PlayerParallaxEffect _playerParallaxEffect;
 
+    [Space]
+    [SerializeField] Canvas _canvasInputHandler;
+
     [Space] 
     [SerializeField] Collider2D _collider;
     [SerializeField] GameObject _deathEffect;
@@ -41,7 +44,7 @@ public class PlayerFacadeGameplay : PlayerFacade
         }
     }
 
-    public void Init(GameObject playerInputHandler)
+    public override void Init()
     {
         base.Init();
         SessionService.Current.Progress.Lvl.Skip(1).Subscribe(_ => EnableShield().Forget()).AddTo(this);
@@ -50,7 +53,7 @@ public class PlayerFacadeGameplay : PlayerFacade
         _audioService.FlyInstance.start();
         _playerAppearance.Init();
         _playerEmergence.Init(_rb);
-        _playerMovement.Init(_rb, _audioService.FlyInstance, playerInputHandler);
+        _playerMovement.Init(_rb, _audioService.FlyInstance, _canvasInputHandler.gameObject);
         InitWeapons();
     }
 

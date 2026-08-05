@@ -14,7 +14,7 @@ public abstract class StateBase : IStateEnter
     readonly ISceneLoaderService _sceneLoaderService;
     protected readonly IProgressTrackingService _progressTrackingService;
     readonly ISplashScreen _splashScreen;
-    readonly IAudioService _audioService;
+    protected readonly IAudioService _audioService;
 
 #endregion
 
@@ -25,10 +25,10 @@ public abstract class StateBase : IStateEnter
                      ISplashScreen splashScreen,
                      IAudioService audioService)
     {
-        _audioService = audioService;
+        _sceneLoaderService = sceneLoaderService;
         _progressTrackingService = progressTrackingService;
         _splashScreen = splashScreen;
-        _sceneLoaderService = sceneLoaderService;
+        _audioService = audioService;
     }
 
     public abstract UniTask Enter();
@@ -67,9 +67,13 @@ public abstract class StateBase : IStateEnter
         _progressTrackingService.RegisterUnloadProcesses(unloadSceneTask);
     }
 
-    protected virtual async UniTask InitSceneContext(SceneLoadProgress sceneLoadProgress) { }
+    protected virtual async UniTask InitSceneContext(SceneLoadProgress sceneLoadProgress) => await UniTask.CompletedTask;
 
-    protected virtual async UniTask DeInitSceneContext(string sceneName) => FmodExtensions.ReleaseSceneInstances(sceneName);
+    protected virtual async UniTask DeInitSceneContext(string sceneName)
+    {
+      FmodExtensions.ReleaseSceneInstances(sceneName);
+      await UniTask.CompletedTask;
+    }
 
 #endregion
 }

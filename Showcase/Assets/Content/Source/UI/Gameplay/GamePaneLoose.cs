@@ -2,7 +2,6 @@
 using Zenject;
 using UnityEngine;
 using IdleNumbers;
-using Source.Gameplay;
 using Cysharp.Threading.Tasks;
 using Source.Data;
 using UnityEngine.Localization.Components;

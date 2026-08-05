@@ -11,7 +11,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Source.Gameplay
 {
-public class EnemiesSpawner : MonoBehaviour
+public class EnemiesController : MonoBehaviour, IEnemiesController
 {
 #region Fields
 

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Source.Gameplay;
 
 namespace Source.UI.Gameplay
 {

@@ -49,7 +49,8 @@ public class ItemsModelController: IItemsModelController
 
     //----------Ships methods----------
     public IShipModel GetShipModel(Guid key) => Model.ShipsData[key];
-    
+    public IShipModel GetShipModel(int idx) => Model.ShipsData[_shipsOrderedIds[idx]];
+
     public int GetShipIdx(Guid key) => Array.IndexOf(_shipsOrderedIds, key);
 
     public void BuyShip(Guid key) => BuyItem(Model.ShipsData[key]);

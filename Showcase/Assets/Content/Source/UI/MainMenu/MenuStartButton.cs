@@ -13,7 +13,7 @@ public class MenuStartButton : MonoBehaviour
 
     Sequence _startbuttonSequence;
 
-    public void Init(IUIMenuFacade uiMenuFacade)
+    public void Init(IMenuUIFacade menuUIFacade)
     {
         _startBtn.onClick.AddListener(OnClickStart_handler);
         PlayTextLoopAnim();
@@ -21,7 +21,7 @@ public class MenuStartButton : MonoBehaviour
         
         void OnClickStart_handler()
         {
-            uiMenuFacade.ClickStartGame_raise();
+            menuUIFacade.ClickStartGame_raise();
             PlayTextHideAnimation();
         }
     }
