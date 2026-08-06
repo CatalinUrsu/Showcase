@@ -81,6 +81,7 @@ public class ProjectInstaller : MonoInstaller
         Container.BindFactory<IShipView, Guid, ShipPresenter, ShipPresenter.Factory>().AsTransient();
         Container.BindFactory<IWeaponView, Guid, WeaponPresenter, WeaponPresenter.Factory>().AsTransient();
         Container.BindFactory<IResetProgressView, ResetProgressPresenter, ResetProgressPresenter.Factory>().AsTransient();
+        Container.BindFactory<IGameplayView, GameRunPresenter, GameRunPresenter.Factory>().AsTransient();
     }
 }
 }

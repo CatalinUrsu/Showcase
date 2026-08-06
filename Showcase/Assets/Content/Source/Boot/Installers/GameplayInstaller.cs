@@ -12,7 +12,7 @@ public class GameplayInstaller : MonoInstaller
 {
     [SerializeField] BankLoader _bankLoader;
     [SerializeField] PlayerFacade _playerFacade;
-    [SerializeField] GameUIFacade uiFacade;
+    [SerializeField] GameUIFacade _uiFacade;
     [SerializeField] EnemiesController _enemiesController;
 
     [SerializeField] GamePanelGameplay _gameplayView;
@@ -22,10 +22,12 @@ public class GameplayInstaller : MonoInstaller
     public override void InstallBindings()
     {
         var gameRunModelController = GetGameRunModelController();
-
+        Container.Bind<IGameRunModelController>().FromInstance(gameRunModelController).AsSingle();
+        
+        _gameplayContext = Container.Resolve<IGameplayContext>();
         _gameplayContext.RegisterBankLoader(_bankLoader);
         _gameplayContext.RegisterPlayerFacade(_playerFacade);
-        _gameplayContext.RegisterUIController(uiFacade);
+        _gameplayContext.RegisterUIController(_uiFacade);
         _gameplayContext.RegisterEnemiesController(_enemiesController);
         _gameplayContext.RegisterGameRunModelController(gameRunModelController);
     }

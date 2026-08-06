@@ -1,9 +1,8 @@
-﻿using TMPro;
+﻿using R3;
+using TMPro;
 using Zenject;
 using UnityEngine;
 using IdleNumbers;
-using Cysharp.Threading.Tasks;
-using Source.Data;
 using UnityEngine.Localization.Components;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
 
@@ -13,12 +12,13 @@ public class GamePaneLoose : GamePanel
 {
 #region Fields
 
-    [SerializeField] LocalizeStringEvent _localizedStringCollected;
+    [SerializeField] LocalizeStringEvent _txtCollectedCoins;
     [SerializeField] TextMeshProUGUI _txtTotal;
     [SerializeField] ButtonBase _buttonRestart;
     [SerializeField] ButtonBase _buttonHome;
 
-    [Inject] GameRunModel _gameRunModel;
+    [Inject] IGameRunModelController _gameRunModelController;
+    readonly StringVariable _coinsStringVar = new();
 
 #endregion
 
@@ -30,17 +30,18 @@ public class GamePaneLoose : GamePanel
 
         _buttonHome.Init();
         _buttonRestart.Init();
-        _buttonHome.onClick.AddListener(() => GameplayMediator.SetGameState(EGameplayState.Leave));
-        _buttonRestart.onClick.AddListener(() => GameplayMediator.SetGameState(EGameplayState.NewGame));
+        
+        _txtCollectedCoins.StringReference.Arguments = new[] { _coinsStringVar };
+
+        _buttonHome.Btn.onClick.AddListener(() => _gameRunModelController.OnClickGoHome_raise());
+        _buttonRestart.Btn.onClick.AddListener(() => _gameRunModelController.OnClickReturnToGame_raise());
+        _gameRunModelController.IModel.CollectedCoinsRef
+                               .Skip(1)
+                               .Subscribe(UpdateCollectedCoinsValue)
+                               .AddTo(this);
     }
 
-    public override async UniTask Show()
-    {
-        (_localizedStringCollected.StringReference["0"] as StringVariable)!.Value = $"{_gameRunModel.CollectedCoins.Value.AsString()} {ConstSpriteAssets.SPRITE_TEXT_COIN}";
-        _txtTotal.SetText($"{SessionService.Current.Progress.Coins.Value.AsString()}  {ConstSpriteAssets.SPRITE_TEXT_COIN}");
-        
-        await base.Show();
-    }
+    void UpdateCollectedCoinsValue(IdleNumber value) => _coinsStringVar.Value = value.AsString();
 
 #endregion
 }

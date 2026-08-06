@@ -7,7 +7,6 @@ public interface IGameUIFacade
     
     void Init();
     void Deinit();
-    UniTask ShowPanel(EGamePanels panelType);
-    UniTask HidePanel(EGamePanels panelType);
+    UniTask SelectPanel(EGamePanels panelType);
 }
 }

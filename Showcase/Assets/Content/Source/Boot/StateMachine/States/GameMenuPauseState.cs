@@ -21,9 +21,7 @@ public class GameMenuPauseState : GameMenuStateBase
     public override async UniTask Enter()
     {
         base.Enter().Forget();
-        await _gameplayContext.UIFacade.ShowPanel(EGamePanels.Pause);
+        await _gameplayContext.UIFacade.SelectPanel(EGamePanels.Pause);
     }
-
-    protected override async UniTask ReturnToGame() => await _gameplayContext.UIFacade.HidePanel(EGamePanels.Pause);
 }
 }

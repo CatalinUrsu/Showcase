@@ -18,8 +18,8 @@ public class GameplayState : IStateEnter
     {
         AddGameRunControllerListeners();
         _gameplayContext.EnemiesController.ToggleSpawning(true);
-        
-        await UniTask.WhenAll(_gameplayContext.UIFacade.ShowPanel(EGamePanels.Game),
+
+        await UniTask.WhenAll(_gameplayContext.UIFacade.SelectPanel(EGamePanels.Game),
                               _gameplayContext.PlayerFacade.ShowPlayer());
 
         _gameplayContext.PlayerFacade.ToggleControl(true);
@@ -30,8 +30,6 @@ public class GameplayState : IStateEnter
         RemoveGameRunControllerListeners();
         _gameplayContext.EnemiesController.ToggleSpawning(false);
         _gameplayContext.PlayerFacade.ToggleControl(false);
-
-        await _gameplayContext.UIFacade.HidePanel(EGamePanels.Game);
     }
 
 #endregion

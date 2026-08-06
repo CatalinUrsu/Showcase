@@ -1,5 +1,4 @@
-﻿using Zenject;
-using UnityEngine;
+﻿using UnityEngine;
 using Cysharp.Threading.Tasks;
 
 namespace Source.UI.Gameplay
@@ -8,16 +7,14 @@ public class GamePanel : MonoBehaviour
 {
 #region Fields
 
+    [SerializeField] EGamePanels _ePanelType;
     [SerializeField] protected GamePanelAnimation _animation;
 
-    protected IGameplayMediator GameplayMediator;
+    public EGamePanels EPanelType => _ePanelType;
 
 #endregion
 
 #region Public methods
-
-    [Inject]
-    public void Construct(IGameplayMediator gameplayMediator) => GameplayMediator = gameplayMediator;
 
     public virtual void Init() { }
 

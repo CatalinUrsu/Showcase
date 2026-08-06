@@ -19,39 +19,32 @@ public class GamePanelAnimation : MonoBehaviour
     [SerializeField] RectTransform PositionShow;
     [SerializeField] RectTransform PositionHide;
 
-    public Sequence ShowSequence;
-    public Sequence HideSequence;
+     Sequence _animTween;
 
 #endregion
 
 #region Public methods
 
-    public void Deinit()
-    {
-        ShowSequence.Kill();
-        HideSequence.Kill();
-    }
+    public void Deinit() => _animTween.Kill();
 
     public async UniTask Show()
     {
-        ShowSequence.CheckAndEnd();
-        ShowSequence = DOTween.Sequence().Pause().SetUpdate(true);
-        ShowSequence.Append(PopupRT.DOMove(PositionShow.position, AnimDuration)
-                                   .From(PositionInit.position)
-                                   .SetEase(EaseShow));
-            
-        await ShowSequence.Play().AwaitForComplete();
+        await _animTween.FinishAndGetNew()
+                        .Append(PopupRT.DOMove(PositionShow.position, AnimDuration)
+                                       .From(PositionInit.position)
+                                       .SetEase(EaseShow))
+                        .SetUpdate(true)
+                        .AwaitForComplete();
     }
 
     public async UniTask Hide()
     {
-        HideSequence.CheckAndEnd();
-        HideSequence = DOTween.Sequence().Pause().SetUpdate(true);
-        HideSequence.Append(PopupRT.DOMove(PositionHide.position, AnimDuration)
-                                   .From(PositionShow.position)
-                                   .SetEase(EaseHide));
-        
-        await HideSequence.Play().AwaitForComplete();
+        await _animTween.FinishAndGetNew()
+                        .Append(PopupRT.DOMove(PositionHide.position, AnimDuration)
+                                       .From(PositionShow.position)
+                                       .SetEase(EaseHide))
+                        .SetUpdate(true)
+                        .AwaitForComplete();
     }
 
 #endregion

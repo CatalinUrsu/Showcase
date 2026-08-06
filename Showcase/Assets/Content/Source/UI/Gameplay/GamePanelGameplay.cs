@@ -1,17 +1,18 @@
 ﻿using TMPro;
 using System;
 using Helpers;
+using Zenject;
 using UnityEngine;
 using DG.Tweening;
 using IdleNumbers;
+using Source.Data;
 using Helpers.Audio;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
-using Source.Data;
 
 namespace Source.UI.Gameplay
 {
-public class GamePanelGameplay : GamePanel, IViewGameplay
+public class GamePanelGameplay : GamePanel, IGameplayView
 {
 #region Fields
 
@@ -20,34 +21,39 @@ public class GamePanelGameplay : GamePanel, IViewGameplay
     [SerializeField] Slider _sliderProgress;
     [SerializeField] TextMeshProUGUI _txtLvlCurrent;
     [SerializeField] TextMeshProUGUI _txtCoin;
-    
+
     [Space]
+    [SerializeField] FmodEventsSo _fmodEventsSo;
     [SerializeField] ParticleSystem _newLvlFx_1;
     [SerializeField] ParticleSystem _newLvlFx_2;
 
-    float _lvlTextAnimDur = .25f;
+    const float LVL_TEXT_ANIM_DUR = .25f;
     Vector3 _lvlTextRTMaxSize = new(1.3f, 1.3f, 1);
     RectTransform _lvlTextRT;
 
-    float _coinsAnimDur = .1f;
+    const float COINS_ANIM_DUR = .1f;
     Vector3 _coinsRTMaxSize = new(1.1f, 1.1f, 1);
     RectTransform _coinsRT;
 
     Tween _sliderTween;
     Tween _coinTween;
     Sequence _newLvlSequence;
+    GameRunPresenter _gameRunPresenter;
 
 #endregion
 
 #region Public methods
 
+    [Inject]
+    public void Construct(GameRunPresenter.Factory gameRunPresenterFactory) => _gameRunPresenter = gameRunPresenterFactory.Create(this);
+
     public override void Init()
     {
         _lvlTextRT = _txtLvlCurrent.rectTransform;
         _coinsRT = _txtCoin.rectTransform;
-        
+
         _buttonPause.Init();
-        _buttonPause.onClick.AddListener(OnClickPause_handler);
+        _buttonPause.Btn.onClick.AddListener(OnClickPause_handler);
     }
 
     public override void Deinit()
@@ -56,8 +62,9 @@ public class GamePanelGameplay : GamePanel, IViewGameplay
         _coinTween.CheckAndEnd();
         _sliderTween.CheckAndEnd();
         _newLvlSequence.CheckAndEnd();
+        _gameRunPresenter.Dispose();
     }
-    
+
     public void SetNewGameInfo(int lvl)
     {
         _sliderProgress.value = 0;
@@ -65,53 +72,54 @@ public class GamePanelGameplay : GamePanel, IViewGameplay
         _txtLvlCurrent.SetText(lvl.ToString());
     }
 
-    public void OnChangeCoins_handler(IdleNumber collectedCoins)
+    public void SetCollectedCoins(IdleNumber collectedCoins)
     {
         _coinTween.CheckAndEnd();
-        _coinTween = _coinsRT.DOScale(_coinsRTMaxSize, _coinsAnimDur).SetLoops(2, LoopType.Yoyo);
+        _coinTween = _coinsRT.DOScale(_coinsRTMaxSize, COINS_ANIM_DUR).SetLoops(2, LoopType.Yoyo);
         _txtCoin.SetText($"{collectedCoins.AsString()} {ConstSpriteAssets.SPRITE_TEXT_COIN}");
     }
 
-    public void OnChangeProgress_handler(float progress)
+    public void SetProgressSlider(float progress)
     {
-        var fillAmount = progress / ConstGameplay.PROGRESS_TARGET;
         _sliderTween.CheckAndEnd();
-        _sliderTween = _sliderProgress.DOValue(fillAmount, _lvlTextAnimDur);
+        _sliderTween = _sliderProgress.DOValue(progress / ConstGameplay.PROGRESS_TARGET, LVL_TEXT_ANIM_DUR);
     }
 
-    public async UniTaskVoid PlayNewLvlAnimation(int newLvl, Action OnAnimationFinish)
+    public async UniTask PlayNewLvlAnimation(int newLvl)
     {
         _sliderTween.CheckAndEnd(false);
-        _newLvlSequence.CheckAndEnd(false);
+        _newLvlSequence.FinishAndGetNew(false)
+                       .Pause()
+                       .Append(_sliderProgress.DOValue(1, LVL_TEXT_ANIM_DUR))
+                       .Join(_lvlTextRT.DOScale(_lvlTextRTMaxSize, LVL_TEXT_ANIM_DUR).From(Vector3.one)
+                                       .SetLoops(2, LoopType.Yoyo)
+                                       .OnStart(PlayNewLvlAnimation)
+                                       .OnComplete(() => _txtLvlCurrent.SetText($"{newLvl}")))
+                       .Append(_sliderProgress.DOValue(0, LVL_TEXT_ANIM_DUR * 2));
 
-        _newLvlSequence = DOTween.Sequence()
-                                 .Pause()
-                                 .Append(_sliderProgress.DOValue(1, _lvlTextAnimDur))
-                                 .Join(_lvlTextRT.DOScale(_lvlTextRTMaxSize, _lvlTextAnimDur).From(Vector3.one)
-                                                 .SetLoops(2, LoopType.Yoyo)
-                                                 .OnStart(() =>
-                                                 {
-                                                     FmodEventsSo.Instance.LvlUp.PlayOneShot();
-                                                     PlayNewLvlEffects().Forget();
-                                                 })
-                                                 .OnComplete(() => _txtLvlCurrent.SetText($"{newLvl}")))
-                                 .Append(_sliderProgress.DOValue(0, _lvlTextAnimDur * 2));
-
-        using (InputManager.Instance.LockInputSystem())
-            await _newLvlSequence.Play();
-
-        OnAnimationFinish?.Invoke();
+        await _newLvlSequence.Play();
     }
 
 #endregion
-    
-    void OnClickPause_handler() => GameplayMediator.SetGameState(EGameplayState.Pause);
 
-    async UniTaskVoid PlayNewLvlEffects()
+#region Private methods
+
+    void OnClickPause_handler() => _gameRunPresenter.ClickPause();
+
+    void PlayNewLvlAnimation()
     {
-        _newLvlFx_1.Play();
-        await UniTask.Delay(TimeSpan.FromSeconds(.2f));
-        _newLvlFx_2.Play();
+        _fmodEventsSo.LvlUp.PlayOneShot();
+        PlayNewLvlEffects().Forget();
+        return;
+
+        async UniTaskVoid PlayNewLvlEffects()
+        {
+            _newLvlFx_1.Play();
+            await UniTask.Delay(TimeSpan.FromSeconds(.2f));
+            _newLvlFx_2.Play();
+        }
     }
+
+#endregion
 }
 }

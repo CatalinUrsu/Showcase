@@ -21,12 +21,12 @@ public class GameMenuLooseState : GameMenuStateBase
     public override async UniTask Enter()
     {
         base.Enter().Forget();
-        await _gameplayContext.UIFacade.ShowPanel(EGamePanels.Loose);
+        await _gameplayContext.UIFacade.SelectPanel(EGamePanels.Loose);
     }
 
     protected override async UniTask ReturnToGame()
     {
-        await _gameplayContext.UIFacade.HidePanel(EGamePanels.Loose);
+        await UniTask.CompletedTask;
         //TODO: Spawn and init new player
     }
 }

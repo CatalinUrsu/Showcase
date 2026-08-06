@@ -22,13 +22,12 @@ public class LoadGameplayState : StateBase
 
     public override async UniTask Enter()
     {
-        await LoadGameplayScene();
-        SetMusicState(EMusicStates.Gameplay);
-
-        await HideSplashScreen();
-
         using (InputManager.Instance.LockInputSystem())
+        {
+            await LoadGameplayScene();
+            await HideSplashScreen();
             await StatesMachine.Enter<GameplayState>();
+        }
     }
 
     public override UniTask Exit() => UniTask.CompletedTask;
@@ -54,6 +53,7 @@ public class LoadGameplayState : StateBase
         
         _gameplayContext.UIFacade.Init();
         _gameplayContext.PlayerFacade.Init();
+        SetMusicState(EMusicStates.Gameplay);
 
         await UniTask.WhenAll(_gameplayContext.BankLoader.Init(),
                               _gameplayContext.EnemiesController.Init());
