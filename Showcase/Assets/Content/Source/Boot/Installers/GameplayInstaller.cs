@@ -1,8 +1,8 @@
 ﻿using Zenject;
 using UnityEngine;
 using Source.Data;
-using Source.Player;
 using Helpers.Audio;
+using Source.Game.Player;
 using Source.Gameplay;
 using Source.UI.Gameplay;
 

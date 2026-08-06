@@ -1,13 +1,12 @@
-﻿using R3;
-using Zenject;
+﻿using FMOD.Studio;
 using Helpers;
-using UnityEngine;
-using FMOD.Studio;
-using R3.Triggers;
-using Helpers.Audio;
 using Helpers.Services;
+using R3;
+using R3.Triggers;
+using UnityEngine;
+using Zenject;
 
-namespace Source.Player
+namespace Source.Game.Player
 {
 public class PlayerMovement : MonoBehaviour
 {

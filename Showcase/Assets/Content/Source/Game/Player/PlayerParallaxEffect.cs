@@ -1,9 +1,9 @@
-using R3;
-using Zenject;
-using UnityEngine;
 using Helpers.Services;
+using R3;
+using UnityEngine;
+using Zenject;
 
-namespace Source.Player
+namespace Source.Game.Player
 {
 public class PlayerParallaxEffect : MonoBehaviour
 {

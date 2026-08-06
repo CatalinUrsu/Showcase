@@ -4,9 +4,9 @@ using UnityEngine;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 
-namespace Source.Player
+namespace Source.Game.Player
 {
-public class PlayerAppearanceGameplay : PlayerAppearenceBase
+public class PlayerAppearanceGameplay : PlayerAppearanceBase
 {
 #region Fields
 
@@ -37,12 +37,10 @@ public class PlayerAppearanceGameplay : PlayerAppearenceBase
 
     public override async UniTask AnimateShield(CancellationToken token)
     {
-        _shieldSequence.CheckAndEnd();
         _shieldInTransform.gameObject.SetActive(true);
         _shieldOutTransform.gameObject.SetActive(true);
         
-        _shieldSequence = DOTween.Sequence()
-                                 .Pause()
+        _shieldSequence.FinishAndGetNew()
                                  .Join(_shieldInSprite.DOFade(1, _invincibilityDuration)
                                                       .From(0)
                                                       .SetEase(_invincibilityCurve))
@@ -63,7 +61,7 @@ public class PlayerAppearanceGameplay : PlayerAppearenceBase
                                      _shieldOutTransform.gameObject.SetActive(false);
                                  });
 
-            await _shieldSequence.Play().ToUniTask().AttachExternalCancellation(token);
+        await _shieldSequence.ToUniTask(cancellationToken: token);
     }
 
     public override void ToggleAppearance(bool enable)

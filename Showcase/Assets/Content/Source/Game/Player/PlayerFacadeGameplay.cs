@@ -1,16 +1,12 @@
-using R3;
 using System;
-using Zenject;
-using UnityEngine;
-using System.Linq;
-using FMOD.Studio;
-using Helpers.Audio;
-using Source.Gameplay;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Source.Data;
+using Source.Gameplay;
+using UnityEngine;
+using Zenject;
 
-namespace Source.Player
+namespace Source.Game.Player
 {
 public class PlayerFacadeGameplay : PlayerFacade
 {

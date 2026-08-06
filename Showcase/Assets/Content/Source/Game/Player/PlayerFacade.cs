@@ -1,9 +1,9 @@
-using Zenject;
-using UnityEngine;
-using FMOD.Studio;
 using Cysharp.Threading.Tasks;
+using FMOD.Studio;
+using UnityEngine;
+using Zenject;
 
-namespace Source.Player
+namespace Source.Game.Player
 {
 public class PlayerFacade : MonoBehaviour, IPlayerFacade
 {
@@ -11,7 +11,7 @@ public class PlayerFacade : MonoBehaviour, IPlayerFacade
     
     [Space]
     [SerializeField] protected PlayerEmergence _playerEmergence;
-    [SerializeField] protected PlayerAppearenceBase _playerAppearence;
+    [SerializeField] protected PlayerAppearanceBase _playerAppearance;
     
     [Inject] protected IAudioService _audioService;
 
@@ -19,7 +19,7 @@ public class PlayerFacade : MonoBehaviour, IPlayerFacade
     {
         _audioService.FlyInstance.start();
         
-        _playerAppearence.Init();
+        _playerAppearance.Init();
         _playerEmergence.Init(_rb);
     }
 

@@ -1,14 +1,12 @@
-﻿using R3;
-using System;
-using IdleNumbers;
-using UnityEngine;
+﻿using System;
 using FMOD.Studio;
-using Helpers.Audio;
-using Source.Gameplay;
 using Helpers.PoolSystem;
+using R3;
 using Source.Data;
+using Source.Gameplay;
+using UnityEngine;
 
-namespace Source.Player
+namespace Source.Game.Player
 {
 public class PlayerWeapons : MonoBehaviour
 {

@@ -1,8 +1,8 @@
 using Zenject;
 using Source.UI;
 using UnityEngine;
-using Source.Player;
 using Helpers.Audio;
+using Source.Game.Player;
 
 namespace Source.Boot
 {

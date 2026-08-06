@@ -1,11 +1,13 @@
-﻿using Source.Data;
+﻿using R3;
+using Zenject;
+using Source.Data;
 using UnityEngine;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 
-namespace Source.Player
+namespace Source.Game.Player
 {
-public class PlayerAppearenceBase : MonoBehaviour
+public class PlayerAppearanceBase : MonoBehaviour
 {
 #region Fields
 
@@ -15,12 +17,14 @@ public class PlayerAppearenceBase : MonoBehaviour
     [SerializeField] protected SpriteRenderer _imgWeaponL;
     [SerializeField] protected SpriteRenderer _imgWeaponR;
 
+    [Inject] IProgressModelController _progressModelController;
+    
 #endregion
 
     public virtual void Init()
     {
-        SessionService.Current.Progress.UsedShipIdx.Subscribe(SetShipSprite).AddTo(gameObject);
-        SessionService.Current.Progress.UsedWeaponIdx.Subscribe(SetWeaponSprite).AddTo(gameObject);
+        _progressModelController.IModel.UsedShipIdxRef.Subscribe(SetShipSprite).AddTo(gameObject);
+        _progressModelController.IModel.UsedWeaponIdxRef.Subscribe(SetWeaponSprite).AddTo(gameObject);
     }
     
     public virtual void Deinit() {}
@@ -29,10 +33,7 @@ public class PlayerAppearenceBase : MonoBehaviour
 
     public virtual UniTask AnimateShield(CancellationToken token) => UniTask.CompletedTask;
 
-    void SetShipSprite(int shpiIdx)
-    {
-        _imgShip.sprite = _shipsSkins[shpiIdx].ItemSprite;
-    }
+    void SetShipSprite(int shipIdx) => _imgShip.sprite = _shipsSkins[shipIdx].ItemSprite;
 
     void SetWeaponSprite(int weaponIdx)
     {

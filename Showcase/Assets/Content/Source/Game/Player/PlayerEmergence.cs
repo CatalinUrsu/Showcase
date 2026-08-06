@@ -1,8 +1,8 @@
-﻿using DG.Tweening;
+﻿using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
-using Cysharp.Threading.Tasks;
 
-namespace Source.Player
+namespace Source.Game.Player
 {
 public class PlayerEmergence : MonoBehaviour
 {
