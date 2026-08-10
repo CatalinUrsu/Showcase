@@ -12,7 +12,7 @@ public interface IGameRunModelController : IDisposable
     event Action OnPlayerLoose;
 
     void StartRun();
-    void KillPlayer(bool alive);
+    void KillPlayer();
     
     void AddCoinsReward(float rewardPoints, IdleNumber coins);
     

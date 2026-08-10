@@ -36,6 +36,8 @@ public class ItemsModelController: IItemsModelController
     //----------Weapons methods----------
     public IWeaponModel GetWeaponModel(Guid key) => Model.WeaponsData[key];
     
+    public IWeaponModel GetWeaponModel(int idx) => Model.WeaponsData[_weaponsOrderedIds[idx]];
+
     public int GetWeaponIdx(Guid key) => Array.IndexOf(_weaponsOrderedIds, key);
 
     public void BuyWeapon(Guid key) => BuyItem(Model.WeaponsData[key]);
@@ -49,6 +51,7 @@ public class ItemsModelController: IItemsModelController
 
     //----------Ships methods----------
     public IShipModel GetShipModel(Guid key) => Model.ShipsData[key];
+    
     public IShipModel GetShipModel(int idx) => Model.ShipsData[_shipsOrderedIds[idx]];
 
     public int GetShipIdx(Guid key) => Array.IndexOf(_shipsOrderedIds, key);

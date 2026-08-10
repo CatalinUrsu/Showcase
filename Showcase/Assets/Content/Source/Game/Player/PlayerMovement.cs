@@ -1,10 +1,10 @@
-﻿using FMOD.Studio;
+﻿using R3;
 using Helpers;
-using Helpers.Services;
-using R3;
+using Zenject;
 using R3.Triggers;
 using UnityEngine;
-using Zenject;
+using Helpers.Audio;
+using Helpers.Services;
 
 namespace Source.Game.Player
 {
@@ -12,89 +12,104 @@ public class PlayerMovement : MonoBehaviour
 {
 #region Fields
 
+    [SerializeField] Canvas _canvasInputHandler;
+    
+    [Space]
     [SerializeField] float _maxSpeed = 10;
     [SerializeField] Transform _playPos;
-    [SerializeField] ParticleSystem _flyEffect;
-
-    public bool ControllIsEnable { get; set; }
-
+    [SerializeField] ParticleSystem _flyFx;
+    
+    bool _controlIsEnable;
     bool _isClicked;
     float _maxPosY;
     float _speedVelocity = 30f;
 
+    Camera _camera;
     Vector2 _targetPos;
     Vector2 _moveDirection;
-    Camera _camera;
-    EventInstance _flySoundInstance;
+    CompositeDisposable _disposables = new();
 
-    [Inject] ICameraService _cameraService;
     ParticleSystem.MainModule _flyEffectMain;
     ParticleSystem.MinMaxCurve _minMaxCurve;
+    
+    ICameraService _cameraService;
+    IAudioService _audioService;
 
 #endregion
 
 #region Public methods
 
-    public void Init(Rigidbody2D rb, EventInstance flyEventInstance, GameObject playerInputHanler)
+    [Inject]
+    public void Construct(ICameraService cameraService, IAudioService audioService)
+    {
+        _cameraService = cameraService;
+        _audioService = audioService;
+    }
+
+    public void Init(Rigidbody2D rb)
     {
         _maxPosY = Screen.height / 3f;
         _camera = _cameraService.GetMainCamera();
-        _flyEffectMain = _flyEffect.main;
-        _minMaxCurve = _flyEffect.main.startLifetime;
+        _targetPos = _playPos.position;
+        _flyEffectMain = _flyFx.main;
+        _minMaxCurve = _flyFx.main.startLifetime;
 
-        SetFlySoundControll(rb, flyEventInstance);
-        SetPlayerControll(rb, playerInputHanler);
+        SetFlySoundControl(rb);
+        SetPlayerControl(rb);
     }
 
-    public void SetOnSpawn()
+    public void Deinit() => _disposables.Dispose();
+
+    public void PlayMovementFx()
     {
-        _targetPos = _playPos.position;
-        _flyEffect.Play();
+        _flyFx.Play();
+        _audioService.FlyInstance.SetParameter(ConstFMOD.FLY_POWER, 0);
     }
     
-    public void SetOnDespawn()
-    {
-        _flyEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-    }
+    public void ToggleControl(bool enable) => _controlIsEnable = enable;
+
+    public void StopMovementFx() => _flyFx.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 
 #endregion
 
 #region Private methods
 
-    void SetPlayerControll(Rigidbody2D rb, GameObject playerInputHanler)
+    void SetPlayerControl(Rigidbody2D rb)
     {
         Observable.EveryUpdate(UnityFrameProvider.FixedUpdate)
                   .Where(_ => _isClicked)
                   .Subscribe(_ => MovePlayer(rb))
-                  .AddTo(gameObject);
+                  .AddTo(_disposables);
 
-        playerInputHanler.AddComponent<ObservablePointerDownTrigger>()
+        _canvasInputHandler.gameObject.AddComponent<ObservablePointerDownTrigger>()
                          .OnPointerDownAsObservable()
-                         .Where(_ => ControllIsEnable)
+                         .Where(_ => _controlIsEnable)
                          .Select(pointer => pointer.position)
                          .Where(position => position.y <= _maxPosY)
-                         .Subscribe(OnPointerDown_handler);
+                         .Subscribe(OnPointerDown_handler)
+                         .AddTo(_disposables);
 
-        playerInputHanler.AddComponent<ObservablePointerUpTrigger>()
+        _canvasInputHandler.gameObject.AddComponent<ObservablePointerUpTrigger>()
                          .OnPointerUpAsObservable()
-                         .Where(_ => ControllIsEnable)
+                         .Where(_ => _controlIsEnable)
                          .Select(x => x.position)
-                         .Subscribe(_ => OnPointerUp_handler());
+                         .Subscribe(_ => OnPointerUp_handler())
+                         .AddTo(_disposables);
 
-        playerInputHanler.AddComponent<ObservableDragTrigger>()
+        _canvasInputHandler.gameObject.AddComponent<ObservableDragTrigger>()
                          .OnDragAsObservable()
-                         .Where(_ => ControllIsEnable && _isClicked)
+                         .Where(_ => _controlIsEnable && _isClicked)
                          .Select(pointer => pointer.position)
-                         .Subscribe(OnDrag_handler);
+                         .Subscribe(OnDrag_handler)
+                         .AddTo(_disposables);
     }
 
-    void SetFlySoundControll(Rigidbody2D rb, EventInstance flyEventInstance)
+    void SetFlySoundControl(Rigidbody2D rb)
     {
-        _flySoundInstance = flyEventInstance;
         Observable.EveryUpdate()
-                  .Where(_ => ControllIsEnable)
-                  .Subscribe(_ => _flySoundInstance.SetParameter(ConstFMOD.FLY_POWER, rb.linearVelocity.magnitude / 5))
-                  .AddTo(gameObject);
+                  .Where(_ => _controlIsEnable)
+                  .Subscribe(_ => _audioService.FlyInstance.SetParameter(ConstFMOD.FLY_POWER, rb.linearVelocity.magnitude / 5))
+                  .AddTo(_disposables);
     }
 
     void OnPointerDown_handler(Vector2 inputPos)

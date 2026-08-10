@@ -5,6 +5,7 @@ namespace Source
 public interface IItemsModelController
 {
     IWeaponModel GetWeaponModel(Guid key);
+    IWeaponModel GetWeaponModel(int idx);
     int GetWeaponIdx(Guid key);
     void BuyWeapon(Guid key);
     void SelectWeapon(Guid key);

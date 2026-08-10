@@ -2,36 +2,31 @@
 using Zenject;
 using Source.Data;
 using UnityEngine;
-using System.Threading;
-using Cysharp.Threading.Tasks;
 
 namespace Source.Game.Player
 {
-public class PlayerAppearanceBase : MonoBehaviour
+public class PlayerAppearance : MonoBehaviour
 {
-#region Fields
-
     [SerializeField] protected ItemLookSO[] _shipsSkins;
     [SerializeField] protected ItemLookSO[] _weaponsSkins;
     [SerializeField] protected SpriteRenderer _imgShip;
     [SerializeField] protected SpriteRenderer _imgWeaponL;
     [SerializeField] protected SpriteRenderer _imgWeaponR;
-
-    [Inject] IProgressModelController _progressModelController;
     
-#endregion
+    [Inject] IProgressModelController _progressModelController;
 
-    public virtual void Init()
+    public void Init()
     {
         _progressModelController.IModel.UsedShipIdxRef.Subscribe(SetShipSprite).AddTo(gameObject);
         _progressModelController.IModel.UsedWeaponIdxRef.Subscribe(SetWeaponSprite).AddTo(gameObject);
     }
     
-    public virtual void Deinit() {}
-
-    public virtual void ToggleAppearance(bool enable) { }
-
-    public virtual UniTask AnimateShield(CancellationToken token) => UniTask.CompletedTask;
+    public void ToggleAppearance(bool enable)
+    {
+        _imgShip.enabled = enable;
+        _imgWeaponL.enabled = enable;
+        _imgWeaponR.enabled = enable;
+    }
 
     void SetShipSprite(int shipIdx) => _imgShip.sprite = _shipsSkins[shipIdx].ItemSprite;
 

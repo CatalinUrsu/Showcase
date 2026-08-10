@@ -16,13 +16,13 @@ public class PlayerParallaxEffect : MonoBehaviour
     readonly CompositeDisposable _disposables = new CompositeDisposable();
 
     [Inject]
-    public void Construct(ICameraService _cameraService)
+    public void Construct(ICameraService cameraService)
     {
-        _cameraTransform = _cameraService.GetMainCamera().transform;
+        _cameraTransform = cameraService.GetMainCamera().transform;
         _cameraInitPos = _cameraTransform.position;
     }
 
-    public void EnableParalax()
+    public void Enable()
     {
         _lastPlayerPosition = transform.position;
 

@@ -49,7 +49,7 @@ public class GameRunModelController : IGameRunModelController
         _model.PlayerIsKilled.Value = false;
     }
 
-    public void KillPlayer(bool alive)
+    public void KillPlayer()
     {
         _model.PlayerIsKilled.Value = true;
         OnPlayerLoose?.Invoke();

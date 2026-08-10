@@ -1,10 +1,14 @@
-﻿using System;
-using FMOD.Studio;
-using Helpers.PoolSystem;
-using R3;
-using Source.Data;
-using Source.Gameplay;
+﻿using R3;
+using System;
+using Zenject;
+using FMODUnity;
 using UnityEngine;
+using Source.Data;
+using FMOD.Studio;
+using IdleNumbers;
+using Helpers.Audio;
+using Source.Gameplay;
+using Helpers.PoolSystem;
 
 namespace Source.Game.Player
 {
@@ -17,8 +21,11 @@ public class PlayerWeapons : MonoBehaviour
     [SerializeField] Transform _poolActive;
     [SerializeField] Transform _poolInactive;
     [SerializeField] Transform[] _bulletSpawnPoses;
-    
-    public bool ShootIsEnable { get; set; }
+
+    bool _shootIsEnable;
+    IdleNumber _firePower;
+    EventReference _shootSfxRef;
+    float _fireRate;
     
     Pool<PooledObject> _bulletsPool;
     Pool<PooledObject> _shootFxPool;
@@ -28,13 +35,26 @@ public class PlayerWeapons : MonoBehaviour
 #endregion
 
 #region Publie methods
-
-    public void Init(IdleNumber firePower, float fireRate)
+    
+    [Inject]
+    public void Construct(IProgressModelController progressModelController,
+                          IItemsModelController itemsModelController,
+                          IGameRunModelController runModelController,
+                          FmodEventsSo fmodEventsSo)
     {
-        CreatePools(firePower);
+        var usedWeaponIdx = progressModelController.IModel.UsedWeaponIdxRef.CurrentValue;
+        var usedWeapon = itemsModelController.GetWeaponModel(usedWeaponIdx);
+        _firePower = usedWeapon.FirePowerRef.CurrentValue;
+        _fireRate = usedWeapon.FireRateRef.CurrentValue;
+        _shootSfxRef = fmodEventsSo.Shoot;
+    }
 
-        Observable.Interval(TimeSpan.FromSeconds(fireRate))
-                  .Where(_ => ShootIsEnable)
+    public void Init()
+    {
+        CreatePools();
+
+        Observable.Interval(TimeSpan.FromSeconds(_fireRate))
+                  .Where(_ => _shootIsEnable)
                   .Subscribe(_ => Shoot())
                   .AddTo(_disposable);
     }
@@ -47,14 +67,16 @@ public class PlayerWeapons : MonoBehaviour
         _shootingSoundsPool.Clear();
     }
 
+    public void ToggleShooting(bool enable) => _shootIsEnable = enable;
+    
 #endregion
 
 #region Private methods
 
-    void CreatePools(IdleNumber firePower)
+    void CreatePools()
     {
         _bulletsPool = new Factory.Builder(_bullet)
-                          .SetConfig(firePower)
+                          .SetConfig(_firePower)
                           .SetParents(_poolActive, _poolInactive)
                           .SetPreloadCount(ConstGameplay.BULLETS_SPAWN_COUNT)
                           .SetMaxCount(ConstGameplay.BULLETS_SPAWN_COUNT + 5)
@@ -66,7 +88,7 @@ public class PlayerWeapons : MonoBehaviour
                           .SetMaxCount(ConstGameplay.BULLETS_SPAWN_COUNT + 5)
                           .Build();
 
-        _shootingSoundsPool = new FactoryFmodEvents.Builder(FmodEventsSo.Instance.Shoot)
+        _shootingSoundsPool = new FactoryFmodEvents.Builder(_shootSfxRef)
                               .SetPreloadCount(3)
                               .SetMaxCount(5)
                               .Build();

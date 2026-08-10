@@ -14,10 +14,12 @@ public class Bullet : PooledObject
 
     public override PooledObject Init(Action<PooledObject> onReleaseToPool, object config = null)
     {
+        base.Init(onReleaseToPool, config);
+        
         if (config is IdleNumber hitDamage) 
             _hitDamage = hitDamage;
         
-        return base.Init(onReleaseToPool, config);
+        return this;
     }
 
     public override void Set(object config = null)
