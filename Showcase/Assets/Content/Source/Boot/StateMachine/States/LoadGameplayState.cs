@@ -56,7 +56,7 @@ public class LoadGameplayState : StateBase
         SetMusicState(EMusicStates.Gameplay);
 
         await UniTask.WhenAll(_gameplayContext.BankLoader.Init(),
-                              _gameplayContext.EnemiesController.Init());
+                              _gameplayContext.EnemiesSpawner.Init());
 
         sceneLoadProgress.SetupProgress = 1;
     }

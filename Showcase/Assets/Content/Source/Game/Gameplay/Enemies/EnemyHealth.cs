@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using IdleNumbers;
+﻿using IdleNumbers;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace Source.Gameplay
+namespace Source.Game.Gameplay
 {
 public class EnemyHealth : MonoBehaviour
 {
@@ -21,7 +21,7 @@ public class EnemyHealth : MonoBehaviour
         _hpSlider.value = _hpSlider.maxValue;
     }
 
-    public void OnHit_handler(IdleNumber damage)
+    public void TakeDamage(IdleNumber damage)
     {
         _hpSlider.value -= (float)damage.RoundToTargetValue(_hpIdleNumLvl);
     }

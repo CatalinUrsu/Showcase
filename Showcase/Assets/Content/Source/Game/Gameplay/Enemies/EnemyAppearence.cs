@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-namespace Source.Gameplay
+namespace Source.Game.Gameplay
 {
 public class EnemyAppearence : MonoBehaviour
 {

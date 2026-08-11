@@ -1,8 +1,8 @@
 using R3; 
 using Zenject;
 using UnityEngine;
-using Source.Gameplay;
 using Cysharp.Threading.Tasks;
+using Source.Game.Gameplay;
 
 namespace Source.Game.Player
 {

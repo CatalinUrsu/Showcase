@@ -2,8 +2,8 @@
 using UnityEngine;
 using Source.Data;
 using Helpers.Audio;
+using Source.Game.Gameplay;
 using Source.Game.Player;
-using Source.Gameplay;
 using Source.UI.Gameplay;
 
 namespace Source.Boot
@@ -13,7 +13,7 @@ public class GameplayInstaller : MonoInstaller
     [SerializeField] BankLoader _bankLoader;
     [SerializeField] PlayerFacade _playerFacade;
     [SerializeField] GameUIFacade _uiFacade;
-    [SerializeField] EnemiesController _enemiesController;
+    [SerializeField] EnemiesSpawner _enemiesSpawner;
 
     [SerializeField] GamePanelGameplay _gameplayView;
 
@@ -28,7 +28,7 @@ public class GameplayInstaller : MonoInstaller
         _gameplayContext.RegisterBankLoader(_bankLoader);
         _gameplayContext.RegisterPlayerFacade(_playerFacade);
         _gameplayContext.RegisterUIController(_uiFacade);
-        _gameplayContext.RegisterEnemiesController(_enemiesController);
+        _gameplayContext.RegisterEnemiesController(_enemiesSpawner);
         _gameplayContext.RegisterGameRunModelController(gameRunModelController);
     }
 

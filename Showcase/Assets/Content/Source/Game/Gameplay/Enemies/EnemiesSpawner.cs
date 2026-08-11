@@ -2,6 +2,7 @@
 using System;
 using Zenject;
 using UnityEngine;
+using Source.Data;
 using System.Linq;
 using Helpers.Services;
 using Helpers.PoolSystem;
@@ -9,10 +10,24 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace Source.Gameplay
+namespace Source.Game.Gameplay
 {
-public class EnemiesController : MonoBehaviour, IEnemiesController
+public class EnemiesSpawner : MonoBehaviour, IEnemiesSpawner
 {
+#region Exernal Types
+
+    [Serializable]
+    public struct EnemyByChance
+    {
+        public int Chance;
+        public EnemySO EnemySO;
+
+        public int MinChance { get; set; }
+        public int MaxChance{ get; set; }
+    }
+
+#endregion
+    
 #region Fields
 
     [SerializeField] EnemyByChance[] _enemiesByChances;
@@ -34,19 +49,24 @@ public class EnemiesController : MonoBehaviour, IEnemiesController
     Pool<PooledObject> _pool;
     ICameraService _cameraService;
     
+    FmodEventsSo _fmodEventsSo;
+    EnemiesInitConfig _enemiesInitConfig;
     readonly CompositeDisposable _disposable = new();
-    EnemyInitConfig _enemyInitConfig;
 
 #endregion
 
 #region Public methods
 
     [Inject]
-    public void Construct(ICameraService cameraService) => _cameraService = cameraService;
+    public void Construct(ICameraService cameraService, FmodEventsSo fmodEventsSo)
+    {
+        _cameraService = cameraService;
+        _fmodEventsSo = fmodEventsSo;
+    }
 
     public async UniTask Init()
     {
-        _enemyInitConfig = new EnemyInitConfig(_hitFx, _deathFx, _poolActive, _poolInactive);
+        _enemiesInitConfig = new EnemiesInitConfig(_hitFx, _deathFx, _poolActive, _poolInactive, _fmodEventsSo);
         await LoadEnemyAsset();
 
         SetSpawnChance();
@@ -58,7 +78,7 @@ public class EnemiesController : MonoBehaviour, IEnemiesController
     {
         Addressables.Release(_enemyAssetOpHandle);
         _pool.Clear();
-        _enemyInitConfig.Deinit();
+        _enemiesInitConfig.Deinit();
         _disposable.Dispose();
     }
 
@@ -69,7 +89,7 @@ public class EnemiesController : MonoBehaviour, IEnemiesController
 #region Private methods
 
     /// <summary>
-    /// Addressables is not required here. I used it just as an axample of its usage and loading and unloading some asset 
+    /// Addressables are not required here. I used it just as an axample of its usage and loading and unloading some asset 
     /// </summary>
     async UniTask LoadEnemyAsset()
     {
@@ -82,12 +102,18 @@ public class EnemiesController : MonoBehaviour, IEnemiesController
     {
         var enemyFacade = _enemyAssetOpHandle.Result.GetComponent<EnemyFacade>();
         _pool = new Factory.Builder(enemyFacade)
-                             .SetConfig(_enemyInitConfig)
+                             .SetConfig(_enemiesInitConfig)
                              .SetParents(_poolActive, _poolInactive)
                              .SetPreloadCount(ConstGameplay.ENEMIES_SPAWN_COUNT)
                              .Build();
     }
 
+    /// <summary>
+    /// Configures the spawn chance ranges for each enemy:<br/>
+    /// 1) Sort the array of enemies<br/>
+    /// 2) Calculate cumulative chance ranges <br/>
+    /// 3) Assigning minimum and maximum chance values for each enemy.
+    /// </summary>
     void SetSpawnChance()
     {
         _enemiesByChances = _enemiesByChances.OrderBy(enemy => enemy.Chance).ToArray();
@@ -118,6 +144,7 @@ public class EnemiesController : MonoBehaviour, IEnemiesController
                   .Where(_ => _spawnEnable)
                   .Subscribe(_ => SpawnEnemy())
                   .AddTo(_disposable);
+        return;
 
         void SpawnEnemy()
         {

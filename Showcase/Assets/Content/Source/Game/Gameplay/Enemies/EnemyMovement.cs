@@ -1,9 +1,9 @@
-﻿using R3;
+﻿using DG.Tweening;
 using Helpers;
+using R3;
 using UnityEngine;
-using DG.Tweening;
 
-namespace Source.Gameplay
+namespace Source.Game.Gameplay
 {
 public class EnemyMovement : MonoBehaviour
 {

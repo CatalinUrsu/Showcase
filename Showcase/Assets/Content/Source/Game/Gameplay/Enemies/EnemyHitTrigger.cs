@@ -1,8 +1,8 @@
 ﻿using System;
-using UnityEngine;
 using IdleNumbers;
+using UnityEngine;
 
-namespace Source.Gameplay
+namespace Source.Game.Gameplay
 {
 public class EnemyHitTrigger : MonoBehaviour
 {

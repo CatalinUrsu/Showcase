@@ -1,27 +1,31 @@
 ﻿using FMOD.Studio;
 using UnityEngine;
+using Source.Data;
 using Helpers.Audio;
 using Helpers.PoolSystem;
-using Source.Data;
 
-namespace Source.Gameplay
+namespace Source.Game.Gameplay
 {
-public class EnemyInitConfig
+public class EnemiesInitConfig
 {
-    public Pool<EventInstance> HitSoundPool { get; private set; }
-    public Pool<EventInstance> DeathSoundPool { get; private set; }
+    public Pool<EventInstance> HitSfxPool { get; private set; }
+    public Pool<EventInstance> DeathSfxPool { get; private set; }
     public Pool<PooledObject> HitFxPool { get; private set; }
     public Pool<PooledObject> DeathFxPool { get; private set; }
 
-    public EnemyInitConfig(PooledObject hitFxPrefab, PooledObject deathFxPrefab, Transform poolActive, Transform poolInactive)
+    public EnemiesInitConfig(PooledObject hitFxPrefab,
+                             PooledObject deathFxPrefab,
+                             Transform poolActive,
+                             Transform poolInactive,
+                             FmodEventsSo fmodEventsSo)
     {
-        HitSoundPool = new FactoryFmodEvents.Builder(FmodEventsSo.Instance.Hit)
+        HitSfxPool = new FactoryFmodEvents.Builder(fmodEventsSo.Hit)
                        .SetPreloadCount(5)
                        .SetMaxCount(7)
                        .Set3DAttributes(true)
                        .Build();
 
-        DeathSoundPool = new FactoryFmodEvents.Builder(FmodEventsSo.Instance.EnemyDeath)
+        DeathSfxPool = new FactoryFmodEvents.Builder(fmodEventsSo.EnemyDeath)
                          .SetPreloadCount(3)
                          .SetMaxCount(5)
                          .Set3DAttributes(true)
@@ -42,8 +46,8 @@ public class EnemyInitConfig
 
     public void Deinit()
     {
-        HitSoundPool.Clear();
-        DeathSoundPool.Clear();
+        HitSfxPool.Clear();
+        DeathSfxPool.Clear();
         HitFxPool.Clear();
         DeathFxPool.Clear();
     }

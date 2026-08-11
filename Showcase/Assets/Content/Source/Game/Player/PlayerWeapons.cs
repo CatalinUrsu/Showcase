@@ -7,8 +7,8 @@ using Source.Data;
 using FMOD.Studio;
 using IdleNumbers;
 using Helpers.Audio;
-using Source.Gameplay;
 using Helpers.PoolSystem;
+using Source.Game.Gameplay;
 
 namespace Source.Game.Player
 {

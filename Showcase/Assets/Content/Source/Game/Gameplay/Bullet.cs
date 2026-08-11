@@ -3,7 +3,7 @@ using IdleNumbers;
 using UnityEngine;
 using Helpers.PoolSystem;
 
-namespace Source.Gameplay
+namespace Source.Game.Gameplay
 {
 public class Bullet : PooledObject
 {

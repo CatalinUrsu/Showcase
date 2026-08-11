@@ -17,7 +17,7 @@ public class GameplayState : IStateEnter
     public async UniTask Enter()
     {
         AddGameRunControllerListeners();
-        _gameplayContext.EnemiesController.ToggleSpawning(true);
+        _gameplayContext.EnemiesSpawner.ToggleSpawning(true);
 
         await UniTask.WhenAll(_gameplayContext.UIFacade.SelectPanel(EGamePanels.Game),
                               _gameplayContext.PlayerFacade.ShowPlayer());
@@ -28,7 +28,7 @@ public class GameplayState : IStateEnter
     public async UniTask Exit()
     {
         RemoveGameRunControllerListeners();
-        _gameplayContext.EnemiesController.ToggleSpawning(false);
+        _gameplayContext.EnemiesSpawner.ToggleSpawning(false);
         _gameplayContext.PlayerFacade.ToggleControl(false);
     }
 

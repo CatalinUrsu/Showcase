@@ -54,7 +54,7 @@ public class GameMenuStateBase : StateBase
         _gameplayContext.BankLoader.Deinit();
         _gameplayContext.PlayerFacade.Deinit();
         _gameplayContext.UIFacade.Deinit();
-        _gameplayContext.EnemiesController.Deinit();
+        _gameplayContext.EnemiesSpawner.Deinit();
 
         Time.timeScale = 1;
 

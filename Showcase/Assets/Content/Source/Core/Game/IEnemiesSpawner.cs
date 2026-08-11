@@ -2,7 +2,7 @@
 
 namespace Source
 {
-public interface IEnemiesController
+public interface IEnemiesSpawner
 {
     UniTask Init();
     void Deinit();

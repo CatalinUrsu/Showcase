@@ -1,11 +1,11 @@
 using R3;
 using System;
 using Helpers;
-using DG.Tweening;
 using UnityEngine;
+using DG.Tweening;
 using Random = UnityEngine.Random;
 
-namespace Source
+namespace Source.Game
 {
 public class BackgroundController : MonoBehaviour
 {

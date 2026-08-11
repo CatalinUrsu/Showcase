@@ -1,14 +1,16 @@
 ﻿using System;
 using Zenject;
 using FMODUnity;
-using IdleNumbers;
-using UnityEngine;
 using FMOD.Studio;
-using Helpers.PoolSystem;
+using IdleNumbers;
 using Source.Data;
+using UnityEngine;
+using Helpers.PoolSystem;
 
-namespace Source.Gameplay
+namespace Source.Game.Gameplay
 {
+[RequireComponent(typeof(EnemyHitTrigger), typeof(EnemyMovement), typeof(EnemyAppearence))]
+[RequireComponent(typeof(EnemyHealth))]
 public class EnemyFacade : PooledObject
 {
 #region Fields
@@ -23,12 +25,13 @@ public class EnemyFacade : PooledObject
     [SerializeField] EnemyHealth _enemyHealth;
     
     EnemySO _enemyDataSO;
-    EnemyInitConfig _initConfig;
-    GameRunModel _gameRunModel;
+    EnemiesInitConfig _initConfig;
+    [Inject] IGameRunModelController _runModelController;
+    IProgressModel _progressModel;
 
 #endregion
 
-#region Public methods
+#region Monobeh
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -38,13 +41,21 @@ public class EnemyFacade : PooledObject
 
     void OnDestroy() => _enemyMovement.Deinit();
 
+#endregion
+    
+#region Public methods
+    
     [Inject]
-    public void Construct(GameRunModel gameRunModel) => _gameRunModel = gameRunModel;
+    public void Construct(IGameRunModelController runModelController, IProgressModelController progressModelController)
+    {
+        _runModelController = runModelController;
+        _progressModel = progressModelController.IModel;
+    }
 
     public override PooledObject Init(Action<PooledObject> onReleaseToPool, object config = null)
     {
-        if (config is EnemyInitConfig soundPools) 
-            _initConfig = soundPools;
+        if (config is EnemiesInitConfig initConfig) 
+            _initConfig = initConfig;
             
         _hitTrigger.OnHit += OnHit_handler;
         _hitTrigger.OnHitPlayer += DestroyEnemy;
@@ -55,13 +66,12 @@ public class EnemyFacade : PooledObject
 
     public override void Set(object config = null)
     {
-        if (config is EnemySO enemySo)
-        {
-            _enemyDataSO = enemySo;
-            _enemyAppearence.Set(_spriteRenderer, _enemyDataSO.EnemyAppearence);
-            _enemyMovement.Set(enemySo.SpeedRadius);
-            _enemyHealth.Set(enemySo.HP + SessionService.Current.Progress.Lvl.Value * 1.5f);
-        }
+        if (config is not EnemySO enemySo) return;
+        
+        _enemyDataSO = enemySo;
+        _enemyAppearence.Set(_spriteRenderer, _enemyDataSO.EnemyAppearence);
+        _enemyMovement.Set(enemySo.SpeedRadius);
+        _enemyHealth.Set(enemySo.HP + _progressModel.LvlRef.CurrentValue * 1.5f);
     }
 
 #endregion
@@ -70,8 +80,8 @@ public class EnemyFacade : PooledObject
 
     void OnHit_handler(IdleNumber damage, Vector2 impulseDirection)
     {
-        _enemyHealth.OnHit_handler(damage);
-        PlayAudio(_initConfig.HitSoundPool.Get());
+        _enemyHealth.TakeDamage(damage);
+        PlayAudio(_initConfig.HitSfxPool.Get());
 
         if (_enemyHealth.IsDead)
             KillByBullet();
@@ -85,7 +95,7 @@ public class EnemyFacade : PooledObject
     void KillByBullet()
     {
         DestroyEnemy();
-        _gameRunModel.AddKillReward(_enemyDataSO.RewardPoints, _enemyDataSO.Coin);
+        _runModelController.AddCoinsReward(_enemyDataSO.RewardPoints, _enemyDataSO.Coin);
     }
 
     void DestroyEnemy()
@@ -93,13 +103,13 @@ public class EnemyFacade : PooledObject
         _enemyMovement.OnDie_handler();
 
         PlayFx(_initConfig.DeathFxPool.Get());
-        PlayAudio(_initConfig.DeathSoundPool.Get());
+        PlayAudio(_initConfig.DeathSfxPool.Get());
         OnReleaseToPool_raise();   
     }
 
     void PlayAudio(EventInstance eventInstance)
     {
-        eventInstance.set3DAttributes(RuntimeUtils.To3DAttributes(transform.position));
+        eventInstance.set3DAttributes(transform.position.To3DAttributes());
         eventInstance.start();
     }
     
