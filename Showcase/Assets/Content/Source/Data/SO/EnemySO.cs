@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Source.Data
 {
-[CreateAssetMenu(menuName = "SO/Enemy", fileName = "Enemy_")]
+[CreateAssetMenu(menuName = "SO/Enemy", fileName = "Enemy_", order = 1)]
 public class EnemySO : ScriptableObject
 {
     public IdleNumber Coin;

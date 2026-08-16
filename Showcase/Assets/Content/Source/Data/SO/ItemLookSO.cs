@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Source.Data
 {
-[CreateAssetMenu(menuName = "SO/ItemAppearence", fileName = "Appearence_")]
+[CreateAssetMenu(menuName = "SO/Items/ItemAppearance", fileName = "Appearance_", order = 2)]
 public class ItemLookSO : ScriptableObject
 {
     public ItemIdSo IdSo;

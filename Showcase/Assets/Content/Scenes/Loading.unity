@@ -196,6 +196,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -317,6 +318,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -700,8 +702,29 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4643210783151171430, guid: c1bb39b52fb032147885241423845f05, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1666692920}
   m_SourcePrefab: {fileID: 100100000, guid: c1bb39b52fb032147885241423845f05, type: 3}
+--- !u!1 &1666692919 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4643210783151171430, guid: c1bb39b52fb032147885241423845f05, type: 3}
+  m_PrefabInstance: {fileID: 1666692918}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1666692920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666692919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62f4a85f076e456d9eea34915237e8ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Source.Boot::Source.Boot.LoadingInstaller
+  _splashScreen: {fileID: 1585211570}
 --- !u!1 &1838421507
 GameObject:
   m_ObjectHideFlags: 0

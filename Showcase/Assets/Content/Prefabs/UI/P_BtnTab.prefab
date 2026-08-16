@@ -11,8 +11,10 @@ GameObject:
   - component: {fileID: 1480455159194975124}
   - component: {fileID: 20871589886377195}
   - component: {fileID: 8953695972271773259}
-  - component: {fileID: 2724349226674803605}
+  - component: {fileID: 2927426553447247272}
   - component: {fileID: 5207482648975936847}
+  - component: {fileID: 2724349226674803605}
+  - component: {fileID: 3234969699093132712}
   m_Layer: 5
   m_Name: P_BtnTab
   m_TagString: Untagged
@@ -77,7 +79,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2724349226674803605
+--- !u!114 &2927426553447247272
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -86,9 +88,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2974227983694073373}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ee275dca5801ea499713eddaf4aa5f5, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -121,7 +123,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
-  _canvasGroup: {fileID: 5207482648975936847}
 --- !u!225 &5207482648975936847
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -134,3 +135,29 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &2724349226674803605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2974227983694073373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ee275dca5801ea499713eddaf4aa5f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _btnHelper: {fileID: 3234969699093132712}
+  _canvasGroup: {fileID: 5207482648975936847}
+--- !u!114 &3234969699093132712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2974227983694073373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42c4b266945d47a5ba640b657d875aea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Source.UI::Source.UI.ButtonBase

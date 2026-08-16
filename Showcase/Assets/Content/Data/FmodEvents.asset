@@ -1,0 +1,112 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e7992b6c38849f680ffe20a5cfcd931, type: 3}
+  m_Name: FmodEvents
+  m_EditorClassIdentifier: Source.Data::Source.Data.FmodEventsSo
+  BtnClick:
+    Guid:
+      Data1: -1654974024
+      Data2: 1160016242
+      Data3: -2096727362
+      Data4: -1375416317
+    Path: event:/General/Btn_Click
+  Music:
+    Guid:
+      Data1: -1797031959
+      Data2: 1078068380
+      Data3: -1720410467
+      Data4: -1549129830
+    Path: event:/General/Music
+  Fly:
+    Guid:
+      Data1: 315747313
+      Data2: 1182180167
+      Data3: 2083204025
+      Data4: -425265385
+    Path: event:/General/Ship_Fly
+  BtnBuy:
+    Guid:
+      Data1: 915629557
+      Data2: 1136029237
+      Data3: 1249816728
+      Data4: 708821954
+    Path: event:/Menu/Btn_Buy_Item
+  SelectItem:
+    Guid:
+      Data1: 698464602
+      Data2: 1256467005
+      Data3: 876875151
+      Data4: 692660206
+    Path: event:/Menu/Btn_Select_Item
+  ResetProgress:
+    Guid:
+      Data1: -1045604139
+      Data2: 1188236322
+      Data3: 1478517923
+      Data4: -861726293
+    Path: event:/Menu/Btn_Reset_Progress
+  ItemAppear:
+    Guid:
+      Data1: -1112117314
+      Data2: 1288098168
+      Data3: -699274076
+      Data4: -415204332
+    Path: event:/Menu/Item_Appear
+  Hit:
+    Guid:
+      Data1: 610748943
+      Data2: 1148293828
+      Data3: -2036960583
+      Data4: -2037716263
+    Path: event:/Gameplay/Hit
+  Shoot:
+    Guid:
+      Data1: -462007667
+      Data2: 1334518408
+      Data3: -301813573
+      Data4: 672082726
+    Path: event:/Gameplay/Shoot
+  PlayerDeath:
+    Guid:
+      Data1: 762930800
+      Data2: 1261744237
+      Data3: -684020069
+      Data4: -1164495276
+    Path: event:/Gameplay/Player_Death
+  EnemyDeath:
+    Guid:
+      Data1: 839651761
+      Data2: 1232618546
+      Data3: 1043214227
+      Data4: -513072155
+    Path: event:/Gameplay/Enemy_Death
+  PopupOpen:
+    Guid:
+      Data1: -760526951
+      Data2: 1221130978
+      Data3: 1939925661
+      Data4: -33472444
+    Path: event:/Gameplay/Popup_Open
+  PopupClose:
+    Guid:
+      Data1: -1442744655
+      Data2: 1275289007
+      Data3: 435754174
+      Data4: -870717831
+    Path: event:/Gameplay/Popup_Close
+  LvlUp:
+    Guid:
+      Data1: -1635851653
+      Data2: 1245247881
+      Data3: 817126042
+      Data4: -2122446989
+    Path: event:/Gameplay/Lvl_Up

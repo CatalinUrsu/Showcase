@@ -13,6 +13,7 @@ namespace Source.UI
 {
 public class MenuTabsGroup : TabsGroup, IMenuTabsGroup
 {
+    [Space]
     [SerializeField] RectTransform _indicatorRT;
     [SerializeField] FmodEventsSo _fmodEventsSo;
 

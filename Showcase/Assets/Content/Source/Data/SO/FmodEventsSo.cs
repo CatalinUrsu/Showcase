@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Source.Data
 {
-[CreateAssetMenu(fileName = "FmodEvents", menuName = "SO/Audio/Fmod Events", order = 0)]
+[CreateAssetMenu(fileName = "FmodEvents", menuName = "SO/Fmod Events", order = 0)]
 public class FmodEventsSo : ScriptableObject
 {
     [Header("General")]
