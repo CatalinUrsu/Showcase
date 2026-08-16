@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 
 namespace Source.Game.Player
 {
-[RequireComponent(typeof(Rigidbody), typeof(PlayerAppearance), typeof(PlayerEmergence))]
+[RequireComponent(typeof(Rigidbody2D), typeof(PlayerAppearance), typeof(PlayerEmergence))]
 public class PlayerFacade : MonoBehaviour, IPlayerFacade
 {
     [SerializeField] protected Rigidbody2D _rb;

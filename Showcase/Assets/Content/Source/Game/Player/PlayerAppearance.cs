@@ -7,12 +7,14 @@ namespace Source.Game.Player
 {
 public class PlayerAppearance : MonoBehaviour
 {
-    [SerializeField] protected ItemLookSO[] _shipsSkins;
-    [SerializeField] protected ItemLookSO[] _weaponsSkins;
-    [SerializeField] protected SpriteRenderer _imgShip;
-    [SerializeField] protected SpriteRenderer _imgWeaponL;
-    [SerializeField] protected SpriteRenderer _imgWeaponR;
-    
+    [SerializeField] ItemLookSO[] _shipsSkins;
+    [SerializeField] ItemLookSO[] _weaponsSkins;
+
+    [Space]
+    [SerializeField] SpriteRenderer _imgShip;
+    [SerializeField] SpriteRenderer _imgWeaponL;
+    [SerializeField] SpriteRenderer _imgWeaponR;
+
     [Inject] IProgressModelController _progressModelController;
 
     public void Init()
@@ -20,7 +22,7 @@ public class PlayerAppearance : MonoBehaviour
         _progressModelController.IModel.UsedShipIdxRef.Subscribe(SetShipSprite).AddTo(gameObject);
         _progressModelController.IModel.UsedWeaponIdxRef.Subscribe(SetWeaponSprite).AddTo(gameObject);
     }
-    
+
     public void ToggleAppearance(bool enable)
     {
         _imgShip.enabled = enable;
