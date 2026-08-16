@@ -49,6 +49,7 @@ MonoBehaviour:
   _monoInstallers:
   - {fileID: 296825087063195945}
   _installerPrefabs: []
+  _findSiblingMonoInstallers: 0
   _parentNewObjectsUnderContext: 1
   _editorReflectionBakingCoverageMode: 0
   _buildsReflectionBakingCoverageMode: 0
@@ -57,6 +58,7 @@ MonoBehaviour:
     _displayWarningWhenResolvingDuringInstall: 1
     _validationRootResolveMethod: 0
     _validationErrorResponse: 0
+    _constructorChoiceStrategy: 0
     _signalSettings:
       _defaultSyncMode: 0
       _missingHandlerDefaultResponse: 2
@@ -74,3 +76,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1d9415f90d0b8648a94cb4ebca675ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _weaponsSO:
+  - {fileID: 11400000, guid: 9d5703454b105de4d891f31f7a7e21a0, type: 2}
+  - {fileID: 11400000, guid: 7e92e494cbef878408e7fbfc1da75f56, type: 2}
+  - {fileID: 11400000, guid: 9698609f4bb69df4db339bdfb9dc02ec, type: 2}
+  - {fileID: 11400000, guid: 5e232db8ceccca148bc05beae74a38d0, type: 2}
+  - {fileID: 11400000, guid: 90adaa1116534b840b7c9a5e832ce70a, type: 2}
+  - {fileID: 11400000, guid: b77e9f6ed0b3cc740b84f537cbe01035, type: 2}
+  - {fileID: 11400000, guid: b0e4634b89b795b498b403348b1a6f14, type: 2}
+  _ShipsSO:
+  - {fileID: 11400000, guid: 9c892277be99d3e40943e9d79150b52b, type: 2}
+  - {fileID: 11400000, guid: bd40146e5db9dbf46a9b56939e040a58, type: 2}
+  - {fileID: 11400000, guid: 0c46c828970829f40aee3627e518e574, type: 2}
+  - {fileID: 11400000, guid: 20a6acc0527e29b40b9f89a7727477a0, type: 2}
+  - {fileID: 11400000, guid: c35686705347b2543bc4e0f22b799e6f, type: 2}
+  - {fileID: 11400000, guid: ac7305313517dd74d8ad797c6fcb9a3e, type: 2}
+  _fmodEventsSO: {fileID: 11400000, guid: aafaf79d7f4f39344a5a2ab150ea6dc0, type: 2}

@@ -22,12 +22,12 @@ public abstract class StateBase : IStateEnter
 
     public StateBase(ISceneLoaderService sceneLoaderService,
                      IProgressTrackingService progressTrackingService,
-                     ISplashScreen splashScreen,
+                     ILoadingContext splashScreen,
                      IAudioService audioService)
     {
         _sceneLoaderService = sceneLoaderService;
         _progressTrackingService = progressTrackingService;
-        _splashScreen = splashScreen;
+        _splashScreen = splashScreen.SplashScreen;
         _audioService = audioService;
     }
 

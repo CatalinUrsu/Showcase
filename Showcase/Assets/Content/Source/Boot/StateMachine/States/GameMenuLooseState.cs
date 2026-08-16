@@ -7,15 +7,15 @@ public class GameMenuLooseState : GameMenuStateBase
 {
     public GameMenuLooseState(ISceneLoaderService sceneLoaderService,
                               IProgressTrackingService progressTrackingService,
-                              ISplashScreen splashScreen,
                               IAudioService audioService,
                               ISessionService sessionService,
+                              ILoadingContext loadingContext,
                               IGameplayContext gameplayContext)
         : base(sceneLoaderService,
                progressTrackingService,
-               splashScreen,
                audioService,
                sessionService,
+               loadingContext,
                gameplayContext) { }
 
     public override async UniTask Enter()

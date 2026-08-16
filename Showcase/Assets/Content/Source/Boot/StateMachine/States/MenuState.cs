@@ -12,10 +12,10 @@ public class MenuState : StateBase
 
     public MenuState(ISceneLoaderService sceneLoaderService,
                      IProgressTrackingService progressTrackingService,
-                     ISplashScreen splashScreen,
                      IAudioService audioService,
+                     ILoadingContext loadingContext,
                      IMenuContext menuContext)
-        : base(sceneLoaderService, progressTrackingService, splashScreen, audioService)
+        : base(sceneLoaderService, progressTrackingService, loadingContext, audioService)
     {
         _menuContext = menuContext;
     }

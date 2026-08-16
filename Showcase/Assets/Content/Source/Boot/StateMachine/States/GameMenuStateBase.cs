@@ -16,11 +16,11 @@ public class GameMenuStateBase : StateBase
 
     public GameMenuStateBase(ISceneLoaderService sceneLoaderService,
                              IProgressTrackingService progressTrackingService,
-                             ISplashScreen splashScreen,
                              IAudioService audioService,
                              ISessionService sessionService,
+                             ILoadingContext loadingContext,
                              IGameplayContext gameplayContext)
-        : base(sceneLoaderService, progressTrackingService, splashScreen, audioService)
+        : base(sceneLoaderService, progressTrackingService, loadingContext, audioService)
     {
         _sessionService = sessionService;
         _gameplayContext = gameplayContext;

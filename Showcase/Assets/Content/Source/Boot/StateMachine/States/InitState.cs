@@ -20,12 +20,12 @@ public class InitState : IStateEnter
 #region Public methods
 
     public InitState(ISceneLoaderService sceneLoaderService,
-                     ISplashScreen splashScreen,
+                     ILoadingContext loadingContext,
                      IAudioService audioService,
                      ISettingsModelController settingsModelController)
     {
         _sceneLoaderService = sceneLoaderService;
-        _splashScreen = splashScreen;
+        _splashScreen = loadingContext.SplashScreen;
         _audioService = audioService;
         _settingsModel = settingsModelController.IModel;
     }

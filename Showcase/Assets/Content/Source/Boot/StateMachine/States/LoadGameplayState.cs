@@ -12,10 +12,10 @@ public class LoadGameplayState : StateBase
 
     public LoadGameplayState(ISceneLoaderService sceneLoaderService,
                              IProgressTrackingService progressTrackingService,
-                             ISplashScreen splashScreen,
                              IAudioService audioService,
+                             ILoadingContext loadingContext,
                              IGameplayContext gameplayContext)
-        : base(sceneLoaderService, progressTrackingService, splashScreen, audioService)
+        : base(sceneLoaderService, progressTrackingService, loadingContext, audioService)
     {
         _gameplayContext = gameplayContext;
     }
