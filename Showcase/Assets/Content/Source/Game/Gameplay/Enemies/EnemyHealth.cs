@@ -8,22 +8,18 @@ public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] Slider _hpSlider;
 
-    int _hpIdleNumLvl;
+    IdleNumber _hp;
     
     public bool IsDead => _hpSlider.value <= 0;
 
-    public void Set(IdleNumber initEnemyHP)
+    public void Set(IdleNumber initHp, int lvl)
     {
-        var idleNumberHP = new IdleNumber(initEnemyHP) * Mathf.Pow(ConstGameplay.ENEMY_HP_MULTIPLIER, SessionService.Current.Progress.Lvl.Value);
-        _hpIdleNumLvl = idleNumberHP.Lvl;
+        _hp = new IdleNumber(initHp * Mathf.Pow(ConstGameplay.ENEMY_HP_MULTIPLIER, lvl));
 
-        _hpSlider.maxValue = (float)idleNumberHP.Value;
+        _hpSlider.maxValue = (float)_hp.Value;
         _hpSlider.value = _hpSlider.maxValue;
     }
 
-    public void TakeDamage(IdleNumber damage)
-    {
-        _hpSlider.value -= (float)damage.RoundToTargetValue(_hpIdleNumLvl);
-    }
+    public void TakeDamage(IdleNumber damage) => _hpSlider.value -= (float)damage.RoundToTargetValue(_hp.Lvl);
 }
 }
