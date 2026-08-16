@@ -2,9 +2,9 @@
 using UnityEngine;
 using Source.Data;
 using Helpers.Audio;
-using Source.Game.Gameplay;
-using Source.Game.Player;
 using Source.UI.Gameplay;
+using Source.Game.Player;
+using Source.Game.Gameplay;
 
 namespace Source.Boot
 {
@@ -14,8 +14,6 @@ public class GameplayInstaller : MonoInstaller
     [SerializeField] PlayerFacade _playerFacade;
     [SerializeField] GameUIFacade _uiFacade;
     [SerializeField] EnemiesSpawner _enemiesSpawner;
-
-    [SerializeField] GamePanelGameplay _gameplayView;
 
     IGameplayContext _gameplayContext;
 

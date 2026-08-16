@@ -23,15 +23,13 @@ public class GamePanelGameplay : GamePanel, IGameplayView
     [SerializeField] TextMeshProUGUI _txtCoin;
 
     [Space]
-    [SerializeField] FmodEventsSo _fmodEventsSo;
     [SerializeField] ParticleSystem _newLvlFx_1;
     [SerializeField] ParticleSystem _newLvlFx_2;
 
-    const float LVL_TEXT_ANIM_DUR = .25f;
     Vector3 _lvlTextRTMaxSize = new(1.3f, 1.3f, 1);
     RectTransform _lvlTextRT;
+    FmodEventsSo _fmodEventsSo;
 
-    const float COINS_ANIM_DUR = .1f;
     Vector3 _coinsRTMaxSize = new(1.1f, 1.1f, 1);
     RectTransform _coinsRT;
 
@@ -39,13 +37,20 @@ public class GamePanelGameplay : GamePanel, IGameplayView
     Tween _coinTween;
     Sequence _newLvlSequence;
     GameRunPresenter _gameRunPresenter;
+    
+    const float COINS_ANIM_DUR = .1f;
+    const float LVL_TEXT_ANIM_DUR = .25f;
 
 #endregion
 
 #region Public methods
 
     [Inject]
-    public void Construct(GameRunPresenter.Factory gameRunPresenterFactory) => _gameRunPresenter = gameRunPresenterFactory.Create(this);
+    public void Construct(GameRunPresenter.Factory gameRunPresenterFactory, FmodEventsSo fmodEventsSo)
+    {
+        _gameRunPresenter = gameRunPresenterFactory.Create(this);
+        _fmodEventsSo = fmodEventsSo;
+    }
 
     public override void Init()
     {

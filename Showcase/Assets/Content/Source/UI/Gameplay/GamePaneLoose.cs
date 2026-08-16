@@ -12,8 +12,11 @@ public class GamePaneLoose : GamePanel
 {
 #region Fields
 
+    [Space]
     [SerializeField] LocalizeStringEvent _txtCollectedCoins;
     [SerializeField] TextMeshProUGUI _txtTotal;
+    
+    [Space]
     [SerializeField] ButtonBase _buttonRestart;
     [SerializeField] ButtonBase _buttonHome;
 

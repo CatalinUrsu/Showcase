@@ -1,4 +1,5 @@
 using UnityEngine;
+using EditorAttributes;
 
 namespace Source.Data
 {
@@ -6,6 +7,6 @@ namespace Source.Data
 public class ItemLookSO : ScriptableObject
 {
     public ItemIdSo IdSo;
-    public Sprite ItemSprite;
+    [AssetPreview(64, 64)] public Sprite ItemSprite;
 }
 }

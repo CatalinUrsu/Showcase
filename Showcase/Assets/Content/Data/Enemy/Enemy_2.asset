@@ -20,4 +20,4 @@ MonoBehaviour:
     Lvl: 0
   RewardPoints: 1
   SpeedRadius: {x: 3, y: 4}
-  EnemyAppearence: {fileID: 21300000, guid: 2b910efd6f5a34345b38fd841e294148, type: 3}
+  EnemyAppearance: {fileID: 21300000, guid: 2b910efd6f5a34345b38fd841e294148, type: 3}

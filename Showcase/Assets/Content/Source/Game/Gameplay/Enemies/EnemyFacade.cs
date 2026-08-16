@@ -69,7 +69,7 @@ public class EnemyFacade : PooledObject
         if (config is not EnemySO enemySo) return;
         
         _enemyDataSO = enemySo;
-        _enemyAppearence.Set(_spriteRenderer, _enemyDataSO.EnemyAppearence);
+        _enemyAppearence.Set(_spriteRenderer, _enemyDataSO.EnemyAppearance);
         _enemyMovement.Set(enemySo.SpeedRadius);
         _enemyHealth.Set(enemySo.HP, _progressModel.LvlRef.CurrentValue);
     }

@@ -7,10 +7,10 @@ public class GamePanel : MonoBehaviour
 {
 #region Fields
 
-    [SerializeField] EGamePanels _ePanelType;
+    [SerializeField] EGamePanels _panelType;
     [SerializeField] protected GamePanelAnimation _animation;
 
-    public EGamePanels EPanelType => _ePanelType;
+    public EGamePanels PanelType => _panelType;
 
 #endregion
 

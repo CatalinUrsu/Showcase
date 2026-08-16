@@ -1,5 +1,6 @@
 ﻿using IdleNumbers;
 using UnityEngine;
+using EditorAttributes;
 
 namespace Source.Data
 {
@@ -10,6 +11,6 @@ public class EnemySO : ScriptableObject
     public IdleNumber HP;
     public float RewardPoints;
     public Vector2 SpeedRadius;
-    public Sprite EnemyAppearence;
+    [AssetPreview(64, 64)] public Sprite EnemyAppearance;
 }
 }

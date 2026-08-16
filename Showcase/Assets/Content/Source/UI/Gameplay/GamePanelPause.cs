@@ -5,6 +5,7 @@ namespace Source.UI.Gameplay
 {
 public class GamePanelPause : GamePanel
 {
+    [Space]
     [SerializeField] ButtonBase _buttonHome;
     [SerializeField] ButtonBase _buttonContinue;
 
