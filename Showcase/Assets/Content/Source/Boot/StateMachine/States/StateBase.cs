@@ -13,7 +13,7 @@ public abstract class StateBase : IStateEnter
 
     readonly ISceneLoaderService _sceneLoaderService;
     protected readonly IProgressTrackingService _progressTrackingService;
-    readonly ISplashScreen _splashScreen;
+    readonly ILoadingContext _loadingContext;
     protected readonly IAudioService _audioService;
 
 #endregion
@@ -22,12 +22,12 @@ public abstract class StateBase : IStateEnter
 
     public StateBase(ISceneLoaderService sceneLoaderService,
                      IProgressTrackingService progressTrackingService,
-                     ILoadingContext splashScreen,
+                     ILoadingContext loadingContext,
                      IAudioService audioService)
     {
         _sceneLoaderService = sceneLoaderService;
         _progressTrackingService = progressTrackingService;
-        _splashScreen = splashScreen.SplashScreen;
+        _loadingContext = loadingContext;
         _audioService = audioService;
     }
 
@@ -41,9 +41,9 @@ public abstract class StateBase : IStateEnter
 
     protected void SetMusicState(EMusicStates state) => _audioService.MusicInstance.SetParameter(ConstFMOD.MUSIC_STATE, state.ToString());
 
-    protected async UniTask ShowSplashScreen() => await _splashScreen.Show();
+    protected async UniTask ShowSplashScreen() => await _loadingContext.SplashScreen.Show();
 
-    protected async UniTask HideSplashScreen() => await _splashScreen.Hide();
+    protected async UniTask HideSplashScreen() => await _loadingContext.SplashScreen.Hide();
 
     protected async UniTask LoadScene(SceneLoadParams sceneLoadParams)
     {

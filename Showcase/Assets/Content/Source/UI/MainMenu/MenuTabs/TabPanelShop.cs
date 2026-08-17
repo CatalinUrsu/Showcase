@@ -1,5 +1,6 @@
 using R3;
 using System;
+using Zenject;
 using UnityEngine;
 using DG.Tweening;
 using Source.Data;
@@ -19,6 +20,7 @@ public class TabPanelShop : MenuTabsPanel
     protected List<ItemView> _items = new();
     float _effectLocation;
     Tween _shineTween;
+    [Inject] DiContainer _diContainer;
 
 #endregion
 
@@ -43,7 +45,7 @@ public class TabPanelShop : MenuTabsPanel
         for (var i = 0; i < _itemAppearenceSO.Length; i++)
         {
             var itemAppearance = _itemAppearenceSO[i];
-            var itemView = Instantiate(_item, _itemsContainer);
+            var itemView = _diContainer.InstantiatePrefabForComponent<ItemView>(_item, _itemsContainer);
 
             itemView.Init(itemAppearance);
             _items.Add(itemView);

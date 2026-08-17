@@ -293,6 +293,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5011245106094240787}
   - component: {fileID: 7618668572000394336}
+  - component: {fileID: 148346101360095772}
   - component: {fileID: 7760007640999039938}
   m_Layer: 5
   m_Name: P_Item
@@ -335,7 +336,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &7760007640999039938
+--- !u!114 &148346101360095772
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -344,9 +345,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3779104309667099233}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42c4b266945d47a5ba640b657d875aea, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -354,7 +355,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -379,7 +380,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
-  _playButtonSound: 0
+--- !u!114 &7760007640999039938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3779104309667099233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42c4b266945d47a5ba640b657d875aea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Btn>k__BackingField: {fileID: 148346101360095772}
+  <RT>k__BackingField: {fileID: 5011245106094240787}
 --- !u!1 &4058370572708924469
 GameObject:
   m_ObjectHideFlags: 0
@@ -728,6 +742,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
