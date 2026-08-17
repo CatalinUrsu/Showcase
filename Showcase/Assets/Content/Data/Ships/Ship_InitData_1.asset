@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61a95feb60044d908907a65677dd758f, type: 3}
   m_Name: Ship_InitData_1
   m_EditorClassIdentifier: 
-  GUID: bbd93ea3-758f-4dac-bc76-408f31a9b67c
-  ShipInfo:
+  IdSo: {fileID: 11400000, guid: fdc8d3dd559bbf945b256ab86e53b60c, type: 2}
+  InitData:
     IsBought: 1
     IsSelected: 1
     BuyPrice:
       Value: 0
       Lvl: 0
     UpgradePrice:
-      Value: 10
+      Value: 0
       Lvl: 0
-    EnemyCoinBonus: 5
+    EnemyCoinBonus: 0

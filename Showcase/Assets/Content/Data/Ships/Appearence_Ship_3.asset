@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 392402a2d3f94432be672f085e1111dd, type: 3}
   m_Name: Appearence_Ship_3
   m_EditorClassIdentifier: 
+  IdSo: {fileID: 11400000, guid: 00fadcf81d85e254a806e925e33ccf2c, type: 2}
   ItemSprite: {fileID: 21300000, guid: 95138c03dd730b9499b0298b27f10b93, type: 3}
-  ItemCurrencyIcon: {fileID: 21300000, guid: e122fd36d566bb546ad34dcce8ffeacc, type: 3}

@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bad9893628c4113aa97b1f04b194c11, type: 3}
   m_Name: Weapon_InitData_7
   m_EditorClassIdentifier: 
-  GUID: ce9aec2c-b19a-471f-837a-18537b1c4730
-  WeaponInfo:
+  IdSo: {fileID: 11400000, guid: 55b61e3d1d891744583e99f0b67afdee, type: 2}
+  InitData:
     IsBought: 0
     IsSelected: 0
     BuyPrice:
-      Value: 8
-      Lvl: 1
-    UpgradePrice:
-      Value: 4
-      Lvl: 1
-    FirePower:
-      Value: 400
+      Value: 0
       Lvl: 0
-    FireRate: 0.4
+    UpgradePrice:
+      Value: 0
+      Lvl: 0
+    FirePower:
+      Value: 0
+      Lvl: 0
+    FireRate: 0

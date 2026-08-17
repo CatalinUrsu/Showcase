@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 392402a2d3f94432be672f085e1111dd, type: 3}
   m_Name: Appearence_Weapon_7
   m_EditorClassIdentifier: 
+  IdSo: {fileID: 11400000, guid: 55b61e3d1d891744583e99f0b67afdee, type: 2}
   ItemSprite: {fileID: 21300000, guid: c36c3c6c38eeb3941809746e15e4591f, type: 3}
-  ItemCurrencyIcon: {fileID: 21300000, guid: 717ce97b5ccf65e49b48175e2e640a11, type: 3}
