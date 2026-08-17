@@ -15,10 +15,10 @@ public class ProgressModel : IProgressModel
     public ReadOnlyReactiveProperty<int> UsedWeaponIdxRef => UsedWeaponIdx;
 
     // ---------- Serialized ----------
-    public ReactiveProperty<int> Lvl { get; private set; }
-    public ReactiveProperty<IdleNumber> Coins { get; private set; }
-    public ReactiveProperty<IdleNumber> Diamonds { get; private set; }
-    public ReactiveProperty<int> UsedShipIdx { get; private set; }
-    public ReactiveProperty<int> UsedWeaponIdx { get; private set; }
+    public ReactiveProperty<int> Lvl { get; private set; } = new();
+    public ReactiveProperty<IdleNumber> Coins { get; private set; } = new(new IdleNumber());
+    public ReactiveProperty<IdleNumber> Diamonds { get; private set; } = new(new IdleNumber());
+    public ReactiveProperty<int> UsedShipIdx { get; private set; } = new();
+    public ReactiveProperty<int> UsedWeaponIdx { get; private set; } = new();
 }
 }

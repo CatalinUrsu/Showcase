@@ -22,11 +22,7 @@ public class AudioService : IAudioService
 
 #region Public methods
 
-    public AudioService(FmodEventsSo fmodEventsSO)
-    {
-        Debug.Log($"[AudioServices]: AudioService -> fmodEvents is null {fmodEventsSO == null}");
-        _fmodEvents = fmodEventsSO;
-    }
+    public AudioService(FmodEventsSo fmodEventsSO) => _fmodEvents = fmodEventsSO;
 
     public void Init()
     {
@@ -45,7 +41,6 @@ public class AudioService : IAudioService
 
     void InitEventInstances()
     {
-        Debug.Log($"[AudioServices]: InitEventInstances -> fmodEvents is null {_fmodEvents == null}");
         MusicInstance = _fmodEvents.Music.GetInstance();
         MusicInstance.start();
 

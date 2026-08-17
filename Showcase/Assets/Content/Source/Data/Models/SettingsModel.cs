@@ -14,10 +14,10 @@ public class SettingsModel : ISettingsModel
     public ReadOnlyReactiveProperty<int> LocaleIdxRef => LocaleIdx;
 
     // ---------- Serialized ----------
-    public ReactiveProperty<bool> Sound { get; private set; }
-    public ReactiveProperty<bool> Music { get; private set; }
-    public ReactiveProperty<float> SoundVolume { get; private set; }
-    public ReactiveProperty<float> MusicVolume { get; private set; }
-    public ReactiveProperty<int> LocaleIdx { get; private set; }
+    public ReactiveProperty<bool> Sound { get; private set; } = new();
+    public ReactiveProperty<bool> Music { get; private set; } = new();
+    public ReactiveProperty<float> SoundVolume { get; private set; } = new();
+    public ReactiveProperty<float> MusicVolume { get; private set; } = new();
+    public ReactiveProperty<int> LocaleIdx { get; private set; } = new();
 }
 }
