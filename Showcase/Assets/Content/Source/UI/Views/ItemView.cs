@@ -47,7 +47,7 @@ public class ItemView : MonoBehaviour, IItemView
 
     public virtual void Init(ItemLookSO itemAppearance)
     {
-        _id = itemAppearance.IdSo.GUID;
+        _id = itemAppearance.IdSo.Guid;
         _itemButton.Init();
         _itemButton.Btn.onClick.AddListener(OnSelect_handler);
 

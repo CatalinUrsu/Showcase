@@ -27,8 +27,8 @@ public class ProjectInstaller : MonoInstaller
     void BindSessionModelsControllers()
     {
         // Store init Data into Dict
-        var initWeaponsData = _weaponsSO.ToDictionary(weaponSo => weaponSo.IdSo.GUID, weaponSo => weaponSo.InitData);
-        var initShipsData = _ShipsSO.ToDictionary(shipSo => shipSo.IdSo.GUID, shipSo => shipSo.InitData);
+        var initWeaponsData = _weaponsSO.ToDictionary(weaponSo => weaponSo.IdSo.Guid, weaponSo => weaponSo.InitData);
+        var initShipsData = _ShipsSO.ToDictionary(shipSo => shipSo.IdSo.Guid, shipSo => shipSo.InitData);
 
         // Load or Create save data for models
         var itemsModel = SaveSystem.LoadOrCreate<ItemsModel>(ConstSavesPaths.ITEMS_PATH);
