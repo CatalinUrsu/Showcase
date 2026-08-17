@@ -3,7 +3,6 @@ using UnityEngine;
 using Helpers.Audio;
 using Helpers.Services;
 using Cysharp.Threading.Tasks;
-using UnityEngine.AddressableAssets;
 
 namespace Source.Boot
 {
@@ -12,8 +11,8 @@ public class AppInit : MonoBehaviour
 #region Fields
     
     [Header("Fmod Banks")]
-    [SerializeField] AssetReference _masterAssetRef;
-    [SerializeField] AssetReference _masterStringAssetRef;
+    [SerializeField] BankLoader _bankLoaderMaster;
+    [SerializeField] BankLoader _bankLoaderMasterStrings;
     
     [Header("Cameras")]
     [SerializeField] Camera _cameraMain;
@@ -79,8 +78,8 @@ public class AppInit : MonoBehaviour
 
     async UniTask LoadFMODBanks()
     {
-        await _masterAssetRef.LoadBank();
-        await _masterStringAssetRef.LoadBank();
+        await _bankLoaderMasterStrings.Init();
+        await _bankLoaderMaster.Init();
     }
 
 #endregion

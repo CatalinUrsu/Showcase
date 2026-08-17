@@ -352,6 +352,8 @@ GameObject:
   m_Component:
   - component: {fileID: 882357756}
   - component: {fileID: 882357758}
+  - component: {fileID: 882357760}
+  - component: {fileID: 882357759}
   m_Layer: 0
   m_Name: Init
   m_TagString: Untagged
@@ -386,24 +388,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adb8b588c4da1494ebf074f77af99404, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initValuesForSaves: {fileID: 0}
-  _singletonParent: {fileID: 319565670}
-  _masterAssetRef:
-    m_AssetGUID: 84e4dce360368b0409162adf8bcbf656
-    m_SubObjectName: 
-    m_SubObjectGUID: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  _masterStringAssetRef:
-    m_AssetGUID: 3dfb5fbf6f7c74246a5094358ae818a7
-    m_SubObjectName: 
-    m_SubObjectGUID: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
+  _bankLoaderMaster: {fileID: 882357760}
+  _bankLoaderMasterStrings: {fileID: 882357759}
   _cameraMain: {fileID: 519420031}
   _cameraUI: {fileID: 1157746725}
   _enableDebug: 0
   _graphyObj: {fileID: 177638, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+--- !u!114 &882357759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 882357755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f99104efac710c45bd2f0db60eeefd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Helpers.Audio::Helpers.Audio.BankLoader
+  _fmodAssetRef:
+    m_AssetGUID: 3dfb5fbf6f7c74246a5094358ae818a7
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+--- !u!114 &882357760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 882357755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f99104efac710c45bd2f0db60eeefd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Helpers.Audio::Helpers.Audio.BankLoader
+  _fmodAssetRef:
+    m_AssetGUID: 84e4dce360368b0409162adf8bcbf656
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 1
 --- !u!1 &1157746722
 GameObject:
   m_ObjectHideFlags: 0

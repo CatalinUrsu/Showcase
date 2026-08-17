@@ -11,7 +11,7 @@ public class InitState : IStateEnter
     public StatesMachine StatesMachine { get; set; }
 
     readonly ISceneLoaderService _sceneLoaderService;
-    readonly ISplashScreen _splashScreen;
+    readonly ILoadingContext _loadingContext;
     readonly IAudioService _audioService;
     readonly ISettingsModel _settingsModel;
 
@@ -25,7 +25,7 @@ public class InitState : IStateEnter
                      ISettingsModelController settingsModelController)
     {
         _sceneLoaderService = sceneLoaderService;
-        _splashScreen = loadingContext.SplashScreen;
+        _loadingContext = loadingContext;
         _audioService = audioService;
         _settingsModel = settingsModelController.IModel;
     }
@@ -57,7 +57,7 @@ public class InitState : IStateEnter
                                      .Build();
 
         await _sceneLoaderService.LoadScene(splashScreenLoadParams, new SceneLoadResult());
-        await _splashScreen.Show(true);
+        await _loadingContext.SplashScreen.Show(true);
     }
 
     async UniTask UnloadInitScene()

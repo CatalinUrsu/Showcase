@@ -16,7 +16,6 @@ public class TabPanelSettings : MenuTabsPanel
 
     [Space]
     [SerializeField] ButtonToggle _buttonSound;
-
     [SerializeField] ButtonToggle _buttonMusic;
     [SerializeField] Slider _sliderSound;
     [SerializeField] Slider _sliderMusic;

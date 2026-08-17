@@ -615,11 +615,11 @@ MonoBehaviour:
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1
   AutomaticEventLoading: 0
-  BankLoadType: 0
+  BankLoadType: 2
   AutomaticSampleLoading: 0
   EncryptionKey: 
-  ImportType: 0
-  TargetAssetPath: FMODBanks
+  ImportType: 1
+  TargetAssetPath: Content/FMODBanks
   TargetBankFolder: 
   EventLinkage: 0
   SerializeGUIDsOnly: 0

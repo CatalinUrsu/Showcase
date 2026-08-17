@@ -23,18 +23,15 @@ public class MenuState : StateBase
     public override async UniTask Enter()
     {
         SetMusicState(EMusicStates.Idle);
-        _menuContext.UIFacade.OnClickStartGame += GoToGameplay;
 
         await LoadMenuScene();
         await HideSplashScreen();
-        _menuContext.PlayerFacade.Init();
         await _menuContext.PlayerFacade.ShowPlayer();
     }
 
     public override async UniTask Exit()
     {
-        if (_menuContext.UIFacade != null)
-            _menuContext.UIFacade.OnClickStartGame -= GoToGameplay;
+        _menuContext.UIFacade.OnClickStartGame -= GoToGameplay;
 
         await ShowSplashScreen();
         await DeInitSceneContext(ConstSceneNames.MENU_SCENE);
@@ -59,8 +56,11 @@ public class MenuState : StateBase
     {
         _progressTrackingService.UpdateLoadingTip("Setup Menu Scene");
 
-        await UniTask.WhenAll(_menuContext.BankLoader.Init(),
-                              _menuContext.UIFacade.Init(UpdateProgress));
+        await _menuContext.BankLoader.Init();
+        await _menuContext.UIFacade.Init(UpdateProgress);
+
+        _menuContext.PlayerFacade.Init();
+        _menuContext.UIFacade.OnClickStartGame += GoToGameplay;
         return;
 
         void UpdateProgress(float progress)
