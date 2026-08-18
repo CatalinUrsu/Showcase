@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IdSo: {fileID: 11400000, guid: 369364fd6ae4d044e8dffd8cfe4e4ffc, type: 2}
   InitData:
-    IsBought: 0
-    IsSelected: 0
+    IsBought: 1
+    IsSelected: 1
     BuyPrice:
       Value: 0
       Lvl: 0
