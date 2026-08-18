@@ -10,7 +10,7 @@ using UnityEngine.Localization.Settings;
 
 namespace Source.UI
 {
-public class TabPanelSettings : MenuTabsPanel
+public class TabPanelSettings : TabsPanelMenu
 {
 #region Fields
 
@@ -94,10 +94,7 @@ public class TabPanelSettings : MenuTabsPanel
         }
     }
 
-    void InitPanelAnimation()
-    {
-        _elemntsAnimations = _settingParts.Select(part => part.GetComponent<MenuElementAnimation>()).ToList();
-    }
+    void InitPanelAnimation() => _itemsAnims = _settingParts.Select(part => part.GetComponent<MenuItemAnimation>()).ToList();
 
     void SubscribeSettingsEvents()
     {

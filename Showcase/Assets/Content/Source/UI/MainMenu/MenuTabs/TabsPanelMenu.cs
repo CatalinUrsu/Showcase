@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace Source.UI
 {
 [RequireComponent(typeof(LayoutGroup), typeof(ContentSizeFitter))]
-public class MenuTabsPanel : TabPanel
+public class TabsPanelMenu : TabPanel
 {
 #region Fields
 
@@ -20,10 +20,10 @@ public class MenuTabsPanel : TabPanel
     float _itemShowDelay;
     LayoutGroup _layoutGroup;
     ContentSizeFitter _contentSizeFitter;
-    IMenuTabsGroup _menuTabsGroup;
+    IMenuFmodFactory _menuFmodFactory;
     Sequence _showSequence;
 
-    protected List<MenuElementAnimation> _elemntsAnimations = new();
+    protected List<MenuItemAnimation> _itemsAnims = new();
 
 #endregion
 
@@ -31,12 +31,10 @@ public class MenuTabsPanel : TabPanel
 
     public override async UniTask Init(CancellationToken cancelToken, object config = null)
     {
-        _menuTabsGroup = config as IMenuTabsGroup;
+        _menuFmodFactory = config as IMenuFmodFactory;
 
         _layoutGroup = _itemsContainer.GetComponent<LayoutGroup>();
         _contentSizeFitter = _itemsContainer.GetComponent<ContentSizeFitter>();
-
-        SetShowSequence();
         await UniTask.CompletedTask;
     }
 
@@ -51,19 +49,21 @@ public class MenuTabsPanel : TabPanel
     public override async UniTask Show(bool skipAnimation, CancellationToken cancelToken)
     {
         gameObject.SetActive(true);
-
         if (skipAnimation)
-            _elemntsAnimations.ForEach(item => item.ShowInstant());
+            _itemsAnims.ForEach(item => item.ShowInstant());
         else
-            await _showSequence.Play().ToUniTask(TweenCancelBehaviour.Complete, cancelToken);
+        {
+            _showSequence.Rewind();
+            await _showSequence.Play().AwaitForComplete(TweenCancelBehaviour.Complete, cancelToken);
+        }
     }
 
     public override async UniTask Hide(bool skipAnimation, CancellationToken cancelToken)
     {
         if (skipAnimation)
-            _elemntsAnimations.ForEach(item => item.HideInstant());
+            _itemsAnims.ForEach(item => item.HideInstant());
         else
-            await UniTask.WhenAll(_elemntsAnimations.Select(view => view.GetHideAnim().ToUniTask(TweenCancelBehaviour.Complete, cancelToken)));
+            await UniTask.WhenAll(_itemsAnims.Select(view => view.GetHideAnim().ToUniTask(TweenCancelBehaviour.Complete, cancelToken)));
 
         gameObject.SetActive(false);
     }
@@ -98,7 +98,7 @@ public class MenuTabsPanel : TabPanel
         }
     }
 
-    void SetShowSequence()
+    protected void SetShowSequence()
     {
         var itemShowDelay = 0f;
         var eventInstancePitch = 0f;
@@ -106,20 +106,22 @@ public class MenuTabsPanel : TabPanel
                                .Pause()
                                .SetAutoKill(false);
 
-        foreach (var item in _elemntsAnimations)
+        foreach (var item in _itemsAnims)
         {
-            var showTween = item.GetShowAnim()
-                                .OnStart(() =>
-                                {
-                                    var itemAppearFmodEvent = _menuTabsGroup.GetItemAppearFmodEvent();
-                                    itemAppearFmodEvent.SetParameter(ConstFMOD.ITEM_APPEAR_PITCH, eventInstancePitch);
-                                    itemAppearFmodEvent.start();
-
-                                    eventInstancePitch += .1f;
-                                });
-
-            _showSequence.Insert(itemShowDelay, showTween);
+            var pitch = eventInstancePitch;
+            _showSequence.Insert(itemShowDelay, item.GetShowAnim())
+                         .InsertCallback(itemShowDelay, () => PlayItemShowSound(pitch));
+            
             itemShowDelay += ConstUIAnimation.ITEM_SPAWN_DELAY;
+            eventInstancePitch += .1f;
+        }
+        return;
+
+        void PlayItemShowSound(float pitch)
+        {
+            var itemAppearFmodEvent = _menuFmodFactory.GetItemAppearFmodEvent();
+            itemAppearFmodEvent.SetParameter(ConstFMOD.ITEM_APPEAR_PITCH, pitch);
+            itemAppearFmodEvent.start();
         }
     }
 

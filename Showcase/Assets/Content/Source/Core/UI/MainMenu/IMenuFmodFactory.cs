@@ -2,7 +2,7 @@
 
 namespace Source
 {
-public interface IMenuTabsGroup
+public interface IMenuFmodFactory
 {
     EventInstance GetItemAppearFmodEvent();
 }

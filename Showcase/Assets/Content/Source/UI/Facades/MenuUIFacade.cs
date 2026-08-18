@@ -8,7 +8,7 @@ public class MenuUIFacade : MonoBehaviour, IMenuUIFacade
 {
 #region Fields
     
-    [SerializeField] MenuTabsGroup _tabsGroup;
+    [SerializeField] TabsGroupMenu _tabsGroup;
     [SerializeField] MenuStartButton _menuStartButton;
 
     public event Action OnClickStartGame;

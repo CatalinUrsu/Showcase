@@ -10,7 +10,7 @@ using Zenject;
 
 namespace Source.UI
 {
-[RequireComponent(typeof(MenuElementAnimation))]
+[RequireComponent(typeof(MenuItemAnimation))]
 public class ResetProgressView : MonoBehaviour, IResetProgressView
 {
 #region Fields

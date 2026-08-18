@@ -1,16 +1,14 @@
 using TMPro;
 using System;
-using Zenject;
 using IdleNumbers;
 using Source.Data;
 using UnityEngine;
-using Helpers.Audio;
 using UnityEngine.UI;
 using Coffee.UIExtensions;
 
 namespace Source.UI
 {
-[RequireComponent(typeof(MenuElementAnimation))]
+[RequireComponent(typeof(MenuItemAnimation))]
 public class ItemView : MonoBehaviour, IItemView
 {
 #region Fields

@@ -11,10 +11,10 @@ public class TabPanelShopShips : TabPanelShop
 
     public override async UniTask Init(CancellationToken cancelToken, object config = null)
     {
-        await base.Init(cancelToken, config);
-
+        _itemsAnims.Insert(0, _resetButton.GetComponent<MenuItemAnimation>());
         _resetButton.Init();
-        _elemntsAnimations.Insert(0, _resetButton.GetComponent<MenuElementAnimation>());
+
+        await base.Init(cancelToken, config);
     }
 }
 }

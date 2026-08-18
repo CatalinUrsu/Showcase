@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Source.UI
 {
-public class TabPanelShop : MenuTabsPanel
+public class TabPanelShop : TabsPanelMenu
 {
 #region Fields
 
@@ -31,6 +31,7 @@ public class TabPanelShop : MenuTabsPanel
         await base.Init(cancelToken, config);
 
         InitItems();
+        SetShowSequence();
         SetItemsShineEffect();
 
         await SetLayoutComponents(cancelToken);
@@ -49,7 +50,7 @@ public class TabPanelShop : MenuTabsPanel
 
             itemView.Init(itemAppearance);
             _items.Add(itemView);
-            _elemntsAnimations.Add(itemView.GetComponent<MenuElementAnimation>());
+            _itemsAnims.Add(itemView.GetComponent<MenuItemAnimation>());
         }
     }
 

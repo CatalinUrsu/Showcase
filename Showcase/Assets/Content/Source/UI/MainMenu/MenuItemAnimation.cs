@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Source.UI
 {
-public class MenuElementAnimation : MonoBehaviour
+public class MenuItemAnimation : MonoBehaviour
 {
     [SerializeField] CanvasGroup _cgItem;
 
