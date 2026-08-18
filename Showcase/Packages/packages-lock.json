@@ -47,6 +47,13 @@
       "dependencies": {},
       "hash": "5764d44d4232c8ea628549137559050ea6f6dc10"
     },
+    "com.handzlikchris.fastscriptreload": {
+      "version": "https://github.com/handzlikchris/FastScriptReload.git?path=Assets",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "51140b71d9e5df1de231b33ec20ee089b18bebec"
+    },
     "com.innogames.asset-relations-viewer": {
       "version": "https://github.com/innogames/asset-relations-viewer.git",
       "depth": 0,
