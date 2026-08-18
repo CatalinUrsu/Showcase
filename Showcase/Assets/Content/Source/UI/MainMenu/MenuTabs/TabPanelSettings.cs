@@ -94,7 +94,11 @@ public class TabPanelSettings : TabsPanelMenu
         }
     }
 
-    void InitPanelAnimation() => _itemsAnims = _settingParts.Select(part => part.GetComponent<MenuItemAnimation>()).ToList();
+    void InitPanelAnimation()
+    {
+        _itemsAnims = _settingParts.Select(part => part.GetComponent<MenuItemAnimation>()).ToList();
+        SetShowSequence();
+    }
 
     void SubscribeSettingsEvents()
     {

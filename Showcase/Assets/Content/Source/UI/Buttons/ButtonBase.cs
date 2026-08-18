@@ -29,7 +29,7 @@ public class ButtonBase : ButtonHelper
     void PlayPointerAnim(Vector2 sizeDelta)
     {
         _clickTween?.CheckAndEnd();
-        _clickTween = RT.DOSizeDelta(sizeDelta, ConstUIAnimation.UI_ANIM_DUR)
+        _clickTween = RT.DOScale(sizeDelta, ConstUIAnimation.UI_ANIM_DUR)
                         .SetRelative()
                         .SetUpdate(true);
     }

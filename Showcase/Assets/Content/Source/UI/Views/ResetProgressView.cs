@@ -17,24 +17,27 @@ public class ResetProgressView : MonoBehaviour, IResetProgressView
 
     [Space]
     [SerializeField] ButtonBase _itemButton;
+
     [SerializeField] Image _imgBg;
     [SerializeField] Color _colorActive;
     [SerializeField] Color _colorInactive;
-    
+
     [Space]
     [SerializeField] RawImage _imgRawIcons;
+
     [SerializeField] Vector2 _activeMoveSpeed;
     [SerializeField] Vector2 _inactiveMoveSpeed;
-    
+
     [Space]
     [SerializeField] LocalizeStringEvent _localizedStringEventBonus;
+
     [SerializeField] LocalizeStringEvent _localizedStringEventRequire;
-    
+
     Rect _imgIconsUVRect;
     Vector2 _rawImgSpeed;
     Tween _speedChangeTween;
     ResetProgressPresenter _resetProgressPresenter;
-    
+
     [Inject] ResetProgressPresenter.Factory _presenterFactory;
 
 #endregion
@@ -47,17 +50,17 @@ public class ResetProgressView : MonoBehaviour, IResetProgressView
     {
         _itemButton.Init();
         _itemButton.Btn.onClick.AddListener(OnSelect_handler);
-        
+
         _resetProgressPresenter = _presenterFactory.Create(this);
-        _rawImgSpeed = _inactiveMoveSpeed;
-        
+        _rawImgSpeed = _inactiveMoveSpeed * Time.deltaTime;
+
         SetRawImageMovement();
     }
-    
+
     public void OnChangeLvl_handler(bool reachedMinBonusLvl, int progressResetBonus)
     {
         _imgBg.color = reachedMinBonusLvl ? _colorActive : _colorInactive;
-        
+
         SetRawImageSpeed(reachedMinBonusLvl);
         SetText(reachedMinBonusLvl, progressResetBonus);
     }
@@ -70,19 +73,19 @@ public class ResetProgressView : MonoBehaviour, IResetProgressView
 
     void SetRawImageSpeed(bool reachedMinBonusLvl)
     {
-        var newSpeed = reachedMinBonusLvl ? _activeMoveSpeed : _inactiveMoveSpeed;
-        
-         if(newSpeed == _rawImgSpeed) return;
+        var newSpeed = (reachedMinBonusLvl ? _activeMoveSpeed : _inactiveMoveSpeed) * Time.deltaTime;
 
-         _speedChangeTween.CheckAndEnd();
-         _speedChangeTween = DOTween.To(() => _rawImgSpeed, x => _rawImgSpeed = x, newSpeed, 1);
+        if (newSpeed == _rawImgSpeed) return;
+
+        _speedChangeTween.CheckAndEnd();
+        _speedChangeTween = DOTween.To(() => _rawImgSpeed, x => _rawImgSpeed = x, newSpeed, 1);
     }
 
     void SetText(bool reachedMinBonusLvl, int progressResetBonus)
     {
         _localizedStringEventBonus.gameObject.SetActive(reachedMinBonusLvl);
         _localizedStringEventRequire.gameObject.SetActive(!reachedMinBonusLvl);
-        
+
         if (reachedMinBonusLvl)
             (_localizedStringEventBonus.StringReference["0"] as StringVariable)!.Value = $"{progressResetBonus} {ConstSpriteAssets.SPRITE_TEXT_DIAMOND}";
         else
@@ -92,9 +95,9 @@ public class ResetProgressView : MonoBehaviour, IResetProgressView
     void SetRawImageMovement()
     {
         _imgIconsUVRect = _imgRawIcons.uvRect;
-        
+
         Observable.EveryUpdate()
-                  .Where(_ => this!=null && gameObject.activeInHierarchy)
+                  .Where(_ => this != null && gameObject.activeInHierarchy)
                   .Subscribe(_ =>
                   {
                       _imgIconsUVRect.x += _rawImgSpeed.x;

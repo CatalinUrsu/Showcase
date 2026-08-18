@@ -31,7 +31,7 @@ public static class ConstUIAnimation
     public const float ITEM_SPAWN_DELAY = .05f;
     public const float ITEM_AVAILABLE_ALPHA = 1;
     public const float ITEM_NOT_AVAILABLE_ALPHA = .15f;
-    public static readonly Vector2 ITEM_ANIM_SIZE = new(10f, 10f);
+    public static readonly Vector2 ITEM_ANIM_SIZE = new(.05f, .05f);
 
     public static float GetAnimDuration(bool skipAnimation) => skipAnimation ? 0 : UI_ANIM_DUR;
 }
