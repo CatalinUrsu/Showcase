@@ -1,5 +1,6 @@
 ﻿using R3;
 using System;
+using UnityEngine;
 using Zenject;
 
 namespace Source.Data
@@ -76,7 +77,7 @@ public class WeaponPresenter : ItemPresenterBase
 
     protected override void DeselectOnSelectOtherItem(int selectedItemIdx)
     {
-        if (selectedItemIdx == _idx) return;
+        if (selectedItemIdx == _idx || !_itemModel.IsSelectedRef.CurrentValue) return;
 
         _itemsController.DeselectWeapon(_key);
     }

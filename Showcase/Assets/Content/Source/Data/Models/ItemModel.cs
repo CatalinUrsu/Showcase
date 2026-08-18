@@ -1,6 +1,7 @@
 using R3;
 using System;
 using IdleNumbers;
+using System.Text.Json.Serialization;
 
 namespace Source.Data
 {
@@ -8,15 +9,15 @@ namespace Source.Data
 public class ItemModel : IItemModel
 {
 
-    public ReadOnlyReactiveProperty<bool> IsBoughtRef => IsBought;
-    public ReadOnlyReactiveProperty<bool> IsSelectedRef => IsSelected;
-    public ReadOnlyReactiveProperty<IdleNumber> BuyPriceRef => BuyPrice;
-    public ReadOnlyReactiveProperty<IdleNumber> UpgradePriceRef => UpgradePrice;
+    [JsonIgnore] public ReadOnlyReactiveProperty<bool> IsBoughtRef => IsBought;
+    [JsonIgnore] public ReadOnlyReactiveProperty<bool> IsSelectedRef => IsSelected;
+    [JsonIgnore] public ReadOnlyReactiveProperty<IdleNumber> BuyPriceRef => BuyPrice;
+    [JsonIgnore] public ReadOnlyReactiveProperty<IdleNumber> UpgradePriceRef => UpgradePrice;
 
-    public ReactiveProperty<bool> IsBought { get; private set; }
-    public ReactiveProperty<bool> IsSelected { get; private set; }
-    public ReactiveProperty<IdleNumber> BuyPrice { get; private set; }
-    public ReactiveProperty<IdleNumber> UpgradePrice { get; private set; }
+    [JsonInclude] public ReactiveProperty<bool> IsBought { get; private set; }
+    [JsonInclude] public ReactiveProperty<bool> IsSelected { get; private set; }
+    [JsonInclude] public ReactiveProperty<IdleNumber> BuyPrice { get; private set; }
+    [JsonInclude] public ReactiveProperty<IdleNumber> UpgradePrice { get; private set; }
 
     protected ItemModel()
     {

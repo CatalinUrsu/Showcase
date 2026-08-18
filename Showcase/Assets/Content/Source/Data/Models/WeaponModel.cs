@@ -1,17 +1,18 @@
 using R3;
 using System;
 using IdleNumbers;
+using System.Text.Json.Serialization;
 
 namespace Source.Data
 {
 [Serializable]
 public class WeaponModel : ItemModel, IWeaponModel
 {
-    public ReadOnlyReactiveProperty<IdleNumber> FirePowerRef => FirePower;
-    public ReadOnlyReactiveProperty<float> FireRateRef => FireRate;
+    [JsonIgnore] public ReadOnlyReactiveProperty<IdleNumber> FirePowerRef => FirePower;
+    [JsonIgnore] public ReadOnlyReactiveProperty<float> FireRateRef => FireRate;
 
-    public ReactiveProperty<IdleNumber> FirePower { get; private set; }
-    public ReactiveProperty<float> FireRate { get; private set; }
+    [JsonInclude] public ReactiveProperty<IdleNumber> FirePower { get; private set; }
+    [JsonInclude] public ReactiveProperty<float> FireRate { get; private set; }
 
     public WeaponModel()
     {

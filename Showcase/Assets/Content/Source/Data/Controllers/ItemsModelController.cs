@@ -109,7 +109,7 @@ public class ItemsModelController: IItemsModelController
 
     static void SelectItem(ItemModel model) => model.IsSelected.Value = true;
 
-    static void DeselectItem(ItemModel model) => model.IsSelected.Value = true;
+    static void DeselectItem(ItemModel model) => model.IsSelected.Value = false;
 
     static void UpdateWeapon(WeaponModel model)
     {

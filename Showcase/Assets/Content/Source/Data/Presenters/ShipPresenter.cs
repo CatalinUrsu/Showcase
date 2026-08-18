@@ -40,7 +40,7 @@ public class ShipPresenter : ItemPresenterBase
         _shipModel.UpgradePriceRef.Subscribe(_ => _view.SetShipStats(GetPrice(), _shipModel.EnemyCoinBonusRef.CurrentValue)).AddTo(_disposables);
 
         _progressModel.CoinsRef.Subscribe(_ => _view.UpdateSolvency(HasEnoughCurrency())).AddTo(_disposables);
-        _progressModel.UsedWeaponIdxRef.Subscribe(DeselectOnSelectOtherItem).AddTo(_disposables);
+        _progressModel.UsedShipIdxRef.Subscribe(DeselectOnSelectOtherItem).AddTo(_disposables);
     }
 
     public override void SelectItem()
@@ -76,7 +76,7 @@ public class ShipPresenter : ItemPresenterBase
 
     protected override void DeselectOnSelectOtherItem(int selectedItemIdx)
     {
-        if (selectedItemIdx == _idx) return;
+        if (selectedItemIdx == _idx || !_itemModel.IsSelectedRef.CurrentValue) return;
 
         _itemsController.DeselectShip(_key);
     }

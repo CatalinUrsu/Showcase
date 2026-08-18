@@ -2,6 +2,7 @@
 using System;
 using IdleNumbers;
 using Helpers.Audio;
+using UnityEngine;
 
 namespace Source.Data
 {
@@ -82,7 +83,7 @@ public abstract class ItemPresenterBase : IPresenterItemBase
 
     protected IdleNumber GetPrice() => _itemModel.IsBoughtRef.CurrentValue ? _itemModel.UpgradePriceRef.CurrentValue : _itemModel.BuyPriceRef.CurrentValue;
 
-    void SaveProgress()
+    protected void SaveProgress()
     {
         _sessionService.Save(ESaveFileType.Items);
         _sessionService.Save(ESaveFileType.Progress);
