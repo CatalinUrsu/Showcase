@@ -602,6 +602,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42c4b266945d47a5ba640b657d875aea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Btn>k__BackingField: {fileID: 102029432}
+  <RT>k__BackingField: {fileID: 102029426}
 --- !u!114 &102029432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2606,7 +2608,7 @@ MonoBehaviour:
   - TabBtn: {fileID: 1649644749}
     TabPanel: {fileID: 746097158}
   _indicatorRT: {fileID: 1974579522}
-  _fmodEventsSo: {fileID: 11400000, guid: aafaf79d7f4f39344a5a2ab150ea6dc0, type: 2}
+  _menuFmodFactory: {fileID: 1199872649}
 --- !u!1 &1002576672
 GameObject:
   m_ObjectHideFlags: 0
@@ -3539,6 +3541,7 @@ GameObject:
   - component: {fileID: 1199872645}
   - component: {fileID: 1199872644}
   - component: {fileID: 1199872648}
+  - component: {fileID: 1199872649}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -3645,6 +3648,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tabsGroup: {fileID: 922166544}
   _menuStartButton: {fileID: 365824685}
+--- !u!114 &1199872649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1199872643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1121863c7fc34db78f1f5e712198df7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Source.UI::Source.UI.MenuFmodFactory
+  _fmodEventsSo: {fileID: 11400000, guid: aafaf79d7f4f39344a5a2ab150ea6dc0, type: 2}
 --- !u!1001 &1252754822
 PrefabInstance:
   m_ObjectHideFlags: 0
