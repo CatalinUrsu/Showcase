@@ -29,7 +29,7 @@ public class PlayerWeapons : MonoBehaviour
     
     Pool<PooledObject> _bulletsPool;
     Pool<PooledObject> _shootFxPool;
-    Pool<EventInstance> _shootingSoundsPool;
+    Pool<PooledFmodEvent> _shootingSoundsPool;
     CompositeDisposable _disposable = new();
 
 #endregion
@@ -96,7 +96,7 @@ public class PlayerWeapons : MonoBehaviour
 
     void Shoot()
     {
-        _shootingSoundsPool.Get().start();
+        _shootingSoundsPool.Get().Instance.start();
 
         for (int i = 0; i < _bulletSpawnPoses.Length; i++)
         {

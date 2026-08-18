@@ -32,14 +32,10 @@ public class ItemView : MonoBehaviour, IItemView
     bool _solvency;
     protected Guid _id;
     protected IPresenterItemBase _presenterItem;
-    protected FmodEventsSo _fmodEvents;
 
 #endregion
 
 #region Public methods
-
-    [Inject]
-    public void Construct(FmodEventsSo fmodEvents) => _fmodEvents = fmodEvents;
 
     void OnDestroy() => _presenterItem?.Dispose();
 
@@ -74,16 +70,12 @@ public class ItemView : MonoBehaviour, IItemView
 
     public virtual void UpdateBoughtState(bool isBought, IdleNumber price)
     {
-        _fmodEvents.BtnBuy.PlayOneShot();
         _cgContent.alpha = isBought ? ConstUIAnimation.ITEM_AVAILABLE_ALPHA : ConstUIAnimation.ITEM_NOT_AVAILABLE_ALPHA;
         _borderBought.SetActive(isBought);
     }
 
     public void UpdateSelectState(bool isBought, bool isSelect)
     {
-        if (isSelect)
-            _fmodEvents.SelectItem.PlayOneShot();
-
         _borderBought.SetActive(isBought && !isSelect);
         _bordeSelected.SetActive(isSelect);
     }

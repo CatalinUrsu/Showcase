@@ -3,7 +3,6 @@ using Zenject;
 using UnityEngine;
 using Source.Data;
 using IdleNumbers;
-using Helpers.Audio;
 
 namespace Source.UI
 {
@@ -29,8 +28,6 @@ public class WeaponView : ItemView, IWeaponView
 
     public void SetWeaponsStats(IdleNumber upgradePrice, IdleNumber firePower, float fireRate)
     {
-        _fmodEvents.BtnBuy.PlayOneShot();
-
         _txtPrice.SetText($"{upgradePrice.AsString()} {ConstSpriteAssets.SPRITE_TEXT_COIN}");
         _txtFirePower.SetText($"{firePower.AsString()} {ConstSpriteAssets.SPRITE_TEXT_FIRE_POWER}");
         _txtFireRate.SetText($"{fireRate:F2} {ConstSpriteAssets.SPRITE_TEXT_FIRE_RATE}");

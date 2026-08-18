@@ -1,5 +1,4 @@
-﻿using FMOD.Studio;
-using UnityEngine;
+﻿using UnityEngine;
 using Source.Data;
 using Helpers.Audio;
 using Helpers.PoolSystem;
@@ -8,8 +7,8 @@ namespace Source.Game.Gameplay
 {
 public class EnemiesInitConfig
 {
-    public Pool<EventInstance> HitSfxPool { get; private set; }
-    public Pool<EventInstance> DeathSfxPool { get; private set; }
+    public Pool<PooledFmodEvent> HitSfxPool { get; private set; }
+    public Pool<PooledFmodEvent> DeathSfxPool { get; private set; }
     public Pool<PooledObject> HitFxPool { get; private set; }
     public Pool<PooledObject> DeathFxPool { get; private set; }
 

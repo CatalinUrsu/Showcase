@@ -1,10 +1,10 @@
 ﻿using System;
 using Zenject;
 using FMODUnity;
-using FMOD.Studio;
 using IdleNumbers;
 using Source.Data;
 using UnityEngine;
+using Helpers.Audio;
 using Helpers.PoolSystem;
 
 namespace Source.Game.Gameplay
@@ -107,10 +107,10 @@ public class EnemyFacade : PooledObject
         OnReleaseToPool_raise();   
     }
 
-    void PlayAudio(EventInstance eventInstance)
+    void PlayAudio(PooledFmodEvent fmodEvent)
     {
-        eventInstance.set3DAttributes(transform.position.To3DAttributes());
-        eventInstance.start();
+        fmodEvent.Instance.set3DAttributes(transform.position.To3DAttributes());
+        fmodEvent.Instance.start();
     }
     
     void PlayFx(PooledObject fx)

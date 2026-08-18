@@ -28,7 +28,7 @@ public static class ConstUIAnimation
 {
     public const float SPLASH_SCREEN_ANIM_DUR = .5f;
     public const float UI_ANIM_DUR = .25f;
-    public const float ITEM_SPAWN_DELAY = .1f;
+    public const float ITEM_SPAWN_DELAY = .05f;
     public const float ITEM_AVAILABLE_ALPHA = 1;
     public const float ITEM_NOT_AVAILABLE_ALPHA = .15f;
     public static readonly Vector2 ITEM_ANIM_SIZE = new(10f, 10f);
