@@ -81,8 +81,8 @@ public static class ConstFMOD
 
 public static class ConstSavesPaths
 {
-    public static readonly string SETTINGS_PATH = ConstSession.SAVES_FOLDER_PATH + "/settings.bin";
-    public static readonly string PROGRESS_PATH = ConstSession.SAVES_FOLDER_PATH + "/progress.bin";
-    public static readonly string ITEMS_PATH = ConstSession.SAVES_FOLDER_PATH + "/items.bin";
+    public static readonly string SETTINGS_PATH = ConstSession.SAVES_FOLDER_PATH + "/settings.json";
+    public static readonly string PROGRESS_PATH = ConstSession.SAVES_FOLDER_PATH + "/progress.json";
+    public static readonly string ITEMS_PATH = ConstSession.SAVES_FOLDER_PATH + "/items.json";
 }
 }
