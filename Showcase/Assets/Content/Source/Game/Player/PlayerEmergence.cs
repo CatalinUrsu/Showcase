@@ -1,8 +1,10 @@
-﻿using Zenject;
+﻿using R3;
+using Zenject;
 using DG.Tweening;
 using FMOD.Studio;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using EditorAttributes;
 
 namespace Source.Game.Player
 {
@@ -10,10 +12,17 @@ public class PlayerEmergence : MonoBehaviour
 {
     [SerializeField] Transform _spawnPos;
     [SerializeField] Transform _playPos;
-    
-    float _playerShowDuration = .5f;
-    
+
+    [Space]
+    [SerializeField] bool _idleMovement;
+
+    [SerializeField, Range(0f, 2f)] float _idleRadius = 0.75f;
+    [SerializeField] Vector2 _idleSpeed;
+
     [Inject] protected IAudioService _audioService;
+    readonly CompositeDisposable _idleMoveDisposable = new();
+
+    const float PLAYER_SHOW_DURATION = .5f;
 
     public void Init(Rigidbody2D rb)
     {
@@ -21,19 +30,47 @@ public class PlayerEmergence : MonoBehaviour
         rb.position = _spawnPos.position;
     }
 
-    public void Deinit() => _audioService.FlyInstance.stop(STOP_MODE.IMMEDIATE);
+    public void Deinit()
+    {
+        _audioService.FlyInstance.stop(STOP_MODE.IMMEDIATE);
+        _idleMoveDisposable?.Clear();
+    }
 
     public async UniTask ShowPlayer(Rigidbody2D rb)
     {
         gameObject.SetActive(true);
         _audioService.FlyInstance.start();
 
-        var lerpTime = 0f;
-        var showAnimationTween = DOTween.To(() => lerpTime, x => lerpTime = x, 1, _playerShowDuration)
-                                        .OnUpdate(() => rb.position = Vector3.Lerp(_spawnPos.position, _playPos.position, lerpTime))
-                                        .SetUpdate(UpdateType.Fixed);
+        await DOVirtual.Float(0f, 1f, PLAYER_SHOW_DURATION, MovePlayerToPlayPos)
+                       .SetUpdate(UpdateType.Fixed)
+                       .ToUniTask();
 
-        await showAnimationTween.ToUniTask();
+        if (_idleMovement)
+            MoveIdle();
+        return;
+
+        void MovePlayerToPlayPos(float lerpValue) => rb.position = Vector3.Lerp(_spawnPos.position, _playPos.position, lerpValue);
+    }
+
+    void MoveIdle()
+    {
+        Vector3 targetPos;
+        SetTarget();
+
+        Observable.EveryUpdate()
+                  .Subscribe(_=> MovePlayerRandomly())
+                  .AddTo(_idleMoveDisposable);
+        return;
+
+        void MovePlayerRandomly()
+        {
+            if (Vector3.Distance(transform.position, targetPos) < 0.01f)
+                SetTarget();
+
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime * Random.Range(_idleSpeed.x, _idleSpeed.y));
+        }
+
+        void SetTarget() => targetPos = _playPos.position + (Vector3)(Random.insideUnitCircle * _idleRadius);
     }
 }
 }
