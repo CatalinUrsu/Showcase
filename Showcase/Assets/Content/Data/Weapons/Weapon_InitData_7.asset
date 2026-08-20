@@ -17,12 +17,12 @@ MonoBehaviour:
     IsBought: 0
     IsSelected: 0
     BuyPrice:
-      Value: 0
-      Lvl: 0
+      Value: 16.59453
+      Lvl: 2
     UpgradePrice:
-      Value: 0
-      Lvl: 0
+      Value: 5.13403
+      Lvl: 2
     FirePower:
-      Value: 0
-      Lvl: 0
-    FireRate: 0
+      Value: 303.536
+      Lvl: 1
+    FireRate: 0.418

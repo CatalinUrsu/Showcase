@@ -17,9 +17,9 @@ MonoBehaviour:
     IsBought: 0
     IsSelected: 0
     BuyPrice:
-      Value: 0
-      Lvl: 0
+      Value: 5.001
+      Lvl: 1
     UpgradePrice:
-      Value: 0
-      Lvl: 0
-    EnemyCoinBonus: 0
+      Value: 1.472
+      Lvl: 1
+    EnemyCoinBonus: 0.616

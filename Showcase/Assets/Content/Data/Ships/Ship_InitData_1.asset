@@ -20,6 +20,6 @@ MonoBehaviour:
       Value: 0
       Lvl: 0
     UpgradePrice:
-      Value: 0
+      Value: 10
       Lvl: 0
     EnemyCoinBonus: 0

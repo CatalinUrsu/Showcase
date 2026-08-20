@@ -115,7 +115,7 @@ public class ItemsModelController: IItemsModelController
     {
         model.UpgradePrice.Value *= ConstUpgradeItems.WEAPON_PRICE_MULTIPLIER;
         model.FirePower.Value += ConstUpgradeItems.WEAPON_POWER_UPGRADE;
-        model.FireRate.Value = Mathf.Clamp(model.FireRate.Value + ConstUpgradeItems.WEAPON_FIRE_RATE_UPGRADE, ConstUpgradeItems.WEAPON_FIRE_RATE_MIN, 5);
+        model.FireRate.Value = Mathf.Clamp(model.FireRate.Value + ConstUpgradeItems.WEAPON_FIRE_RATE_UPGRADE, ConstUpgradeItems.WEAPON_FIRE_RATE_MIN, 1);
     }
 
     static void UpdateShip(ShipModel model)
