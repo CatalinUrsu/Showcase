@@ -29,6 +29,7 @@ public class GameplayContext : IGameplayContext
     public async UniTask Init(IProgressTrackingService progressTrackingService, SceneLoadProgress sceneLoadProgress)
     {
         progressTrackingService.UpdateLoadingTip("Setup Gameplay Scene");
+        await BankLoader.Init();
         
         UIFacade.Init();
         PlayerFacade.Init();
