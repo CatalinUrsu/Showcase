@@ -12,6 +12,7 @@ public class GameRunModelController : IGameRunModelController
     public event Action OnClickPause;
     public event Action OnClickGoHome;
     public event Action OnContinueGame;
+    public event Action OnRestartRun;
     public event Action OnPlayerLoose;
 
     float _lvlCoinBonus;
@@ -71,8 +72,10 @@ public class GameRunModelController : IGameRunModelController
 
     public void OnClickGoHome_raise() => OnClickGoHome?.Invoke();
     
-    public void OnClickReturnToGame_raise() => OnContinueGame?.Invoke();
+    public void OnClickContinue_raise() => OnContinueGame?.Invoke();
     
+    public void OnClickRestartRun_raise() => OnRestartRun?.Invoke();
+
     public void StartNewLvlAnim() => _model.IsPlayingNewLvlAnim.Value = true;
     
     public void FinishNewLvlAnim() => _model.IsPlayingNewLvlAnim.Value = false;

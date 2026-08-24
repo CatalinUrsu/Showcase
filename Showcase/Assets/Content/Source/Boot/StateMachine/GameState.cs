@@ -56,11 +56,10 @@ public class GameState : IStateEnter
         {
             RemoveGameRunControllerListeners();
             await ShowSplashScreen();
-
-            Time.timeScale = 1;
-            _audioService.PauseSnapshot.stop(STOP_MODE.ALLOWFADEOUT);
+            
             _sessionService.Save(ESaveFileType.Progress);
 
+            ApplyResume();
             await UnloadGameScene();
         }
     }
@@ -68,7 +67,7 @@ public class GameState : IStateEnter
 #endregion
 
 #region Private methods
-
+    
     async UniTask LoadGameScene()
     {
         var sceneLoadParams = new SceneLoadParams.Builder(ConstSceneNames.GAME_SCENE)
@@ -100,62 +99,71 @@ public class GameState : IStateEnter
     {
         _gameRunModelController.OnClickPause += OpenPause;
         _gameRunModelController.OnPlayerLoose += OpenLooseMenu;
+        _gameRunModelController.OnClickGoHome += GoToMenu;
         _gameRunModelController.OnContinueGame += ContinueGame;
-        _gameRunModelController.OnClickGoHome += ContinueGame;
+        _gameRunModelController.OnRestartRun += RestartGame;
     }
 
     void RemoveGameRunControllerListeners()
     {
         _gameRunModelController.OnClickPause -= OpenPause;
         _gameRunModelController.OnPlayerLoose -= OpenLooseMenu;
+        _gameRunModelController.OnClickGoHome -= GoToMenu;
         _gameRunModelController.OnContinueGame -= ContinueGame;
-        _gameRunModelController.OnClickGoHome -= ContinueGame;
+        _gameRunModelController.OnRestartRun -= RestartGame;
     }
 
     void OpenPause()
     {
+        Time.timeScale = 0;
         ApplyPause();
-        OpenMenuPanel(EGamePanels.Pause).Forget();
+        SelectUIPanel(EGamePanels.Pause).Forget();
     }
 
     void OpenLooseMenu()
     {
         ApplyPause();
-        OpenMenuPanel(EGamePanels.Loose).Forget();
+        SelectUIPanel(EGamePanels.Loose).Forget();
     }
     
     void ContinueGame()
     {
         ApplyResume();
-        OpenMenuPanel(EGamePanels.Game).Forget();
+        SelectUIPanel(EGamePanels.Game).Forget();
     }
     
     void RestartGame()
     {
         ApplyResume();
-        //TODO: Implement Restart Game Logic
+        _gameRunModelController.StartRun();
+        RestartGameLogic().Forget();
+        return;
+        
+        async UniTaskVoid RestartGameLogic()
+        {
+            await UniTask.WhenAll(SelectUIPanel(EGamePanels.Game),
+                                  _gameplayContext.PlayerFacade.ShowPlayer());
+
+            _gameplayContext.PlayerFacade.ToggleControl(true);
+        }
     }
 
-    void GoToMenu() => StatesMachine.Enter<MenuState>().GetAwaiter();
+    void ApplyPause() => _audioService.PauseSnapshot.start();
 
-    void ApplyPause()
-    {
-        Time.timeScale = 0;
-        _audioService.PauseSnapshot.start();
-    }
-    
     void ApplyResume()
     {
         Time.timeScale = 1;
         _audioService.PauseSnapshot.stop(STOP_MODE.ALLOWFADEOUT);
     }
 
-    async UniTaskVoid OpenMenuPanel(EGamePanels panelType)
+    async UniTask SelectUIPanel(EGamePanels panelType)
     {
         using (InputManager.Instance.LockInputSystem())
             await _gameplayContext.UIFacade.SelectPanel(panelType);
     }
-    
+
+    void GoToMenu() => StatesMachine.Enter<MenuState>().GetAwaiter();
+
 #endregion
 }
 }

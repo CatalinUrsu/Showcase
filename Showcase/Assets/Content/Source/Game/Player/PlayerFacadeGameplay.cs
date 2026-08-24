@@ -95,6 +95,7 @@ public class PlayerFacadeGameplay : PlayerFacade
         _playerEffects.PlayDeathEffects();
         _playerMovement.StopMovementFx();
         _playerParallaxEffect.DisableParallax();
+        _playerEmergence.HidePlayer(_rb);
         
         ToggleControl(false);
     }

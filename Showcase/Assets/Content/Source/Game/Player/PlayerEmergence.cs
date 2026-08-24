@@ -14,7 +14,6 @@ public class PlayerEmergence : MonoBehaviour
 
     [Space]
     [SerializeField] bool _idleMovement;
-
     [SerializeField, Range(0f, 2f)] float _idleRadius = 0.75f;
     [SerializeField] Vector2 _idleSpeed;
 
@@ -50,6 +49,8 @@ public class PlayerEmergence : MonoBehaviour
 
         void MovePlayerToPlayPos(float lerpValue) => rb.position = Vector3.Lerp(_spawnPos.position, _playPos.position, lerpValue);
     }
+    
+    public void HidePlayer(Rigidbody2D rb) => rb.position = _spawnPos.position;
 
     void MoveIdle()
     {

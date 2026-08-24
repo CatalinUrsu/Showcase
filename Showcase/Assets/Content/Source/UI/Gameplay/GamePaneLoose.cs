@@ -37,7 +37,7 @@ public class GamePaneLoose : GamePanel
         _txtCollectedCoins.StringReference.Arguments = new[] { _coinsStringVar };
 
         _buttonHome.Btn.onClick.AddListener(() => _gameRunModelController.OnClickGoHome_raise());
-        _buttonRestart.Btn.onClick.AddListener(() => _gameRunModelController.OnClickReturnToGame_raise());
+        _buttonRestart.Btn.onClick.AddListener(() => _gameRunModelController.OnClickRestartRun_raise());
         _gameRunModelController.IModel.CollectedCoinsRef
                                .Skip(1)
                                .Subscribe(UpdateCollectedCoinsValue)

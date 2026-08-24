@@ -18,7 +18,7 @@ public class GamePanelPause : GamePanel
         _buttonHome.Init();
         _buttonContinue.Init();
         _buttonHome.Btn.onClick.AddListener(() => _gameRunModelController.OnClickGoHome_raise());
-        _buttonContinue.Btn.onClick.AddListener(() => _gameRunModelController.OnClickReturnToGame_raise());
+        _buttonContinue.Btn.onClick.AddListener(() => _gameRunModelController.OnClickContinue_raise());
     }
 }
 }

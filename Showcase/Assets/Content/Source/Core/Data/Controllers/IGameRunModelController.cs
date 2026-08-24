@@ -9,6 +9,7 @@ public interface IGameRunModelController
     event Action OnClickPause;
     event Action OnClickGoHome;
     event Action OnContinueGame;
+    event Action OnRestartRun;
     event Action OnPlayerLoose;
 
     void StartRun();
@@ -18,7 +19,8 @@ public interface IGameRunModelController
     
     void OnClickPause_raise();
     void OnClickGoHome_raise();
-    void OnClickReturnToGame_raise();
+    void OnClickContinue_raise();
+    void OnClickRestartRun_raise();
 
     void StartNewLvlAnim();
     void FinishNewLvlAnim();
