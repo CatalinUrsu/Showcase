@@ -43,6 +43,8 @@ public class GameState : IStateEnter
         using (InputManager.Instance.LockInputSystem())
         {
             await LoadGameScene();
+            _gameRunModelController.StartRun();
+            
             await HideSplashScreen();
             await StartGameplay();
             
