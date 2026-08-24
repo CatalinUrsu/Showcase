@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Enemy_2
   m_EditorClassIdentifier: 
   Coin:
-    Value: 23.55
+    Value: 24
     Lvl: 0
   HP:
     Value: 25
