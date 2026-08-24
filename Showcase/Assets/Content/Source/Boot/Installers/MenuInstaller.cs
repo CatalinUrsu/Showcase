@@ -22,7 +22,5 @@ public class MenuInstaller : MonoInstaller
         _menuContext.RegisterPlayerFacade(_playerFacade);
         _menuContext.RegisterUIMenuFacade(_menuUIFacade);
     }
-
-    void OnDestroy() => _menuContext.Clear();
 }
 }

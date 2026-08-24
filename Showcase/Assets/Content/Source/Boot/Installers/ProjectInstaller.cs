@@ -11,9 +11,15 @@ namespace Source.Boot
 {
 public class ProjectInstaller : MonoInstaller
 {
+#region Fields
+
     [SerializeField] ItemInfoWeaponSO[] _weaponsSO;
     [SerializeField] ItemInfoShipSO[] _ShipsSO;
     [SerializeField] FmodEventsSo _fmodEventsSO;
+
+#endregion
+
+#region Bindings methods
 
     public override void InstallBindings()
     {
@@ -26,31 +32,19 @@ public class ProjectInstaller : MonoInstaller
 
     void BindSessionModelsControllers()
     {
-        // Store init Data into Dict
-        var initWeaponsData = _weaponsSO.ToDictionary(weaponSo => weaponSo.IdSo.Guid, weaponSo => weaponSo.InitData);
-        var initShipsData = _ShipsSO.ToDictionary(shipSo => shipSo.IdSo.Guid, shipSo => shipSo.InitData);
-
         // Load or Create save data for models
-        var itemsModel = SaveSystem.LoadOrCreate<ItemsModel>(ConstSavesPaths.ITEMS_PATH);
-        var progressModel = SaveSystem.LoadOrCreate<ProgressModel>(ConstSavesPaths.PROGRESS_PATH);
-        var settingsModel = SaveSystem.LoadOrCreate<SettingsModel>(ConstSavesPaths.SETTINGS_PATH);
-
-        // Create ModelControllers with needed models
-        var itemsModelController = new ItemsModelController(itemsModel, initWeaponsData, initShipsData);
-        var progressModelController = new ProgressModelController(progressModel);
-        var settingsModelController = new SettingsModelController(settingsModel);
-
-        // Create SessionService with needed ModelControllers
+        var itemsModelController = GetItemsModelController();
+        var progressModelController = GetProgressModelController();
+        var settingsModelController = GetSettingsModelController();
+        var gameRunModelController = new GameRunModelController(itemsModelController, progressModelController);
         var sessionService = new SessionService(itemsModelController, progressModelController, settingsModelController);
 
         // Bind Models 
         Container.Bind<IItemsModelController>().FromInstance(itemsModelController).AsSingle();
         Container.Bind<IProgressModelController>().FromInstance(progressModelController).AsSingle();
         Container.Bind<ISettingsModelController>().FromInstance(settingsModelController).AsSingle();
-
-        // Bind SessionService
+        Container.Bind<IGameRunModelController>().FromInstance(gameRunModelController).AsSingle();
         Container.Bind<ISessionService>().FromInstance(sessionService).AsSingle();
-        
     }
 
     void BindSoData()
@@ -67,6 +61,7 @@ public class ProjectInstaller : MonoInstaller
         Container.Bind<ICameraService>().FromInstance(new CameraService()).AsSingle();
         Container.Bind<IProgressTrackingService>().FromInstance(progressTrackingService).AsSingle();
         Container.Bind<ISceneLoaderService>().FromInstance(sceneLoaderService).AsSingle();
+        Container.Bind<ISceneLifecycleService>().To<SceneLifecycleService>().AsSingle();
     }
 
     void BindSceneContexts()
@@ -83,5 +78,31 @@ public class ProjectInstaller : MonoInstaller
         Container.BindFactory<IResetProgressView, ResetProgressPresenter, ResetProgressPresenter.Factory>().AsTransient();
         Container.BindFactory<IGameplayView, GameRunPresenter, GameRunPresenter.Factory>().AsTransient();
     }
+
+#endregion
+
+#region private methods
+
+    ItemsModelController GetItemsModelController()
+    {
+        var initWeaponsData = _weaponsSO.ToDictionary(weaponSo => weaponSo.IdSo.Guid, weaponSo => weaponSo.InitData);
+        var initShipsData = _ShipsSO.ToDictionary(shipSo => shipSo.IdSo.Guid, shipSo => shipSo.InitData);
+        var itemsModel = SaveSystem.LoadOrCreate<ItemsModel>(ConstSavesPaths.ITEMS_PATH);
+        return new ItemsModelController(itemsModel, initWeaponsData, initShipsData);
+    }
+
+    ProgressModelController GetProgressModelController()
+    {
+        var progressModel = SaveSystem.LoadOrCreate<ProgressModel>(ConstSavesPaths.PROGRESS_PATH);
+        return new ProgressModelController(progressModel);
+    }
+
+    SettingsModelController GetSettingsModelController()
+    {
+        var settingsModel = SaveSystem.LoadOrCreate<SettingsModel>(ConstSavesPaths.SETTINGS_PATH);
+        return new SettingsModelController(settingsModel);
+    }
+
+#endregion
 }
 }

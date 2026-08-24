@@ -1,41 +1,59 @@
 ﻿using Helpers;
+using Helpers.Audio;
 using Helpers.Services;
 using Cysharp.Threading.Tasks;
 
 namespace Source.Boot
 {
-public class MenuState : StateBase
+public class MenuState : IStateEnter
 {
+#region Fields
+
+    public StatesMachine StatesMachine { get; set; }
+    
+    readonly ISceneLifecycleService _sceneLifecycleService;
+    readonly IAudioService _audioService;
+    readonly ILoadingContext _loadingContext;
     readonly IMenuContext _menuContext;
+
+#endregion
 
 #region Public methods
 
-    public MenuState(ISceneLoaderService sceneLoaderService,
-                     IProgressTrackingService progressTrackingService,
-                     IAudioService audioService,
+    public MenuState(IAudioService audioService,
+                     ISceneLifecycleService sceneLifecycleService,
                      ILoadingContext loadingContext,
                      IMenuContext menuContext)
-        : base(sceneLoaderService, progressTrackingService, loadingContext, audioService)
     {
+        _audioService = audioService;
+        _sceneLifecycleService = sceneLifecycleService;
+        _loadingContext = loadingContext;
         _menuContext = menuContext;
     }
 
-    public override async UniTask Enter()
+    public async UniTask Enter()
     {
-        SetMusicState(EMusicStates.Idle);
+        using (InputManager.Instance.LockInputSystem())
+        {
+            _audioService.MusicInstance.SetParameter(ConstFMOD.MUSIC_STATE, EMusicStates.Idle.ToString());
 
-        await LoadMenuScene();
-        await HideSplashScreen();
-        await _menuContext.PlayerFacade.ShowPlayer();
+            await LoadMenuScene();
+            await HideSplashScreen();
+            await _menuContext.PlayerFacade.ShowPlayer();
+
+            _menuContext.UIFacade.OnClickStartGame += GoToGameplay;
+        }
     }
 
-    public override async UniTask Exit()
+    public async UniTask Exit()
     {
-        _menuContext.UIFacade.OnClickStartGame -= GoToGameplay;
+        using (InputManager.Instance.LockInputSystem())
+        {
+            _menuContext.UIFacade.OnClickStartGame -= GoToGameplay;
 
-        await ShowSplashScreen();
-        await DeInitSceneContext(ConstSceneNames.MENU_SCENE);
-        UnloadScene(ConstSceneNames.MENU_SCENE);
+            await ShowSplashScreen();
+            await UnloadMenuScene();
+        }
     }
 
 #endregion
@@ -49,47 +67,17 @@ public class MenuState : StateBase
                               .SetIsAddressable(true)
                               .SetActiveOnLoad(true)
                               .Build();
-        await LoadScene(sceneLoadParams);
+
+        await _sceneLifecycleService.LoadAndInitScene(sceneLoadParams, _menuContext);
     }
 
-    protected override async UniTask InitSceneContext(SceneLoadProgress sceneLoadProgress)
-    {
-        _progressTrackingService.UpdateLoadingTip("Setup Menu Scene");
+    async UniTask UnloadMenuScene() => await _sceneLifecycleService.DeinitAndUnloadScene(ConstSceneNames.MENU_SCENE, _menuContext);
 
-        await _menuContext.BankLoader.Init();
-        await _menuContext.UIFacade.Init(UpdateProgress);
+    async UniTask ShowSplashScreen() => await _loadingContext.SplashScreen.Show();
 
-        _menuContext.PlayerFacade.Init();
-        _menuContext.UIFacade.OnClickStartGame += GoToGameplay;
-        return;
+    async UniTask HideSplashScreen() => await _loadingContext.SplashScreen.Hide();
 
-        void UpdateProgress(float progress)
-        {
-            sceneLoadProgress.SetupProgress += progress;
-            _progressTrackingService.UpdateProgress();
-        }
-    }
-
-    protected override async UniTask DeInitSceneContext(string sceneName)
-    {
-        await base.DeInitSceneContext(sceneName);
-
-        _menuContext.BankLoader.Deinit();
-        _menuContext.PlayerFacade.Deinit();
-        await _menuContext.UIFacade.Deinit();
-    }
-
-    void GoToGameplay()
-    {
-        GoToGameplay_Async().Forget();
-        return;
-
-        async UniTaskVoid GoToGameplay_Async()
-        {
-            using (InputManager.Instance.LockInputSystem())
-                await StatesMachine.Enter<GameplayState>();
-        }
-    }
+    void GoToGameplay() => StatesMachine.Enter<GameState>().GetAwaiter();
 
 #endregion
 }

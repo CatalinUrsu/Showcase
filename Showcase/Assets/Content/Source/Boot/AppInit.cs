@@ -70,7 +70,7 @@ public class AppInit : MonoBehaviour
         {
             _container.Instantiate<InitState>(),
             _container.Instantiate<MenuState>(),
-            _container.Instantiate<GameplayState>()
+            _container.Instantiate<GameState>()
         };
             
         _stateMachine = new StatesMachine(states);
