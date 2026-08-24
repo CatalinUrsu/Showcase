@@ -35,10 +35,12 @@ public class GameUIFacade : MonoBehaviour, IGameUIFacade
 
     public async UniTask SelectPanel(EGamePanels panelType)
     {
-        if (_currentPanel.PanelType == panelType) return;
-
         if (_currentPanel != null)
+        {
+            if (_currentPanel.PanelType == panelType) return;
+
             await _currentPanel.Hide();
+        }
 
         _currentPanel = _panelsByTypes[panelType];
         await _currentPanel.Show();
