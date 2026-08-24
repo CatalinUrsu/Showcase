@@ -24,13 +24,12 @@ public class PlayerEffects : MonoBehaviour
     [SerializeField] Collider2D _collider;
     [SerializeField] GameObject _deathEffect;
 
-    UniTask _shieldTask;
-    CancellationTokenSource _shieldCTS = new();
-    
+    bool _isShieldEnabled;
     Transform _shieldInTransform;
     Transform _shieldOutTransform;
-    Vector3 _shieldAnimRotation = new(0, 0, 1000);
     Sequence _shieldSequence;
+    CancellationTokenSource _shieldCTS = new();
+    readonly Vector3 _shieldAnimRotation = new(0, 0, 1000);
     
     EventReference _deathAudioReference;
 
@@ -70,40 +69,43 @@ public class PlayerEffects : MonoBehaviour
 #endregion
 
 #region Private methods
-    
+
     async UniTask CancelPrevShield()
     {
+        if (!_isShieldEnabled)
+            return;
+
         // If shield animation is already running, cancel it and wait until cleanup finishes.
-        if (_shieldTask.Status == UniTaskStatus.Pending)
-        {
-            _shieldCTS?.Cancel();
-            await _shieldTask.SuppressCancellationThrow();
-            _shieldCTS = new CancellationTokenSource();
-        }
-        else
-            await UniTask.CompletedTask;
+        _shieldCTS?.Cancel();
+        await UniTask.WaitUntil(() => !_isShieldEnabled);
+        _shieldCTS = new CancellationTokenSource();
     }
 
     async UniTaskVoid StartShieldAnim()
     {
-        _collider.enabled = false;
-
         ToggleShield(true);
 
+        _isShieldEnabled = true;
+        _collider.enabled = false;
         _shieldSequence = _shieldSequence.FinishAndGetNew()
                                          .Join(GetShieldFade(_shieldInSprite))
                                          .Join(GetShieldFade(_shieldOutSprite))
                                          .Join(GetShieldRotation(_shieldInTransform, _shieldAnimRotation))
                                          .Join(GetShieldRotation(_shieldOutTransform, -_shieldAnimRotation))
                                          .OnComplete(() => ToggleShield(false));
-        
-        _shieldTask = _shieldSequence.ToUniTask(cancellationToken: _shieldCTS.Token);
 
-        // Cancellation is expected when a new shield activation interrupts this one.
-        await _shieldTask.SuppressCancellationThrow();
-
-        if (!_shieldCTS.Token.IsCancellationRequested)
-            _collider.enabled = true;
+        try
+        {
+            await _shieldSequence.ToUniTask(cancellationToken: _shieldCTS.Token);
+        }
+        finally
+        {
+            if (gameObject != null)
+            {
+                _collider.enabled = true;
+                _isShieldEnabled = false;
+            }
+        }
     }
 
     Tween GetShieldFade(SpriteRenderer shield)
