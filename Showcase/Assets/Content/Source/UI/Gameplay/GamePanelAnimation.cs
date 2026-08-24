@@ -29,22 +29,24 @@ public class GamePanelAnimation : MonoBehaviour
 
     public async UniTask Show()
     {
-        await _animTween.FinishAndGetNew()
-                        .Append(PopupRT.DOMove(PositionShow.position, AnimDuration)
-                                       .From(PositionInit.position)
-                                       .SetEase(EaseShow))
-                        .SetUpdate(true)
-                        .AwaitForComplete();
+        _animTween = _animTween.FinishAndGetNew()
+                               .Append(PopupRT.DOMove(PositionShow.position, AnimDuration)
+                                              .From(PositionInit.position)
+                                              .SetEase(EaseShow))
+                               .SetUpdate(true);
+        
+        await _animTween.AwaitForComplete();
     }
 
     public async UniTask Hide()
     {
-        await _animTween.FinishAndGetNew()
+        _animTween = _animTween.FinishAndGetNew()
                         .Append(PopupRT.DOMove(PositionHide.position, AnimDuration)
                                        .From(PositionShow.position)
                                        .SetEase(EaseHide))
-                        .SetUpdate(true)
-                        .AwaitForComplete();
+                        .SetUpdate(true);
+        
+        await _animTween.AwaitForComplete();
     }
 
 #endregion

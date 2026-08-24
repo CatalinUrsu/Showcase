@@ -93,14 +93,14 @@ public class GamePanelGameplay : GamePanel, IGameplayView
     public async UniTask PlayNewLvlAnimation(int newLvl)
     {
         _sliderTween.CheckAndEnd(false);
-        _newLvlSequence.FinishAndGetNew(false)
-                       .Pause()
-                       .Append(_sliderProgress.DOValue(1, LVL_TEXT_ANIM_DUR))
-                       .Join(_lvlTextRT.DOScale(_lvlTextRTMaxSize, LVL_TEXT_ANIM_DUR).From(Vector3.one)
-                                       .SetLoops(2, LoopType.Yoyo)
-                                       .OnStart(PlayNewLvlAnimation)
-                                       .OnComplete(() => _txtLvlCurrent.SetText($"{newLvl}")))
-                       .Append(_sliderProgress.DOValue(0, LVL_TEXT_ANIM_DUR * 2));
+        _newLvlSequence = _newLvlSequence.FinishAndGetNew(false)
+                                         .Pause()
+                                         .Append(_sliderProgress.DOValue(1, LVL_TEXT_ANIM_DUR))
+                                         .Join(_lvlTextRT.DOScale(_lvlTextRTMaxSize, LVL_TEXT_ANIM_DUR).From(Vector3.one)
+                                                         .SetLoops(2, LoopType.Yoyo)
+                                                         .OnStart(PlayNewLvlAnimation)
+                                                         .OnComplete(() => _txtLvlCurrent.SetText($"{newLvl}")))
+                                         .Append(_sliderProgress.DOValue(0, LVL_TEXT_ANIM_DUR * 2));
 
         await _newLvlSequence.Play();
     }

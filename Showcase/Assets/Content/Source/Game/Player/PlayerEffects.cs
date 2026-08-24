@@ -87,18 +87,18 @@ public class PlayerEffects : MonoBehaviour
     async UniTaskVoid StartShieldAnim()
     {
         _collider.enabled = false;
-            
+
         ToggleShield(true);
 
-        _shieldSequence.FinishAndGetNew()
-                       .Join(GetShieldFade(_shieldInSprite))
-                       .Join(GetShieldFade(_shieldOutSprite))
-                       .Join(GetShieldRotation(_shieldInTransform, _shieldAnimRotation))
-                       .Join(GetShieldRotation(_shieldOutTransform, -_shieldAnimRotation))
-                       .OnComplete(() => ToggleShield(false));
-
-        _shieldTask = _shieldSequence.ToUniTask(cancellationToken: _shieldCTS.Token);
+        _shieldSequence = _shieldSequence.FinishAndGetNew()
+                                         .Join(GetShieldFade(_shieldInSprite))
+                                         .Join(GetShieldFade(_shieldOutSprite))
+                                         .Join(GetShieldRotation(_shieldInTransform, _shieldAnimRotation))
+                                         .Join(GetShieldRotation(_shieldOutTransform, -_shieldAnimRotation))
+                                         .OnComplete(() => ToggleShield(false));
         
+        _shieldTask = _shieldSequence.ToUniTask(cancellationToken: _shieldCTS.Token);
+
         // Cancellation is expected when a new shield activation interrupts this one.
         await _shieldTask.SuppressCancellationThrow();
 

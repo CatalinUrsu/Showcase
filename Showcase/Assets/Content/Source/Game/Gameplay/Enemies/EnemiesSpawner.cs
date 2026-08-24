@@ -125,6 +125,8 @@ public class EnemiesSpawner : MonoBehaviour, IEnemiesSpawner
 
             currentEnemy.MinChance = i == 0 ? 0 : _enemiesByChances[i - 1].MaxChance;
             currentEnemy.MaxChance = currentEnemy.Chance + currentEnemy.MinChance;
+            
+            _enemiesByChances[i] = currentEnemy;
         }
     }
 
