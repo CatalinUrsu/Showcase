@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Enemy_3
   m_EditorClassIdentifier: 
   Coin:
-    Value: 57.84
+    Value: 58
     Lvl: 0
   HP:
-    Value: 100
+    Value: 45
     Lvl: 0
   RewardPoints: 1.5
   SpeedRadius: {x: 3, y: 5}

@@ -16,7 +16,7 @@ MonoBehaviour:
     Value: 23.55
     Lvl: 0
   HP:
-    Value: 70
+    Value: 25
     Lvl: 0
   RewardPoints: 1
   SpeedRadius: {x: 3, y: 4}
