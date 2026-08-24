@@ -48,13 +48,13 @@ public class ResetProgressPresenter : IDisposable
 
     public void Dispose() => _disposables.Dispose();
 
-    public void TryResetProgress()
+    public void TryAscend()
     {
         if (!ReachedMinBonusLvl) return;
 
         _fmodEvent.PlayOneShot();
-        _progressModelController.ResetProgress();
-        _itemsModelController.ResetItems();
+        _progressModelController.AscendProgress(LvlBonus);
+        _itemsModelController.ResetOnAscending();
         SaveProgress();
     }
 

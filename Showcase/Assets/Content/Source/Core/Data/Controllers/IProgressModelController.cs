@@ -20,6 +20,6 @@ public interface IProgressModelController
     void SetUsedShipIdx(int shipIdx);
     void SetUsedWeaponIdx(int weaponsIdx);
 
-    void ResetProgress();
+    void AscendProgress(int diamonds);
 }
 }

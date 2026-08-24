@@ -35,13 +35,12 @@ public class ProgressModelController : IProgressModelController
 
     public void SetUsedWeaponIdx(int weaponsIdx) => Model.UsedWeaponIdx.Value = weaponsIdx;
 
-    public void ResetProgress()
+    public void AscendProgress(int diamonds)
     {
         Model.Lvl.Value = 1;
         Model.Coins.Value = 0;
-        Model.Diamonds.Value = 0;
-        Model.UsedShipIdx.Value = 0;
         Model.UsedWeaponIdx.Value = 0;
+        Model.Diamonds.Value += diamonds;
     }
 
 #endregion

@@ -20,6 +20,6 @@ public interface IItemsModelController
     void DeselectShip(Guid key);
     void UpdateShip(Guid key);
 
-    void ResetItems();
+    void ResetOnAscending();
 }
 }

@@ -40,7 +40,7 @@ public class ShipPresenter : ItemPresenterBase
         _shipModel.IsSelectedRef.Subscribe(isSelect => _view.UpdateSelectState(_shipModel.IsBoughtRef.CurrentValue, isSelect)).AddTo(_disposables);
         _shipModel.UpgradePriceRef.Subscribe(_ => _view.SetShipStats(GetPrice(), _shipModel.EnemyCoinBonusRef.CurrentValue)).AddTo(_disposables);
 
-        _progressModel.CoinsRef.Subscribe(_ => _view.UpdateSolvency(HasEnoughCurrency())).AddTo(_disposables);
+        _progressModel.DiamondsRef.Subscribe(_ => _view.UpdateSolvency(HasEnoughCurrency())).AddTo(_disposables);
         _progressModel.UsedShipIdxRef.Subscribe(DeselectOnSelectOtherItem).AddTo(_disposables);
     }
 

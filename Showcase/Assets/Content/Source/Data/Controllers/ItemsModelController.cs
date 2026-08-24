@@ -64,13 +64,10 @@ public class ItemsModelController: IItemsModelController
 
     public void UpdateShip(Guid key) => UpdateShip(Model.ShipsData[key]);
 
-    public void ResetItems()
+    public void ResetOnAscending()
     {
-        foreach (var pair in _initWeaponsData) 
+        foreach (var pair in _initWeaponsData)
             ResetWeapon(Model.WeaponsData[pair.Key], pair.Value);
-        
-        foreach (var pair in _initShipsData) 
-            ResetShip(Model.ShipsData[pair.Key], pair.Value);
     }
 
 #endregion
@@ -116,12 +113,16 @@ public class ItemsModelController: IItemsModelController
         model.UpgradePrice.Value *= ConstUpgradeItems.WEAPON_PRICE_MULTIPLIER;
         model.FirePower.Value += ConstUpgradeItems.WEAPON_POWER_UPGRADE;
         model.FireRate.Value = Mathf.Clamp(model.FireRate.Value + ConstUpgradeItems.WEAPON_FIRE_RATE_UPGRADE, ConstUpgradeItems.WEAPON_FIRE_RATE_MIN, 1);
+        
+        model.UpgradePrice.ForceNotify();
     }
 
     static void UpdateShip(ShipModel model)
     {
         model.UpgradePrice.Value *= ConstUpgradeItems.SHIP_PRICE_MULTIPLIER;
         model.EnemyCoinBonus.Value += ConstUpgradeItems.SHIP_BONUS_INCREASE;
+        
+        model.UpgradePrice.ForceNotify();
     }
 
     static void ResetWeapon(WeaponModel model, WeaponInitData initData)
@@ -129,12 +130,16 @@ public class ItemsModelController: IItemsModelController
         ResetItem(model, initData);
         model.FirePower.Value = initData.FirePower;
         model.FireRate.Value = initData.FireRate;
+        
+        model.UpgradePrice.ForceNotify();
     }
 
     static void ResetShip(ShipModel model, ShipInitData initData)
     {
         ResetItem(model, initData);
         model.EnemyCoinBonus.Value = initData.EnemyCoinBonus;
+        
+        model.UpgradePrice.ForceNotify();
     }
 
     static void ResetItem(ItemModel model, ItemInitData initData)

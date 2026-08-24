@@ -1,4 +1,5 @@
 using R3;
+using Zenject;
 using Helpers;
 using DG.Tweening;
 using Source.Data;
@@ -6,7 +7,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Localization.Components;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
-using Zenject;
 
 namespace Source.UI
 {
@@ -71,7 +71,7 @@ public class ResetProgressView : MonoBehaviour, IResetProgressView
 
 #region Private methods
 
-    void OnSelect_handler() => _resetProgressPresenter.TryResetProgress();
+    void OnSelect_handler() => _resetProgressPresenter.TryAscend();
 
     void SetRawImageSpeed(bool reachedMinBonusLvl)
     {
