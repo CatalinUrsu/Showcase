@@ -1,4 +1,5 @@
-﻿using Zenject;
+﻿using System;
+using Zenject;
 using Helpers;
 using FMODUnity;
 using DG.Tweening;
@@ -93,14 +94,19 @@ public class PlayerEffects : MonoBehaviour
                                          .Join(GetShieldRotation(_shieldInTransform, _shieldAnimRotation))
                                          .Join(GetShieldRotation(_shieldOutTransform, -_shieldAnimRotation))
                                          .OnComplete(() => ToggleShield(false));
-
+        
         try
         {
             await _shieldSequence.ToUniTask(cancellationToken: _shieldCTS.Token);
         }
+        catch (Exception e)
+        {
+            if (e is not OperationCanceledException)
+                throw;
+        }
         finally
         {
-            if (gameObject != null)
+            if (this != null)
             {
                 _collider.enabled = true;
                 _isShieldEnabled = false;
