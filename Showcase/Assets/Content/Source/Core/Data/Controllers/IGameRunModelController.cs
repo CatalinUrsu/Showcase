@@ -3,12 +3,12 @@ using IdleNumbers;
 
 namespace Source
 {
-public interface IGameRunModelController : IDisposable
+public interface IGameRunModelController
 {
     IGameRunModel IModel { get; }
     event Action OnClickPause;
     event Action OnClickGoHome;
-    event Action OnClickReturnToGame;
+    event Action OnContinueGame;
     event Action OnPlayerLoose;
 
     void StartRun();

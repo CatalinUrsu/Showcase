@@ -4,7 +4,6 @@ using DG.Tweening;
 using FMOD.Studio;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using EditorAttributes;
 
 namespace Source.Game.Player
 {

@@ -20,6 +20,7 @@ public class GameRunPresenter : IDisposable
     readonly CompositeDisposable _disposable = new();
     readonly IGameRunModelController _gameRunModelController;
     readonly IGameplayView _viewGameplay;
+    readonly ISessionService _sessionService;
 
 #endregion
 
@@ -27,10 +28,12 @@ public class GameRunPresenter : IDisposable
 
     public GameRunPresenter(IGameplayView viewGameplay,
                             IGameRunModelController gameRunModelController,
-                            IProgressModelController progressModelController)
+                            IProgressModelController progressModelController,
+                            ISessionService sessionService)
     {
         _viewGameplay = viewGameplay;
         _gameRunModelController = gameRunModelController;
+        _sessionService = sessionService;
 
         _gameRunModelController.IModel.ProgressRef.Skip(1).Subscribe(OnProgressChange_handler).AddTo(_disposable);
         _gameRunModelController.IModel.CollectedCoinsRef.Skip(1).Subscribe(OnChangeCoinsAmount_handler).AddTo(_disposable);
@@ -53,6 +56,7 @@ public class GameRunPresenter : IDisposable
 
     void OnReachNewLvl_handler(int lvl)
     {
+        _sessionService.Save(ESaveFileType.Progress);
         PlayNewLvlAnim().Forget();
         return;
 
