@@ -24,13 +24,11 @@ public class ResetProgressView : MonoBehaviour, IResetProgressView
 
     [Space]
     [SerializeField] RawImage _imgRawIcons;
-
     [SerializeField] Vector2 _activeMoveSpeed;
     [SerializeField] Vector2 _inactiveMoveSpeed;
 
     [Space]
     [SerializeField] LocalizeStringEvent _localizedStringEventBonus;
-
     [SerializeField] LocalizeStringEvent _localizedStringEventRequire;
 
     Rect _imgIconsUVRect;
@@ -44,7 +42,11 @@ public class ResetProgressView : MonoBehaviour, IResetProgressView
 
 #region Public methods
 
-    void OnDestroy() => _speedChangeTween.CheckAndEnd();
+    void OnDestroy()
+    {
+        _speedChangeTween.CheckAndEnd();
+        _resetProgressPresenter.Dispose();
+    }
 
     public void Init()
     {

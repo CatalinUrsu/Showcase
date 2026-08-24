@@ -79,7 +79,7 @@ public abstract class ItemPresenterBase : IPresenterItemBase
 
     protected bool CanSelectItem() => _itemModel.IsBoughtRef.CurrentValue && !_itemModel.IsSelectedRef.CurrentValue;
 
-    protected bool HasEnoughCurrency() => _progressModel.CoinsRef.CurrentValue.IsEnough(GetPrice());
+    protected virtual bool HasEnoughCurrency() => _progressModel.CoinsRef.CurrentValue.IsEnough(GetPrice());
 
     protected IdleNumber GetPrice() => _itemModel.IsBoughtRef.CurrentValue ? _itemModel.UpgradePriceRef.CurrentValue : _itemModel.BuyPriceRef.CurrentValue;
 

@@ -1,6 +1,7 @@
 using R3;
 using System;
 using Zenject;
+using IdleNumbers;
 
 namespace Source.Data
 {
@@ -80,6 +81,8 @@ public class ShipPresenter : ItemPresenterBase
 
         _itemsController.DeselectShip(_key);
     }
+
+    protected override bool HasEnoughCurrency() => _progressModel.DiamondsRef.CurrentValue.IsEnough(GetPrice());
 
 #endregion
 }
