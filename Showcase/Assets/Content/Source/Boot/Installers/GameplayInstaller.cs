@@ -13,6 +13,7 @@ public class GameplayInstaller : MonoInstaller
     [SerializeField] PlayerFacade _playerFacade;
     [SerializeField] GameUIFacade _uiFacade;
     [SerializeField] EnemiesSpawner _enemiesSpawner;
+    [SerializeField] Collider2D _gameCameraBounds;
 
     IGameplayContext _gameplayContext;
 
@@ -23,6 +24,7 @@ public class GameplayInstaller : MonoInstaller
         _gameplayContext.RegisterPlayerFacade(_playerFacade);
         _gameplayContext.RegisterUIController(_uiFacade);
         _gameplayContext.RegisterEnemiesController(_enemiesSpawner);
+        _gameplayContext.RegisterGameCameraBounds(_gameCameraBounds);
     }
 }
 }

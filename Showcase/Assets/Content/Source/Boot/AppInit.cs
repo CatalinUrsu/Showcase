@@ -2,6 +2,7 @@ using Zenject;
 using UnityEngine;
 using Helpers.Audio;
 using Helpers.Services;
+using Unity.Cinemachine;
 using Cysharp.Threading.Tasks;
 
 namespace Source.Boot
@@ -18,6 +19,10 @@ public class AppInit : MonoBehaviour
     [SerializeField] Camera _cameraMain;
     [SerializeField] Camera _cameraUI;
     
+    [Header("Cinemachine")]
+    [SerializeField] Animator _cinemachineAnimator;
+    [SerializeField] CinemachineCamera _cinemachineCamGame;
+    
     [Header("Debugs")]
     [SerializeField] bool _enableDebug;
     [SerializeField] GameObject _graphyObj;
@@ -25,16 +30,20 @@ public class AppInit : MonoBehaviour
     StatesMachine _stateMachine;
     DiContainer _container;
     ICameraService _cameraService;
+    ICinemachineService _cinemachineService;
 
 #endregion
 
 #region Monobehaviour
 
     [Inject]
-    public void Construct(DiContainer container, ICameraService cameraService)
+    public void Construct(DiContainer container, 
+                          ICameraService cameraService,
+                          ICinemachineService cinemachineService)
     {
         _container = container;
         _cameraService = cameraService;
+        _cinemachineService = cinemachineService;
     }
 
     async void Awake()
@@ -46,6 +55,7 @@ public class AppInit : MonoBehaviour
         _cameraService.RegisterMainCamera(_cameraMain);
         _cameraService.RegisterCamera(ConstCameras.CAMERA_UI, _cameraUI);
         SetDebugViews();
+        SetCinemachineService();
         InitStateMachine();
 
         await LoadFMODBanks();
@@ -74,6 +84,12 @@ public class AppInit : MonoBehaviour
         };
             
         _stateMachine = new StatesMachine(states);
+    }
+
+    void SetCinemachineService()
+    {
+        _cinemachineService.RegisterAnimator(_cinemachineAnimator);
+        _cinemachineService.RegisterCinemachineGame(_cinemachineCamGame);
     }
 
     async UniTask LoadFMODBanks()

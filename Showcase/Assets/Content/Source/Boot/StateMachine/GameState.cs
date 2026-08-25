@@ -15,6 +15,8 @@ public class GameState : IStateEnter
     readonly IAudioService _audioService;
     readonly ISceneLifecycleService _sceneLifecycleService;
     readonly ISessionService _sessionService;
+    readonly ICinemachineService _cinemachineService;
+    readonly IVolumeSwitcherService _volumeSwitcherService;
     readonly IGameRunModelController _gameRunModelController;
     readonly ILoadingContext _loadingContext;
     readonly IGameplayContext _gameplayContext;
@@ -26,6 +28,8 @@ public class GameState : IStateEnter
     public GameState(IAudioService audioService,
                      ISceneLifecycleService sceneLifecycleService,
                      ISessionService sessionService,
+                     ICinemachineService cinemachineService,
+                     IVolumeSwitcherService volumeSwitcherService,
                      IGameRunModelController gameRunModelController,
                      ILoadingContext loadingContext,
                      IGameplayContext gameplayContext)
@@ -33,6 +37,8 @@ public class GameState : IStateEnter
         _audioService = audioService;
         _sceneLifecycleService = sceneLifecycleService;
         _sessionService = sessionService;
+        _cinemachineService = cinemachineService;
+        _volumeSwitcherService = volumeSwitcherService;
         _gameRunModelController = gameRunModelController;
         _loadingContext = loadingContext;
         _gameplayContext = gameplayContext;
@@ -44,6 +50,8 @@ public class GameState : IStateEnter
         {
             await LoadGameScene();
             _gameRunModelController.StartRun();
+            _cinemachineService.SetCinemachineGame(_gameplayContext.PlayerFacade.Transform, _gameplayContext.GameCameraBounds);
+            _cinemachineService.ChangeState(ECinemachineState.Game);
             
             await HideSplashScreen();
             await StartGameplay();
@@ -60,6 +68,8 @@ public class GameState : IStateEnter
             await ShowSplashScreen();
             
             _sessionService.Save(ESaveFileType.Progress);
+            _cinemachineService.ChangeState(ECinemachineState.Menu);
+            _volumeSwitcherService.ChangeState(EVolumeState.Global);
 
             ApplyResume();
             await UnloadGameScene();
@@ -120,23 +130,27 @@ public class GameState : IStateEnter
         Time.timeScale = 0;
         ApplyPause();
         SelectUIPanel(EGamePanels.Pause).Forget();
+        _volumeSwitcherService.ChangeState(EVolumeState.Pause);
     }
 
     void OpenLooseMenu()
     {
         ApplyPause();
         SelectUIPanel(EGamePanels.Loose).Forget();
+        _volumeSwitcherService.ChangeState(EVolumeState.Loose);
     }
     
     void ContinueGame()
     {
         ApplyResume();
         SelectUIPanel(EGamePanels.Game).Forget();
+        _volumeSwitcherService.ChangeState(EVolumeState.Global);
     }
     
     void RestartGame()
     {
         ApplyResume();
+        _volumeSwitcherService.ChangeState(EVolumeState.Global);
         _gameRunModelController.StartRun();
         RestartGameLogic().Forget();
         return;

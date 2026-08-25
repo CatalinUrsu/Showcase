@@ -13,9 +13,14 @@ public class ProjectInstaller : MonoInstaller
 {
 #region Fields
 
+    [SerializeField] FmodEventsSo _fmodEventsSO;
+    
+    [Space]
     [SerializeField] ItemInfoWeaponSO[] _weaponsSO;
     [SerializeField] ItemInfoShipSO[] _ShipsSO;
-    [SerializeField] FmodEventsSo _fmodEventsSO;
+
+    [Space]
+    [SerializeField] VolumeByState[] _volumes;
 
 #endregion
 
@@ -56,7 +61,10 @@ public class ProjectInstaller : MonoInstaller
     {
         IProgressTrackingService progressTrackingService = new ProgressTrackingService();
         ISceneLoaderService sceneLoaderService = new SceneLoaderService(progressTrackingService);
+        IVolumeSwitcherService volumeSwitcherService = new VolumeSwitcherService(_volumes);
         
+        Container.Bind<ICinemachineService>().To<CinemachineService>().AsSingle();
+        Container.Bind<IVolumeSwitcherService>().FromInstance(volumeSwitcherService).AsSingle();
         Container.Bind<IAudioService>().To<AudioService>().AsSingle();
         Container.Bind<ICameraService>().FromInstance(new CameraService()).AsSingle();
         Container.Bind<IProgressTrackingService>().FromInstance(progressTrackingService).AsSingle();

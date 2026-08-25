@@ -1,4 +1,5 @@
-﻿using Helpers.Audio;
+﻿using UnityEngine;
+using Helpers.Audio;
 using Helpers.Services;
 using Cysharp.Threading.Tasks;
 
@@ -12,6 +13,7 @@ public class GameplayContext : IGameplayContext
     public IPlayerFacade PlayerFacade { get; private set; }
     public IGameUIFacade UIFacade { get; private set; }
     public IEnemiesSpawner EnemiesSpawner { get; private set; }
+    public Collider2D GameCameraBounds { get; private set; }
 
 #endregion
 
@@ -21,7 +23,7 @@ public class GameplayContext : IGameplayContext
     public void RegisterPlayerFacade(IPlayerFacade playerFacade) => PlayerFacade = playerFacade;
     public void RegisterUIController(IGameUIFacade uiFacade) => UIFacade = uiFacade;
     public void RegisterEnemiesController(IEnemiesSpawner enemiesSpawner) => EnemiesSpawner = enemiesSpawner;
-
+    public void RegisterGameCameraBounds(Collider2D gameCameraBounds) => GameCameraBounds = gameCameraBounds;
 #endregion
 
 #region Public methods

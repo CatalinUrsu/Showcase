@@ -11,6 +11,8 @@ public class PlayerFacade : MonoBehaviour, IPlayerFacade
     [Space]
     [SerializeField] protected PlayerEmergence _playerEmergence;
     [SerializeField] protected PlayerAppearance _playerAppearance;
+    
+    public Transform Transform => transform;
 
     protected virtual void OnValidate()
     {
