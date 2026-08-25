@@ -5,6 +5,7 @@ using R3.Triggers;
 using UnityEngine;
 using Helpers.Audio;
 using Helpers.Services;
+using UnityEngine.EventSystems;
 
 namespace Source.Game.Player
 {
@@ -66,7 +67,13 @@ public class PlayerMovement : MonoBehaviour
         _audioService.FlyInstance.SetParameter(ConstFMOD.FLY_POWER, 0);
     }
     
-    public void ToggleControl(bool enable) => _controlIsEnable = enable;
+    public void ToggleControl(bool enable)
+    {
+        _controlIsEnable = enable;
+        
+        if(!_controlIsEnable)
+            _isClicked = false;
+    }
 
     public void StopMovementFx() => _flyFx.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 
@@ -76,32 +83,29 @@ public class PlayerMovement : MonoBehaviour
 
     void SetPlayerControl(Rigidbody2D rb)
     {
-        Observable.EveryUpdate(UnityFrameProvider.FixedUpdate)
-                  .Where(_ => _isClicked)
-                  .Subscribe(_ => MovePlayer(rb))
-                  .AddTo(_disposables);
-
         _canvasInputHandler.gameObject.AddComponent<ObservablePointerDownTrigger>()
-                         .OnPointerDownAsObservable()
-                         .Where(_ => _controlIsEnable)
-                         .Select(pointer => pointer.position)
-                         .Where(position => position.y <= _maxPosY)
-                         .Subscribe(OnPointerDown_handler)
-                         .AddTo(_disposables);
+                           .OnPointerDownAsObservable()
+                           .Select(pointer => pointer.position)
+                           .Where(position => position.y <= _maxPosY)
+                           .Subscribe(TurnOnIsClicked)
+                           .AddTo(_disposables);
 
         _canvasInputHandler.gameObject.AddComponent<ObservablePointerUpTrigger>()
-                         .OnPointerUpAsObservable()
-                         .Where(_ => _controlIsEnable)
-                         .Select(x => x.position)
-                         .Subscribe(_ => OnPointerUp_handler())
-                         .AddTo(_disposables);
+                           .OnPointerUpAsObservable()
+                           .Subscribe(TurnOffIsClicked)
+                           .AddTo(_disposables);
 
         _canvasInputHandler.gameObject.AddComponent<ObservableDragTrigger>()
-                         .OnDragAsObservable()
-                         .Where(_ => _controlIsEnable && _isClicked)
-                         .Select(pointer => pointer.position)
-                         .Subscribe(OnDrag_handler)
-                         .AddTo(_disposables);
+                           .OnDragAsObservable()
+                           .Where(_ => _isClicked)
+                           .Select(pointer => pointer.position)
+                           .Subscribe(SetTargetPos)
+                           .AddTo(_disposables);
+
+        Observable.EveryUpdate(UnityFrameProvider.FixedUpdate)
+                  .Where(_ => _controlIsEnable && _isClicked)
+                  .Subscribe(_ => MovePlayer(rb))
+                  .AddTo(_disposables);
     }
 
     void SetFlySoundControl(Rigidbody2D rb)
@@ -112,17 +116,15 @@ public class PlayerMovement : MonoBehaviour
                   .AddTo(_disposables);
     }
 
-    void OnPointerDown_handler(Vector2 inputPos)
+    void TurnOnIsClicked(Vector2 inputPos)
     {
-        SetTargetPosition(inputPos);
+        SetTargetPos(inputPos);
         _isClicked = true;
     }
 
-    void OnPointerUp_handler() => _isClicked = false;
+    void TurnOffIsClicked(PointerEventData _) => _isClicked = false;
 
-    void OnDrag_handler(Vector2 inputPos) => SetTargetPosition(inputPos);
-
-    void SetTargetPosition(Vector2 inputPos)
+    void SetTargetPos(Vector2 inputPos)
     {
         inputPos.y = Mathf.Clamp(inputPos.y, 0, _maxPosY);
         _targetPos = _camera.ScreenToWorldPoint(inputPos);

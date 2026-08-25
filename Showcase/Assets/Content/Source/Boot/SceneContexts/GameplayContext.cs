@@ -29,12 +29,11 @@ public class GameplayContext : IGameplayContext
     public async UniTask Init(IProgressTrackingService progressTrackingService, SceneLoadProgress sceneLoadProgress)
     {
         progressTrackingService.UpdateLoadingTip("Setup Gameplay Scene");
+        await BankLoader.Init();
+        await EnemiesSpawner.Init();
         
         UIFacade.Init();
         PlayerFacade.Init();
-
-        await UniTask.WhenAll(BankLoader.Init(),
-                              EnemiesSpawner.Init());
     }
 
     public async UniTask DeInit()
