@@ -342,7 +342,7 @@ MonoBehaviour:
     ScreenPosition: {x: 0, y: 0.3}
     DeadZone:
       Enabled: 1
-      Size: {x: 0.4, y: 0.3}
+      Size: {x: 0.2, y: 0.2}
     HardLimits:
       Enabled: 1
       Size: {x: 1, y: 0.8}
@@ -629,8 +629,7 @@ MonoBehaviour:
   _bankLoaderMasterStrings: {fileID: 882357759}
   _cameraMain: {fileID: 519420031}
   _cameraUI: {fileID: 1157746725}
-  _cinemachineAnimator: {fileID: 1884265008}
-  _cinemachineCamGame: {fileID: 347882912}
+  _stateDrivenCamera: {fileID: 1884265007}
   _enableDebug: 0
   _graphyObj: {fileID: 177638, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
 --- !u!114 &882357759
@@ -881,7 +880,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  CustomBlends: {fileID: 0}
+  CustomBlends: {fileID: 11400000, guid: 87c269b8070c2ec43bf279ca6a1129be, type: 2}
   AnimatedTarget: {fileID: 1884265008}
   LayerIndex: 0
   Instructions:
