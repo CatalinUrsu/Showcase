@@ -51,6 +51,10 @@ MonoBehaviour:
     m_Key: loading_progress
     m_Metadata:
       m_Items: []
+  - m_Id: 390023046480519168
+    m_Key: game_loose_total_coins
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
