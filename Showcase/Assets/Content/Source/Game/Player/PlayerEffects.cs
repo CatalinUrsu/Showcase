@@ -23,7 +23,7 @@ public class PlayerEffects : MonoBehaviour
     
     [Space]
     [SerializeField] Collider2D _collider;
-    [SerializeField] GameObject _deathEffect;
+    [SerializeField] ParticleSystem _deathFx;
 
     bool _isShieldEnabled;
     Transform _shieldInTransform;
@@ -63,8 +63,7 @@ public class PlayerEffects : MonoBehaviour
     {
         _collider.enabled = false;
         _deathAudioReference.PlayOneShot();
-
-        Instantiate(_deathEffect, transform.position, Quaternion.identity);
+        _deathFx.Play(true);
     }
 
 #endregion
