@@ -11,8 +11,9 @@ public class MenuState : IStateEnter
 
     public StatesMachine StatesMachine { get; set; }
     
-    readonly ISceneLifecycleService _sceneLifecycleService;
     readonly IAudioService _audioService;
+    readonly ISceneLifecycleService _sceneLifecycleService;
+    readonly ICinemachineService _cinemachineService;
     readonly ILoadingContext _loadingContext;
     readonly IMenuContext _menuContext;
 
@@ -22,11 +23,13 @@ public class MenuState : IStateEnter
 
     public MenuState(IAudioService audioService,
                      ISceneLifecycleService sceneLifecycleService,
+                     ICinemachineService cinemachineService,
                      ILoadingContext loadingContext,
                      IMenuContext menuContext)
     {
         _audioService = audioService;
         _sceneLifecycleService = sceneLifecycleService;
+        _cinemachineService = cinemachineService;
         _loadingContext = loadingContext;
         _menuContext = menuContext;
     }
@@ -35,9 +38,11 @@ public class MenuState : IStateEnter
     {
         using (InputManager.Instance.LockInputSystem())
         {
-            _audioService.MusicInstance.SetParameter(ConstFMOD.MUSIC_STATE, EMusicStates.Idle.ToString());
+            _audioService.MusicInstance.SetParameter(ConstFMOD.MUSIC_STATE, nameof(EMusicStates.Idle));
 
             await LoadMenuScene();
+            
+            _cinemachineService.ChangeState(nameof(ECinemachineState.Menu));
             await HideSplashScreen();
             await _menuContext.PlayerFacade.ShowPlayer();
 

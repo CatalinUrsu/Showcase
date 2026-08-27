@@ -2,6 +2,7 @@ using Helpers;
 using FMOD.Studio;
 using UnityEngine;
 using Helpers.Services;
+using Unity.Cinemachine;
 using Cysharp.Threading.Tasks;
 
 namespace Source.Boot
@@ -11,6 +12,8 @@ public class GameState : IStateEnter
 #region Fields
 
     public StatesMachine StatesMachine { get; set; }
+
+    CinemachineVirtualCameraBase _gameCamera;
     
     readonly IAudioService _audioService;
     readonly ISceneLifecycleService _sceneLifecycleService;
@@ -49,10 +52,9 @@ public class GameState : IStateEnter
         using (InputManager.Instance.LockInputSystem())
         {
             await LoadGameScene();
-            _gameRunModelController.StartRun();
-            _cinemachineService.SetCinemachineGame(_gameplayContext.PlayerFacade.Transform, _gameplayContext.GameCameraBounds);
-            _cinemachineService.ChangeState(ECinemachineState.Game);
             
+            _gameRunModelController.StartRun();
+            SetCinemachineGame();
             await HideSplashScreen();
             await StartGameplay();
             
@@ -68,7 +70,6 @@ public class GameState : IStateEnter
             await ShowSplashScreen();
             
             _sessionService.Save(ESaveFileType.Progress);
-            _cinemachineService.ChangeState(ECinemachineState.Menu);
             _volumeSwitcherService.ChangeState(EVolumeState.Global);
 
             ApplyResume();
@@ -100,12 +101,24 @@ public class GameState : IStateEnter
         await UniTask.WhenAll(_gameplayContext.UIFacade.SelectPanel(EGamePanels.Game),
                               _gameplayContext.PlayerFacade.ShowPlayer());
 
+        SetCameraFollow(_gameplayContext.PlayerFacade.Transform);
         _gameplayContext.PlayerFacade.ToggleControl(true);
     }
 
     async UniTask ShowSplashScreen() => await _loadingContext.SplashScreen.Show();
 
     async UniTask HideSplashScreen() => await _loadingContext.SplashScreen.Hide();
+
+    void SetCinemachineGame()
+    {
+        if (!_cinemachineService.CinemaCameras.TryGetValue(nameof(ECinemachineState.Game), out var cameraData)) return;
+
+        _gameCamera = cameraData.Camera;
+        _gameCamera.GetComponent<CinemachineConfiner2D>().BoundingShape2D = _gameplayContext.GameCameraBounds;
+        _cinemachineService.ChangeState(nameof(ECinemachineState.Game));
+    }
+    
+    void SetCameraFollow(Transform target) => _gameCamera.Follow = target;
 
     void AddGameRunControllerListeners()
     {
@@ -136,6 +149,7 @@ public class GameState : IStateEnter
     void OpenLooseMenu()
     {
         ApplyPause();
+        SetCameraFollow(null);
         SelectUIPanel(EGamePanels.Loose).Forget();
         _volumeSwitcherService.ChangeState(EVolumeState.Loose);
     }
@@ -161,6 +175,7 @@ public class GameState : IStateEnter
                                   _gameplayContext.PlayerFacade.ShowPlayer());
 
             _gameplayContext.PlayerFacade.ToggleControl(true);
+            SetCameraFollow(_gameplayContext.PlayerFacade.Transform);
         }
     }
 

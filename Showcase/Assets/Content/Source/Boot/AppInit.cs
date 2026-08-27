@@ -18,10 +18,7 @@ public class AppInit : MonoBehaviour
     [Header("Cameras")]
     [SerializeField] Camera _cameraMain;
     [SerializeField] Camera _cameraUI;
-    
-    [Header("Cinemachine")]
-    [SerializeField] Animator _cinemachineAnimator;
-    [SerializeField] CinemachineCamera _cinemachineCamGame;
+    [SerializeField] CinemachineStateDrivenCamera _stateDrivenCamera;
     
     [Header("Debugs")]
     [SerializeField] bool _enableDebug;
@@ -88,8 +85,18 @@ public class AppInit : MonoBehaviour
 
     void SetCinemachineService()
     {
-        _cinemachineService.RegisterAnimator(_cinemachineAnimator);
-        _cinemachineService.RegisterCinemachineGame(_cinemachineCamGame);
+        _cinemachineService.RegisterStateDrivenAnimator(_stateDrivenCamera.AnimatedTarget);
+        
+        var instructionIdx = 0;
+        var stateDrivenInstructions = _stateDrivenCamera.Instructions;
+        var states = (ECinemachineState[])System.Enum.GetValues(typeof(ECinemachineState));
+
+        for (int i = 0; i < states.Length; i++)
+        {
+            var stateDrivenInsttruction = stateDrivenInstructions[i];
+            var data = new StateDrivenCameraData(stateDrivenInsttruction.Camera, stateDrivenInsttruction.FullHash);
+            _cinemachineService.AddStateDrivenCameraData(states[i].ToString(), data);
+        }
     }
 
     async UniTask LoadFMODBanks()
