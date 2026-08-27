@@ -38,7 +38,7 @@ public class WeaponPresenter : ItemPresenterBase
         // Subscribe to Properties value changing
         _weaponModel.IsBoughtRef.Subscribe(isBought => _view.UpdateBoughtState(isBought, GetPrice())).AddTo(_disposables);
         _weaponModel.IsSelectedRef.Subscribe(isSelect => _view.UpdateSelectState(_weaponModel.IsBoughtRef.CurrentValue, isSelect)).AddTo(_disposables);
-        _weaponModel.UpgradePriceRef.Subscribe(_ => _view.SetWeaponsStats(GetPrice(), _weaponModel.FirePowerRef.CurrentValue, _weaponModel.FireRateRef.CurrentValue)).AddTo(_disposables);
+        _weaponModel.UpgradePriceRef.Subscribe(_ => SetWeaponsStats()).AddTo(_disposables);
 
         _progressModel.CoinsRef.Subscribe(_ => _view.UpdateSolvency(HasEnoughCurrency())).AddTo(_disposables);
         _progressModel.UsedWeaponIdxRef.Subscribe(DeselectOnSelectOtherItem).AddTo(_disposables);
@@ -60,8 +60,8 @@ public class WeaponPresenter : ItemPresenterBase
 
     protected override void BuyItem()
     {
-        _itemsController.BuyWeapon(_key);
         _progressController.SpendCoins(_weaponModel.BuyPriceRef.CurrentValue);
+        _itemsController.BuyWeapon(_key);
 
         base.BuyItem();
         SelectItem();
@@ -69,8 +69,8 @@ public class WeaponPresenter : ItemPresenterBase
 
     protected override void UpgradeItem()
     {
-        _itemsController.UpdateWeapon(_key);
         _progressController.SpendCoins(_weaponModel.UpgradePriceRef.CurrentValue);
+        _itemsController.UpdateWeapon(_key);
 
         base.UpgradeItem();
     }
@@ -80,6 +80,12 @@ public class WeaponPresenter : ItemPresenterBase
         if (selectedItemIdx == _idx || !_itemModel.IsSelectedRef.CurrentValue) return;
 
         _itemsController.DeselectWeapon(_key);
+    }
+
+    void SetWeaponsStats()
+    {
+        _view.SetWeaponsStats(GetPrice(), _weaponModel.FirePowerRef.CurrentValue, _weaponModel.FireRateRef.CurrentValue);
+        _view.UpdateSolvency(HasEnoughCurrency());
     }
 
 #endregion

@@ -38,7 +38,7 @@ public class ShipPresenter : ItemPresenterBase
         // Subscribe to Properties value changing
         _shipModel.IsBoughtRef.Subscribe(isBought => _view.UpdateBoughtState(isBought, GetPrice())).AddTo(_disposables);
         _shipModel.IsSelectedRef.Subscribe(isSelect => _view.UpdateSelectState(_shipModel.IsBoughtRef.CurrentValue, isSelect)).AddTo(_disposables);
-        _shipModel.UpgradePriceRef.Subscribe(_ => _view.SetShipStats(GetPrice(), _shipModel.EnemyCoinBonusRef.CurrentValue)).AddTo(_disposables);
+        _shipModel.UpgradePriceRef.Subscribe(_ => SetShipStats()).AddTo(_disposables);
 
         _progressModel.DiamondsRef.Subscribe(_ => _view.UpdateSolvency(HasEnoughCurrency())).AddTo(_disposables);
         _progressModel.UsedShipIdxRef.Subscribe(DeselectOnSelectOtherItem).AddTo(_disposables);
@@ -60,8 +60,8 @@ public class ShipPresenter : ItemPresenterBase
 
     protected override void BuyItem()
     {
-        _itemsController.BuyShip(_key);
         _progressController.SpendDiamonds(_shipModel.BuyPriceRef.CurrentValue);
+        _itemsController.BuyShip(_key);
 
         base.BuyItem();
         SelectItem();
@@ -69,8 +69,8 @@ public class ShipPresenter : ItemPresenterBase
 
     protected override void UpgradeItem()
     {
-        _itemsController.UpdateShip(_key);
         _progressController.SpendDiamonds(_shipModel.UpgradePriceRef.CurrentValue);
+        _itemsController.UpdateShip(_key);
 
         base.UpgradeItem();
     }
@@ -83,6 +83,12 @@ public class ShipPresenter : ItemPresenterBase
     }
 
     protected override bool HasEnoughCurrency() => _progressModel.DiamondsRef.CurrentValue.IsEnough(GetPrice());
+    
+    void SetShipStats()
+    {
+        _view.SetShipStats(GetPrice(), _shipModel.EnemyCoinBonusRef.CurrentValue);
+        _view.UpdateSolvency(HasEnoughCurrency());
+    }
 
 #endregion
 }
