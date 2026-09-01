@@ -1,331 +1,276 @@
-  <h1 align="center">
-Showcase
-</h1>
-<h3>Showcase project, created purely to demonstrate some of my skills related to architecture and unity stuffs, so making it visually beautiful was not the goal :)
-<br>- Unity version - Unity 6.1.8f1
-<br>- FMOD Engine for audio control
-<br>- To start -> open Init Scene
-</h3>
+# Showcase
 
-<div align="center">
-<img src="https://i.postimg.cc/pLkfvypN/Showcase-Rec-ezgif-com-video-to-gif-converter.gif" alt="Game Capture" width="250">
-</div>
+Unity 6 pet project focused on architecture quality: state-driven scene lifecycle, dependency injection, reactive UI, async orchestration, and audio/content pipelines.
+
+- Unity version: `6000.5.1f1` (from `Showcase/ProjectSettings/ProjectVersion.txt`)
+- Primary goal: demonstrate production-style structure on a small game scope
+- LinkedIn: [Catalin Ursu](https://www.linkedin.com/in/catalin-ursu-b19429167/)
+
+# Game Capture
+https://github.com/user-attachments/assets/3a0edbf8-be96-42ff-b5b5-1bd159e958eb
 
 
-# Contents:
-- [1. Submodules 🧰](#1-submodules-)
-- [2. Architecture ⚙️](#2-architecture-)
-  - [2.1 State Machine ↔️](#21-state-machine-)
-    - [2.1.1 InitState 📍](#211-initstate-)
-    - [2.1.2 MenuState & GameplayState 🎮](#212-menustate-and-gameplaystate-)
-  - [2.2 Zenject 💉](#22-zenject-)
-  - [2.3 UniTask 🚦](#2-3-unitask-)
-  - [2.4 UniRx 🚀](#2-4-unirx-)
-- [3. Localization 🌐](#3-localization-)
-- [4. Addressables 📦](#4-addressables-)
-- [5. Optimization 🔧](#5-optimization-)
-  - [5.1 UI 📺](#5-1-ui-)
-  - [5.2 Textures 🖼️](#5-2-textures-)
-  - [5.3 Audio 🎚️](#5-3-audio-)
-  - [5.4 Profiling 🎛️](#5-4-profiling-)
-- [6. Extra 🗃️](#6-extra-)
-- [7. Notes 📜](#7-notes-)
+## Contents
+- [Project Highlights](#project-highlights)
+- [Tech Stack](#tech-stack)
+- [How It Works](#how-it-works)
+- [Project Structure](#project-structure)
+- [Quick Start](#quick-start)
+- [Core Architecture Patterns](#core-architecture-patterns)
+- [Integrations](#integrations)
+- [Performance and Optimization](#performance-and-optimization)
+- [Challenges Solved](#challenges-solved)
+- [Architecture Decisions](#architecture-decisions)
+<br/><br/>
+
+## <b><u>Project Highlights</u></b>
+- Single-entry bootstrap through `Showcase/Assets/Content/Source/Boot/AppInit.cs`
+- <b><i>Async</i></b> state machine transitions (`InitState -> MenuState <-> GameState`)
+- Explicit <b><i>DI composition root with Extenject</i></b> in `Showcase/Assets/Content/Source/Boot/Installers/ProjectInstaller.cs`
+- Scene-scoped runtime wiring via installers + context interfaces (`IMenuContext`, `ILoadingContext`, `IGameplayContext`)
+- Presenter-based UI flow with reactive state updates <b><i>(R3)</i></b>
+- <b><i>FMOD banks</i></b> loading and scene-based audio behavior integrated with <b><i>Addressables</i></b>
+<br/><br/>
 
 
-# 1. Submodules 🧰
-Because some of the scripts, prefabs and other assets can be used in other projects, I decided to create several submodules and use them as packages.
-- <i><b><a href="https://github.com/CatalinUrsu/Tool_Helpers">Helpers</a></b></i>
-- <i><b><a href="https://github.com/CatalinUrsu/Tool_IdleNumber">IdleNumber</a></b></i>
+## <b><u>Tech Stack</u></b>
+- Engine: Unity 6
+- Language: C#
+- Dependency Injection: Extenject (Zenject)
+- Async: Cysharp UniTask
+- Reactive: Cysharp R3
+- Audio: FMOD Studio
+- Asset management: Unity Addressables
+- Localization: Unity Localization package
+- Reusable Submodules
+  - Helpers: https://github.com/CatalinUrsu/Tool_Helpers
+  - IdleNumber: https://github.com/CatalinUrsu/Tool_IdleNumber
+<br/><br/>
 
+## <b><u>How It Works</u></b>
+### <b><u>Runtime flow</u></b>
+1. `AppInit.Awake()` registers cameras, configures systems, initializes state machine, and loads FMOD master banks.
+2. State machine enters `InitState`.
+3. `InitState` initializes audio volumes from saved settings, loads loading scene, and shows splash.
+4. Transition to `MenuState`.
+5. `MenuState` loads menu scene content, hooks menu events, and waits for user actions.
+6. Start game transitions to `GameState`, which loads gameplay scene, initializes run state, configures camera, and activates gameplay UI.
+7. Returning to menu triggers cleanup, save, unload, and splash-driven transition.
 
-# 2. Architecture ⚙️
-The project architecture is based on several pillars <i>(StateMachine, DI, MVP, Async Implementation)</i>
-Naturally, a project of such a small scale can do without them and this may seem excessive,but this is still a demonstration project.
-<br><br>App starts from [AppInit](Showcase/Assets/Content/Source/Global/AppInit.cs), this is a single entry point,
-which allows you to control the order of execution of subsequent logic.
+### <b><u>State transitions (simplified)</u></b>
+```text
+AppInit -> InitState -> MenuState <-> GameState
+```
+Input is locked during transitions (`InputManager.Instance.LockInputSystem()`) to avoid race conditions and accidental double actions.
+<br/><br/>
+
+## <b><u>Project Structure</u></b>
+Main source root: `Showcase/Assets/Content/Source`
+
+```text
+Boot/
+  AppInit.cs
+  Installers/        (ProjectInstaller, MenuInstaller, GameplayInstaller, LoadingInstaller)
+  SceneContexts/     (MenuContext, GameplayContext, LoadingContext)
+  StateMachine/      (InitState, MenuState, GameState)
+
+Core/
+  Common/            (constants, DDOL)
+  Data/              (interfaces)
+  Enums/
+  SceneContext/      (context interfaces)
+  UI/                (view interfaces)
+
+Data/
+  Controllers/
+  Models/
+  Presenters/
+  SO/
+
+Services/
+  Audio/
+  Cinemachine/
+  Session/
+
+UI/
+  MainMenu/
+  Gameplay/
+  Facades/
+  Views/
+```
+<br/><br/>
+
+## <b><u>Quick Start</u></b>
+1. Open Unity Hub and add project folder: `Showcase/Showcase`.
+2. Open with Unity Editor `6000.5.1f1` (or closest compatible Unity 6 version).
+3. Let editor auto-resolve packages on load (`[InitializeOnLoad]` in `PackagesResolver`).
+4. If packages are missing, use:
+   - `Tools -> Helpers -> Wizard -> Resolve All Packages`
+   - `Tools -> Helpers -> Wizard -> Resolve Nuget`
+5. Open scene: `Showcase/Assets/Content/Scenes/Init.unity`.
+6. Press Play.
+<br/><br/>
+
+## <b><u>Core Architecture Patterns</u></b>
+### <b><u>1) Composition Root with DI</u></b>
+Global bindings are defined in `Showcase/Assets/Content/Source/Boot/Installers/ProjectInstaller.cs`.
+Use this pattern when introducing a new global service or persistent domain controller that must be shared across states/scenes.
+
+- Binds model controllers and services as singletons by interface.
+- Creates session models via `SaveSystem.LoadOrCreate(...)`.
+- Registers presenter factories (`ShipPresenter`, `WeaponPresenter`, `ResetProgressPresenter`, `GameRunPresenter`).
+
 ```csharp
-    async void Awake()
-    {
-#if !UNITY_EDITOR
-        Application.targetFrameRate = 60;
-#endif
+// Service binding: use this for audio, scene loading, camera service, etc..
+Container.Bind<IAudioService>().To<AudioService>().AsSingle();
 
-        _initValuesForSaves.LoadSavedItems();
-        _serviceCamera.RegisterMainCamera(_cameraMain);
-        _serviceCamera.RegisterCamera(ConstCameras.CAMERA_UI, _cameraUI);
-        SetDebugViews();
-
-        await UniTask.WhenAll(LoadFMODBanks(),
-                              SetSingletons());
-
-        SetStateMachine();
-    }
+// Model-controller binding: create controller after load/create save model,
+// then bind by interface so presenters/states depend on abstraction only.
+var progressModel = SaveSystem.LoadOrCreate<ProgressModel>(ConstSavesPaths.PROGRESS_PATH);
+var progressModelController = new ProgressModelController(progressModel);
+Container.Bind<IProgressModelController>().FromInstance(progressModelController).AsSingle();
 ```
 
+### <b><u>2) Scene lifecycle via states</b></u>
+States live in `Showcase/Assets/Content/Source/Boot/StateMachine` and implement `IStateEnter`.
 
-## 2.1 State Machine ↔️
-App has several states driven by StateMachine.
-For more control during state changing, the process is async
+- `InitState`: bootstrap services + loading scene setup.
+- `MenuState`: menu scene load/init, user entry flow.
+- `GameState`: gameplay scene load/init, runtime listeners, pause/resume, save on exit.
+
+### <b><u>3) Async-first orchestration</u></b>
+UniTask is used across scene loads, transitions, and content activation.
+
+- Non-blocking transitions
+- Coordinated parallel work with `UniTask.WhenAll(...)`
+- Predictable flow sequencing during scene enter/exit
+
+### <b><u>4) Reactive presenter pattern (R3)</u></b>
+R3 is used for observable state and UI updates.
+
+- Models expose reactive values
+- Presenters subscribe and push updates into passive views
+- Disposables are managed to avoid leaks in long sessions
+
 ```csharp
-    public async UniTask Enter<TState>();
-    public async UniTask Enter<TState, TPayload>(TPayload payload)
+// Presenter subscribes to model changes once and stores subscriptions.
+readonly CompositeDisposable _disposable = new();
+
+_gameRunModelController.IModel.ProgressRef
+    .Subscribe(progress => _viewGameplay.SetProgressSlider(progress))
+    .AddTo(_disposable);
+
+_gameRunModelController.IModel.CollectedCoinsRef
+    .Subscribe(coins => _viewGameplay.SetCollectedCoins(coins))
+    .AddTo(_disposable);
+
+// Called on scene/presenter deinit to prevent retained subscriptions.
+public void Dispose() => _disposable.Clear();
 ```
 
-<br>There are two types of states - <b>[Simple](Showcase/Packages/Helpers/StateMachine/Interfaces/IStateEnter.cs)</b> and
-<b>[Payload](Showcase/Packages/Helpers/StateMachine/Interfaces/IStateEnterPayload.cs)</b> with two main methods - <b>Enter()</b> and <b>Exit()</b>
+Implementation note: subscribe in presenter constructor/init, dispose in presenter `Dispose()` or scene deinit.
+
+### <b><u>5) Persistent session mode</u></b>
+Project uses JSON save files for core progression and settings.
+
+- Paths centralized in `Showcase/Assets/Content/Source/Core/Common/Constants.cs` (`settings.json`, `progress.json`, `items.json`)
+- Save/load operations coordinated through `SessionService`
+<br/><br/>
+
+## <b><u>Integrations</u></b>
+### <b><u>FMOD</u></b>
+- Master banks are initialized in `Showcase/Assets/Content/Source/Boot/AppInit.cs`.
+- Audio runtime service is `Showcase/Assets/Content/Source/Services/Audio/AudioService.cs`.
+- Uses VCAs and snapshots for runtime volume states and pause behavior.
+
 ```csharp
-    public interface IStateEnter
-    {
-        UniTask Enter();
-        UniTask Exit();
-    }
+// Music state switch (example from MenuState).
+_audioService.MusicInstance.SetParameter(ConstFMOD.MUSIC_STATE, EMusicStates.Idle.ToString());
 
-    public interface IStateEnterPayload<TPayload>
-    {
-        UniTask Enter(TPayload payload);
-        UniTask Exit();
-    }
+// VCA setup/use (example from AudioService).
+_soundVCA = RuntimeManager.GetVCA(ConstFMOD.VCA_Sound);
+_musicVCA = RuntimeManager.GetVCA(ConstFMOD.VCA_Music);
+_soundVCA.setVolume(soundVolume);
+_musicVCA.setVolume(musicVolume);
+
+// Pause snapshot (example from GameState).
+_audioService.PauseSnapshot.start();
+_audioService.PauseSnapshot.stop(STOP_MODE.ALLOWFADEOUT);
 ```
 
-### 2.1.1 InitState 📍
-When StateMachine is created, it firstly will enter [InitState](Showcase/Assets/Content/Source/StateMachine/States/StateInit.cs). 
 ```csharp
-    public async UniTaskVoid Enter()
-    {
-        _audioService.Init();
-        await LoadAndShowSplashScreen();
-        await StatesMachine.Enter<StateMenu>();
-    }
+// FMOD bank loading at bootstrap (AppInit).
+async UniTask LoadFMODBanks()
+{
+    await _bankLoaderMasterStrings.Init();
+    await _bankLoaderMaster.Init();
+}
 ```
 
-
-### 2.1.2 MenuState And GameplayState 🎮
-Since [MenuState](Showcase/Assets/Content/Source/StateMachine/States/StateMenu.cs). and
-[GameplayState](Showcase/Assets/Content/Source/StateMachine/States/StateGameplay.cs). have similar logic <i>(Load scene and content, unload scene, set music state)</i> so I decided to move the similar
-functionality to the base class - [BaseState](Showcase/Assets/Content/Source/StateMachine/States/StateBase.cs).
-
-<br><h4>OnEnterState</h4>
-- Set music state.
-- Show Loading screen.
-- Load scene using [SceneLoaderService](Showcase/Packages/Helpers/Services/SceneLoaderService.cs) and [SceneLoadParams](Showcase/Packages/Helpers/Services/SceneLoadInfo/SceneLoadParams.cs).
-- Load content from the scene using [EntryPoint](Showcase/Packages/Helpers/StateMachine/Interfaces/IEntryPoint.cs).
-```csharp 
-    public override async UniTaskVoid Enter()
-    {
-        using (InputManager.Instance.LockInputSystem())
-        {
-            var sceneLoadParams = new SceneLoadParams.Builder(ConstSceneNames.MENU_SCENE)
-                                  .SetPrompt("SceneMenu")
-                                  .SetActiveOnLoad(true)
-                                  .Build();
-
-            SetMusicState(EMusicStates.Idle);
-
-            await LoadingContent(sceneLoadParams, "ContentMenu");
-            await ShowingContent();
-        }
-    }
-```
-
-<br><h4>OnExitState</h4>
-- Show Loading screen.
-- Unload all audio instances of current scene to release the memory.
-- Unload content from the scene and unload the scene.
-- Register unloading tasks to LoadingProgressService to track them.
 ```csharp
-    protected async UniTask UnloadingContent(string sceneName)
-    {
-        await _serviceSplashScreen.ShowPage();
+// FMOD pooled event factory usage (MenuFmodFactory / PlayerWeapons style).
+_itemAppearPool = new FactoryFmodEvents.Builder(_fmodEventsSo.ItemAppear)
+                  .SetPreloadCount(3)
+                  .SetMaxCount(5)
+                  .Build();
 
-        FmodExtensions.ReleaseInstanceByScene(sceneName);
-        var unloadingTasks = _entryPoint.Exit().ContinueWith(() => _sceneLoaderService.UnloadScene(sceneName));
-        _loadingProgressService.RegisterUnloadingTasks(unloadingTasks).Forget();
-    }
+_itemAppearPool.Get().Instance.start();
 ```
 
+### <b><u>Addressables</u></b>
+- Scene loading uses `SceneLoadParams` with `.SetIsAddressable(true)` in states.
+- Runtime asset loading is used for gameplay content (for example enemy prefab key usage).
 
-## Zenject 💉
-Zenject is used as a dependency injection framework in the app to manage the dependencies between various components and services efficiently.
-Here are the key benefits and purposes of using Zenject:
-- Helps in breaking dependencies between concrete classes. By using interfaces or abstract classes, different implementations can be
-  swapped easily without modifying the dependent code.
-- It allows for the easy instantiation and management of services, making it straightforward to inject shared functionality (like audio or data services) into classes that need them.
-- Provides mechanisms for managing the lifecycle of objects, such as singletons or transient instances, ensuring proper instantiation and cleanup.
-
-
-## UniTask 🚦
-- UniTask provides a way to perform asynchronous operations in a more efficient manner, allowing for tasks such as loading assets, waiting for conditions,
-  or performing time-based behaviors without blocking the main thread.
-- It is optimized for performance compared to traditional coroutines. It avoids some of the overhead
-  associated with Unity's coroutine system, making it suitable for performance-critical applications.
-- UniTask provides built-in support for task cancellation, allowing for more control over long-running operations, which can be particularly useful in cases where
-  an operation needs to be aborted based on game events, for example - <b>when a player exits a scene or cancels an action.</b>
 ```csharp
-    async UniTaskVoid EnableShield()
-    {
-        if (!_collider.enabled)
-        {
-            CancelShieldCTS();
-            _shieldCTS = new CancellationTokenSource();
-        }
+// Scene load through builder + lifecycle service (MenuState / GameState pattern).
+var sceneLoadParams = new SceneLoadParams.Builder(ConstSceneNames.MENU_SCENE)
+    .SetTip("Load Menu Scene")
+    .SetIsAddressable(true)
+    .SetActiveOnLoad(true)
+    .Build();
 
-        try
-        {
-            _collider.enabled = false;
-            await _playerAppearence.AnimateShield(_shieldCTS.Token);
-            _collider.enabled = true;
-        }
-        catch (OperationCanceledException)
-        {
-            Debug.Log("Shield animation was canceled");
-        }
-    }
-
-    void CancelShieldCTS()
-    {
-        if (_shieldCTS == null) return;
-        _shieldCTS.Cancel();
-        _shieldCTS.Dispose();
-    }
+await _sceneLifecycleService.LoadAndInitScene(sceneLoadParams, _menuContext);
 ```
 
+### <b><u>Localization</u></b>
+- Unity Localization package is used for locale-based UI text.
+- Locale switch logic is wired in settings panel (`TabPanelSettings` using `LocalizationSettings.SelectedLocale`).
 
-## UniRx 🚀
-- UniRx provides a set of powerful LINQ-style query operators, which makes it easy to perform complex operations on collections of data or
-  event streams, such as filtering, mapping, and aggregating
-```csharp
-    playerInputHanler.AddComponent<ObservableDragTrigger>()
-                     .OnDragAsObservable()
-                     .Where(_ => ControllIsEnable && _isClicked)
-                     .Select(pointer => pointer.position)
-                     .Subscribe(OnDrag_handler);
-```
+### <b><u>Cinemachine</u></b>
+- Gameplay camera state is switched by `ICinemachineService` from state layer.
+- Camera references are registered during bootstrap in `AppInit`.
+<br/><br/>
 
-- It offers methods to optimize performance using its own update methods, which can be more efficient than Unity's standard Update() method. This helps
-  avoid performance issues related to frequent updates.
-```csharp
-    Observable.EveryFixedUpdate()
-              .Where(_ => _isClicked)
-              .Subscribe(_ => MovePlayer(rb))
-              .AddTo(gameObject);
-```
+## <b><u>Performance and Optimization</u></b>
+This project is intentionally small, but performance practices are implemented as if it were production content.
 
-- It includes a ReactiveProperty class that allows for easy binding of data properties to UI elements. This supports the Model-View-Presenter (MVP) pattern
-  by efficiently managing data changes and notifying the UI when updates occur
-```csharp
-    public ReactiveProperty<bool> IsBought { get; private set; }
-    public ReactiveProperty<bool> IsSelected { get; private set; }
-    public ReactiveProperty<IdleNumber> BuyPrice { get; private set; }
-    public ReactiveProperty<IdleNumber> UpgradePrice { get; private set; }
-```
+- Transition safety: input is locked during state switches to prevent re-entrancy and duplicated actions.
+- Scene lifecycle discipline: centralized load/deinit/unload flow improves memory predictability during transitions.
+- Asset strategy: Addressables reduce static memory pressure, while FMOD banks are explicitly loaded/unloaded by runtime context.
+- UI batching: Sprite Atlases and 9-slicing reduce draw calls and improve UI reuse.
+- UI cost trimming: unnecessary mask and raycast checks are removed from non-interactive elements.
+- Texture pipeline: POT textures are preferred, compression is pushed with quality checks, and compression is applied at atlas level for Sprite Atlas V2 workflow.
 
-
-# Localization 🌐:
-For localization I used Unity’s localization package. Nice tool to set the text depends on the language, also a very handy thing is localization’s
-formatters (choose, list, plural). It's pretty easy to set up "smart values" dynamically and in runtime update text if some value is changed.
-<br><img src="https://i.postimg.cc/wjXSZ4nf/Localization.png" alt="Localization" width="600">
-
-
-# Addressables 📦:
-Handy system for managing the loading and unloading of assets efficiently. It allows to organize, package, and dynamically load assets in a flexible way,
-which is particularly useful for optimizing memory usage and performance, like FMOD banks and textures loading. Also it helps to minimize asset duplication.
-However, they introduce their own limitations. I had to write a separate editor script to configure sprite-atlases during the build.
-<br><img src="https://i.postimg.cc/pdPgHYH2/Addressables.png" alt="Addressables" width="600">
-
-# Optimization 🔧:
-Even though this project didn't need it, I decided to work on it here too. By optimizing various aspects of the application (such as UI, textures,
-audio, and code execution), the overall performance of the application increases. This leads to smoother gameplay, faster load times, and more responsive interactions.
-For mobile and portable devices, optimizing applications can lead to reduced battery consumption. Efficient rendering, lower CPU usage, and optimized background
-processes can extend battery life for users.
-
-
-## UI 📺:
-To minimize UI batches, textures are packed into Sprite-Atlases. Also I’m using 9-slicing to have large variety of forms of the same texture. I removed “masked”
-and “raycast hit” from UI elements that doesn’t need them to remove them from calculation. (it’s not much, but is fair job)
-
-
-## Textures 🖼️:
-To minimize memory usage, I’m trying to compress textures as good as possible (or at least as good as my knowledge allows). In most cases I use “RGBA Crunched ETC2”
-or “ASTC” and increase compression as much as possible without losing quality. Also   import textures that are POT, to have better compression, it is
-not possible, that putting that texture into Sprite-Atlas resolve that issue. For better compression I imported textures with POT size, but if is not possible
-than this issue is easily solved by putting textures into Sprite-atlases. Since Sprite-Atlas V2 need all textures to be uncompressed (it uncompress them anyway in build),
-I removed all compression from textures and applied it only on Sprite-Atlases.
+### <b><u>Profiling workflow</u></b>
+- Unity Profiler: used to monitor CPU, memory, UI, and Addressables behavior; final-build profiling is preferred over Editor-only readings.
+- Memory Profiler: used to validate memory stability during scene transitions and detect asset duplication.
+- Frame Debugger: used to verify UI batch optimization and rendering-side improvements.
 <br><img src="https://i.postimg.cc/cHS7jXym/Sprite-Atlas.png" alt="Sprite Atlas" width="300">
+<br><img src="https://i.postimg.cc/2yr08MF3/Profiler.png" alt="Profiler" width="600">
+<br><img src="https://i.postimg.cc/264HYrWP/Memory-Profiler.png" alt="MemoryProfiler" width="600">
+<br><img src="https://i.postimg.cc/qRfmWzNs/Frame-Debug.png" alt="FrameDebugger" width="600">
+<br/><br/>
 
+## <b><u>Challenges Solved</u></b>
+- Built a small-scope game with enterprise-like architecture while preserving readability.
+- Combined multiple frameworks (Extenject, UniTask, R3, FMOD, Addressables) into one coherent runtime flow.
+- Designed state-driven scene lifecycle to keep transitions stable and testable.
+- Kept views passive and moved behavior into presenters/controllers for maintainability.
+  <br/><br/>
 
-## Audio 🎚️:
-All audio settings are on FMOD side. To optimize memory space on unity side, I’m using banks that are loaded and unloaded depending on game state (MenuBank for menu scene,
-GameBank for game scene). All these banks are loaded and unloaded using Addressables. For more information about Audio Optimization,
-check <i><b><a href="https://github.com/CatalinUrsu/Tool_Helpers">Helpers Repository</a></b></i>
-
-
-## Profiling 🎛️:
-Profiling in game engines is a critical process used to analyze the performance of a game during development. It helps developers identify bottlenecks, optimize
-resource usage, and ensure a smooth gameplay experience. Unity provides several tools for profiling, including the Profiler, Memory Profiler, and Frame Debugger.
-
-- <h3>Profiler :</h3>  Base tool to check the load of the system (cpu, memory, video, ui. Also a handy tool to check multi-threads jobs execution and addressables. In this project
-  I didn’t use it too much, because of the simplicity of the project. The downside is that the data in the editor is not accurate, since the system also takes into
-  account actions inside the editor, so for a more correct check you need to profile the final app
-  <br><img src="https://i.postimg.cc/2yr08MF3/Profiler.png" alt="Profiler" width="600">
-
-- <h3>MemoryProfiler :</h3>
-  I used this tool more often, since in the newer unity version is very useful and more accurate. I used it to check if there’s no lack of memory during scen
-  e transitions or if there are some asset duplications.
-  <br><img src="https://i.postimg.cc/264HYrWP/Memory-Profiler.png" alt="MemoryProfiler" width="600">
-
-- <h3>FrameDebugger :</h3>
-  Because thi is a simple 2D project, most of the batches were on UI. So to check UI optimization results. Also it helps me to find out that SRP doesn’t fully
-  support 2D on 2022 version, so I had to update it
-  <br><img src="https://i.postimg.cc/qRfmWzNs/Frame-Debug.png" alt="FrameDebugger" width="600">
-
-
-# Extra 🗃️:
-- <h3>Editor scripts :</h3>
-  While using addressables with sprite atlases, I had to write my own editor script for Pre and Post processBuild for SpriteAtlases to exclude them from
-  build during “build” (sorry for the tautology 🙂).
-```csharp
-    public static void SetAllIncludeInBuild(bool enable)
-    {
-        SpriteAtlas[] spriteAtlases = LoadSpriteAtlases();
-
-        foreach (SpriteAtlas atlas in spriteAtlases) 
-            SetIncludeInBuild(atlas, enable);
-    }
-
-    static void SetIncludeInBuild(SpriteAtlas spriteAtlas, bool enable)
-    {
-        SerializedObject so = new SerializedObject(spriteAtlas);
-        SerializedProperty atlasEditorData = so.FindProperty("m_EditorData");
-        SerializedProperty includeInBuild = atlasEditorData.FindPropertyRelative("bindAsDefault");
-        includeInBuild.boolValue = enable;
-        so.ApplyModifiedProperties();
-        EditorUtility.SetDirty(spriteAtlas);
-        AssetDatabase.Refresh();
-    }
-
-    static SpriteAtlas[] LoadSpriteAtlases()
-    {
-        string[] findAssets = AssetDatabase.FindAssets($"t: {nameof(SpriteAtlas)}");
-
-        return findAssets.Length == 0
-            ? Array.Empty<SpriteAtlas>()
-            : findAssets
-              .Select(AssetDatabase.GUIDToAssetPath)
-              .Select(AssetDatabase.LoadAssetAtPath<SpriteAtlas>)
-              .ToArray();
-    }
-```
-Another helpful editor script is [GitPackagesResolver](showcase/Packages/Helpers/Editor/GitPackagesResolver.cs) , since I used some packages from git, like
-(UniRX, UniTask, AssetRelationView), I need some dependency for my own packages. So this script import needed packages at app Initialization.
-
-- <h3>Asset Relation View :</h3>
-  Very helpful tool that helped me to maintain the project clean. Also is very handy when I was checking where some or other file is used, to minimize
-  asset duplication (important thing while using addressables)
-  <br><img src="https://i.postimg.cc/rpGWFmhC/Asset-Viewer.png" alt="Asset Relation Viewer" width="600">
-
-
-# Notes 📜:
-- Because of using Addressables for android platform, the “use existing build” play mode on addressables broke shaders, so for normal play / play-test need to use
-  “use asset database” play mode.
-- While using “use asset database” play mode, Fmod “bank import type” need to be set to streaming assets, so to not change it every time manually, I made an editor
-  [script](showcase/Packages/Helpers/Editor/FmodSettingsFix/FmodSettingsOverrideOnPlay.cs) that do this for me each time on start play mode (for that I hade to add this editor script to ScriptExecutionOrder
+## <b><u>Architecture Decisions</u></b>
+- **State machine for navigation** instead of direct scene chaining for explicit control over enter/exit and cleanup.
+- **Interface-first DI bindings** to reduce coupling and make services replaceable.
+- **Reactive model-to-view updates** to keep UI consistent with gameplay/session state.
+- **Async scene orchestration** to avoid blocking operations and simplify transition sequencing.
+- **Context objects per scene** to isolate scene-level references from global scope.
