@@ -14,11 +14,9 @@ public class MenuInstaller : MonoInstaller
 
     public override void InstallBindings()
     {
-        Container.Bind<IBankLoader>().FromInstance(_bankLoader);
-        Container.Bind<IPlayerFacade>().FromInstance(_playerFacade);
-        Container.Bind<IMenuUIFacade>().FromInstance(_menuUIFacade);
+        var entryPoint = new MenuEntryPoint(_bankLoader, _playerFacade, _menuUIFacade);
 
-        Container.Bind<IMenuEntryPoint>().To<MenuEntryPoint>().AsSingle();
+        Container.Bind<IMenuEntryPoint>().FromInstance(entryPoint).AsSingle();
         Container.BindInterfacesTo<EntryPointRegistrar<IMenuEntryPoint>>().AsSingle().NonLazy();
     }
 }

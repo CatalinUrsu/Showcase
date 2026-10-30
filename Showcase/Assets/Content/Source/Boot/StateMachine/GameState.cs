@@ -22,8 +22,9 @@ public class GameState : IStateEnter
     readonly ICinemachineService _cinemachineService;
     readonly IVolumeSwitcherService _volumeSwitcherService;
     readonly IGameRunModelController _gameRunModelController;
-    readonly ILoadingContext _loadingContext;
-    readonly IGameplayContext _gameplayContext;
+    readonly ILoadingEntryPoint _loadingEntryPoint;
+    
+    IGameplayEntryPoint _gameplayEntryPoint;
 
 #endregion
     
@@ -35,8 +36,7 @@ public class GameState : IStateEnter
                      ICinemachineService cinemachineService,
                      IVolumeSwitcherService volumeSwitcherService,
                      IGameRunModelController gameRunModelController,
-                     ILoadingContext loadingContext,
-                     IGameplayContext gameplayContext)
+                     ILoadingEntryPoint loadingEntryPoint)
     {
         _audioService = audioService;
         _sceneLifecycleService = sceneLifecycleService;
@@ -44,8 +44,7 @@ public class GameState : IStateEnter
         _cinemachineService = cinemachineService;
         _volumeSwitcherService = volumeSwitcherService;
         _gameRunModelController = gameRunModelController;
-        _loadingContext = loadingContext;
-        _gameplayContext = gameplayContext;
+        _loadingEntryPoint = loadingEntryPoint;
     }
 
     public async UniTask Enter(CancellationToken cancellationToken)
@@ -90,32 +89,36 @@ public class GameState : IStateEnter
                               .SetActiveOnLoad(true)
                               .Build();
         
-        await _sceneLifecycleService.LoadAndInitScene(sceneLoadParams, _gameplayContext);
+        _gameplayEntryPoint = await _sceneLifecycleService.LoadAndInitScene<IGameplayEntryPoint>(sceneLoadParams);
     }
     
-    async UniTask UnloadGameScene() => await _sceneLifecycleService.DeinitAndUnloadScene(ConstSceneNames.GAME_SCENE, _gameplayContext);
+    async UniTask UnloadGameScene()
+    {
+        await _sceneLifecycleService.DeinitAndUnloadScene(ConstSceneNames.GAME_SCENE, _gameplayEntryPoint);
+        _gameplayEntryPoint = null;
+    }
 
     async UniTask StartGameplay()
     {
-        _gameplayContext.EnemiesSpawner.ToggleSpawning(true);
+        _gameplayEntryPoint.EnemiesSpawner.ToggleSpawning(true);
 
-        await UniTask.WhenAll(_gameplayContext.UIFacade.SelectPanel(EGamePanels.Game),
-                              _gameplayContext.PlayerFacade.ShowPlayer());
+        await UniTask.WhenAll(_gameplayEntryPoint.UIFacade.SelectPanel(EGamePanels.Game),
+                              _gameplayEntryPoint.PlayerFacade.ShowPlayer());
 
-        SetCameraFollow(_gameplayContext.PlayerFacade.Transform);
-        _gameplayContext.PlayerFacade.ToggleControl(true);
+        SetCameraFollow(_gameplayEntryPoint.PlayerFacade.Transform);
+        _gameplayEntryPoint.PlayerFacade.ToggleControl(true);
     }
 
-    async UniTask ShowSplashScreen() => await _loadingContext.SplashScreen.Show();
+    async UniTask ShowSplashScreen() => await _loadingEntryPoint.SplashScreen.Show();
 
-    async UniTask HideSplashScreen() => await _loadingContext.SplashScreen.Hide();
+    async UniTask HideSplashScreen() => await _loadingEntryPoint.SplashScreen.Hide();
 
     void SetCinemachineGame()
     {
         if (!_cinemachineService.CinemaCameras.TryGetValue(nameof(ECinemachineState.Game), out var cameraData)) return;
 
         _gameCamera = cameraData.Camera;
-        _gameCamera.GetComponent<CinemachineConfiner2D>().BoundingShape2D = _gameplayContext.GameCameraBounds;
+        _gameCamera.GetComponent<CinemachineConfiner2D>().BoundingShape2D = _gameplayEntryPoint.GameCameraBounds;
         _cinemachineService.ChangeState(nameof(ECinemachineState.Game));
     }
     
@@ -173,10 +176,10 @@ public class GameState : IStateEnter
         async UniTaskVoid RestartGameLogic()
         {
             await UniTask.WhenAll(SelectUIPanel(EGamePanels.Game),
-                                  _gameplayContext.PlayerFacade.ShowPlayer());
+                                  _gameplayEntryPoint.PlayerFacade.ShowPlayer());
 
-            _gameplayContext.PlayerFacade.ToggleControl(true);
-            SetCameraFollow(_gameplayContext.PlayerFacade.Transform);
+            _gameplayEntryPoint.PlayerFacade.ToggleControl(true);
+            SetCameraFollow(_gameplayEntryPoint.PlayerFacade.Transform);
         }
     }
 
@@ -191,7 +194,7 @@ public class GameState : IStateEnter
     async UniTask SelectUIPanel(EGamePanels panelType)
     {
         using (InputManager.Instance.LockInputSystem())
-            await _gameplayContext.UIFacade.SelectPanel(panelType);
+            await _gameplayEntryPoint.UIFacade.SelectPanel(panelType);
     }
 
     void GoToMenu() => StatesMachine.Enter<MenuState>();

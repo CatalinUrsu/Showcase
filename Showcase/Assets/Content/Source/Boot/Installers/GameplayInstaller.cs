@@ -15,16 +15,12 @@ public class GameplayInstaller : MonoInstaller
     [SerializeField] EnemiesSpawner _enemiesSpawner;
     [SerializeField] Collider2D _gameCameraBounds;
 
-    IGameplayContext _gameplayContext;
-
     public override void InstallBindings()
     {
-        _gameplayContext = Container.Resolve<IGameplayContext>();
-        _gameplayContext.RegisterBankLoader(_bankLoader);
-        _gameplayContext.RegisterPlayerFacade(_playerFacade);
-        _gameplayContext.RegisterUIController(_uiFacade);
-        _gameplayContext.RegisterEnemiesController(_enemiesSpawner);
-        _gameplayContext.RegisterGameCameraBounds(_gameCameraBounds);
+        var entryPoint = new GameplayEntryPoint(_bankLoader, _playerFacade, _uiFacade, _enemiesSpawner, _gameCameraBounds);
+
+        Container.Bind<IGameplayEntryPoint>().FromInstance(entryPoint).AsSingle();
+        Container.BindInterfacesTo<EntryPointRegistrar<IGameplayEntryPoint>>().AsSingle().NonLazy();
     }
 }
 }
