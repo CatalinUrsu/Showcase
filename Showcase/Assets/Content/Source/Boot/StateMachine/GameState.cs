@@ -1,6 +1,7 @@
 using Helpers;
 using FMOD.Studio;
 using UnityEngine;
+using System.Threading;
 using Helpers.Services;
 using Unity.Cinemachine;
 using Cysharp.Threading.Tasks;
@@ -47,7 +48,7 @@ public class GameState : IStateEnter
         _gameplayContext = gameplayContext;
     }
 
-    public async UniTask Enter()
+    public async UniTask Enter(CancellationToken cancellationToken)
     {
         using (InputManager.Instance.LockInputSystem())
         {
@@ -193,7 +194,7 @@ public class GameState : IStateEnter
             await _gameplayContext.UIFacade.SelectPanel(panelType);
     }
 
-    void GoToMenu() => StatesMachine.Enter<MenuState>().GetAwaiter();
+    void GoToMenu() => StatesMachine.Enter<MenuState>();
 
 #endregion
 }

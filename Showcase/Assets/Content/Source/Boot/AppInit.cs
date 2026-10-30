@@ -43,7 +43,7 @@ public class AppInit : MonoBehaviour
         _cinemachineService = cinemachineService;
     }
 
-    async void Awake()
+    void Awake()
     {
 #if !UNITY_EDITOR
         Application.targetFrameRate = 60;
@@ -55,15 +55,19 @@ public class AppInit : MonoBehaviour
         SetCinemachineService();
         InitStateMachine();
 
-        await LoadFMODBanks();
-
-        _stateMachine.Enter<InitState>().GetAwaiter();
+        BootAsync().Forget();
     }
 
 #endregion
 
 #region Private methods
     
+    async UniTaskVoid BootAsync()
+    {
+        await LoadFMODBanks();
+        _stateMachine.Enter<InitState>();
+    }
+
     void SetDebugViews()
     {
         if (!_enableDebug) return;
@@ -73,28 +77,29 @@ public class AppInit : MonoBehaviour
     
     void InitStateMachine()
     {
+        var menuState = _container.Instantiate<MenuState>();
+        
         var states = new IState[]
         {
             _container.Instantiate<InitState>(),
-            _container.Instantiate<MenuState>(),
+            menuState,
             _container.Instantiate<GameState>()
         };
             
-        _stateMachine = new StatesMachine(states);
+        _stateMachine = new StatesMachine(menuState, states);
     }
 
     void SetCinemachineService()
     {
         _cinemachineService.RegisterStateDrivenAnimator(_stateDrivenCamera.AnimatedTarget);
-        
-        var instructionIdx = 0;
+
         var stateDrivenInstructions = _stateDrivenCamera.Instructions;
         var states = (ECinemachineState[])System.Enum.GetValues(typeof(ECinemachineState));
 
         for (int i = 0; i < states.Length; i++)
         {
-            var stateDrivenInsttruction = stateDrivenInstructions[i];
-            var data = new StateDrivenCameraData(stateDrivenInsttruction.Camera, stateDrivenInsttruction.FullHash);
+            var stateDrivenInstruction = stateDrivenInstructions[i];
+            var data = new StateDrivenCameraData(stateDrivenInstruction.Camera, stateDrivenInstruction.FullHash);
             _cinemachineService.AddStateDrivenCameraData(states[i].ToString(), data);
         }
     }

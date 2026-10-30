@@ -1,6 +1,7 @@
 ﻿using Helpers;
 using Helpers.Audio;
 using Helpers.Services;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 
 namespace Source.Boot
@@ -34,7 +35,7 @@ public class MenuState : IStateEnter
         _menuContext = menuContext;
     }
 
-    public async UniTask Enter()
+    public async UniTask Enter(CancellationToken cancellationToken)
     {
         using (InputManager.Instance.LockInputSystem())
         {
@@ -44,7 +45,7 @@ public class MenuState : IStateEnter
             
             _cinemachineService.ChangeState(nameof(ECinemachineState.Menu));
             await HideSplashScreen();
-            await _menuContext.PlayerFacade.ShowPlayer();
+            await _menuContext.PlayerFacade.ShowPlayer().AttachExternalCancellation(cancellationToken);
 
             _menuContext.UIFacade.OnClickStartGame += GoToGameplay;
         }
@@ -82,7 +83,7 @@ public class MenuState : IStateEnter
 
     async UniTask HideSplashScreen() => await _loadingContext.SplashScreen.Hide();
 
-    void GoToGameplay() => StatesMachine.Enter<GameState>().GetAwaiter();
+    void GoToGameplay() => StatesMachine.Enter<GameState>();
 
 #endregion
 }

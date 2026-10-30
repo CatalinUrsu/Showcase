@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Helpers.Services;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 
 namespace Source.Boot
@@ -30,11 +31,11 @@ public class InitState : IStateEnter
         _settingsModel = settingsModelController.IModel;
     }
 
-    public async UniTask Enter()
+    public async UniTask Enter(CancellationToken cancellationToken)
     {
         InitAudioService();
         await LoadAndShowSplashScreen();
-        await StatesMachine.Enter<MenuState>();
+        StatesMachine.Enter<MenuState>();
     }
 
     public async UniTask Exit() => await UnloadInitScene();
