@@ -12,7 +12,7 @@ public class MenuState : IStateEnter
 
     public StatesMachine StatesMachine { get; set; }
     
-    readonly IInputLock _inputLock;
+    readonly IInputManager _inputManager;
     readonly IAudioService _audioService;
     readonly ISceneLifecycleService _sceneLifecycleService;
     readonly ICinemachineService _cinemachineService;
@@ -28,9 +28,9 @@ public class MenuState : IStateEnter
                      ISceneLifecycleService sceneLifecycleService,
                      ICinemachineService cinemachineService,
                      ILoadingEntryPoint loadingEntryPoint,
-                     IInputLock inputLock)
+                     IInputManager inputManager)
     {
-        _inputLock = inputLock;
+        _inputManager = inputManager;
         _audioService = audioService;
         _sceneLifecycleService = sceneLifecycleService;
         _cinemachineService = cinemachineService;
@@ -39,7 +39,7 @@ public class MenuState : IStateEnter
 
     public async UniTask Enter(CancellationToken cancellationToken)
     {
-        using (_inputLock.LockInputSystem())
+        using (_inputManager.LockInputSystem())
         {
             _audioService.MusicInstance.SetParameter(ConstFMOD.MUSIC_STATE, nameof(EMusicStates.Idle));
 
@@ -57,7 +57,7 @@ public class MenuState : IStateEnter
 
     public async UniTask Exit()
     {
-        using (_inputLock.LockInputSystem())
+        using (_inputManager.LockInputSystem())
         {
             _menuEntryPoint.UIFacade.OnClickStartGame -= GoToGameplay;
 

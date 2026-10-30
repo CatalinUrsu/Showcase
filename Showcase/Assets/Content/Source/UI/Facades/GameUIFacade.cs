@@ -17,18 +17,18 @@ public class GameUIFacade : MonoBehaviour, IGameUIFacade
     Dictionary<EGamePanels, GamePanel> _panelsByTypes;
     GamePanel _currentPanel;
     [Inject] ICameraService _cameraService;
-    [Inject] IInputLock _inputLock;
+    [Inject] IInputManager _inputManager;
 
     public void Init()
     {
-        _inputLock.OnToggleInputLock += OnToggleInputLock_handler;
+        _inputManager.OnToggleInputLock += OnToggleInputLock_handler;
         InitCanvas();
         InitPanelsByType();
     }
 
     public void Deinit()
     {
-        _inputLock.OnToggleInputLock -= OnToggleInputLock_handler;
+        _inputManager.OnToggleInputLock -= OnToggleInputLock_handler;
 
         foreach (var panelByType in _panelsByTypes)
             panelByType.Value.Deinit();

@@ -9,7 +9,7 @@ public class GameUnloadState : IStateEnter
 {
     public StatesMachine StatesMachine { get; set; }
 
-    readonly IInputLock _inputLock;
+    readonly IInputManager _inputManager;
     readonly ISceneLifecycleService _sceneLifecycleService;
     readonly ISessionService _sessionService;
     readonly EntryPointRegistry _entryPointRegistry;
@@ -19,9 +19,9 @@ public class GameUnloadState : IStateEnter
                            ISessionService sessionService,
                            EntryPointRegistry entryPointRegistry,
                            ILoadingEntryPoint loadingEntryPoint,
-                           IInputLock inputLock)
+                           IInputManager inputManager)
     {
-        _inputLock = inputLock;
+        _inputManager = inputManager;
         _sceneLifecycleService = sceneLifecycleService;
         _sessionService = sessionService;
         _entryPointRegistry = entryPointRegistry;
@@ -32,7 +32,7 @@ public class GameUnloadState : IStateEnter
     {
         var gameplay = _entryPointRegistry.Get<IGameplayEntryPoint>();
 
-        using (_inputLock.LockInputSystem())
+        using (_inputManager.LockInputSystem())
         {
             await _loadingEntryPoint.SplashScreen.Show();
             _sessionService.Save(ESaveFileType.Progress);

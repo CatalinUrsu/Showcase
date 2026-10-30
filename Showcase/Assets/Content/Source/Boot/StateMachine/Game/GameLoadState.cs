@@ -16,7 +16,7 @@ public class GameLoadState : IStateEnter
 
     public StatesMachine StatesMachine { get; set; }
 
-    readonly IInputLock _inputLock;
+    readonly IInputManager _inputManager;
     readonly ISceneLifecycleService _sceneLifecycleService;
     readonly ICinemachineService _cinemachineService;
     readonly EntryPointRegistry _entryPointRegistry;
@@ -30,9 +30,9 @@ public class GameLoadState : IStateEnter
                          ICinemachineService cinemachineService,
                          EntryPointRegistry entryPointRegistry,
                          ILoadingEntryPoint loadingEntryPoint,
-                         IInputLock inputLock)
+                         IInputManager inputManager)
     {
-        _inputLock = inputLock;
+        _inputManager = inputManager;
         _sceneLifecycleService = sceneLifecycleService;
         _cinemachineService = cinemachineService;
         _entryPointRegistry = entryPointRegistry;
@@ -43,7 +43,7 @@ public class GameLoadState : IStateEnter
     {
         try
         {
-            using (_inputLock.LockInputSystem())
+            using (_inputManager.LockInputSystem())
             {
                 var gameEntryPoint = await LoadGameScene();
 

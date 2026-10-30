@@ -75,7 +75,7 @@ public class ProjectInstaller : MonoInstaller
         Container.Bind<ISceneLifecycleService>().To<SceneLifecycleService>().AsSingle();
         Container.Bind<IPauseService>().To<PauseService>().AsSingle();
         Container.BindInterfacesTo<GameCommands>().AsSingle();
-        Container.Bind<IInputLock>().FromComponentInNewPrefab(_inputManagerPrefab).AsSingle().NonLazy();
+        Container.Bind<IInputManager>().FromComponentInNewPrefab(_inputManagerPrefab).AsSingle().NonLazy();
     }
 
     void BindEntryPoints()

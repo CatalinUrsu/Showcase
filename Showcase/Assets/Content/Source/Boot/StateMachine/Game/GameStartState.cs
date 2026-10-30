@@ -12,7 +12,7 @@ public class GameStartState : IStateEnter
 {
     public StatesMachine StatesMachine { get; set; }
 
-    readonly IInputLock _inputLock;
+    readonly IInputManager _inputManager;
     readonly ICinemachineService _cinemachineService;
     readonly IGameRunModelController _gameRunModelController;
     readonly EntryPointRegistry _entryPointRegistry;
@@ -20,9 +20,9 @@ public class GameStartState : IStateEnter
     public GameStartState(ICinemachineService cinemachineService,
                           IGameRunModelController gameRunModelController,
                           EntryPointRegistry entryPointRegistry,
-                          IInputLock inputLock)
+                          IInputManager inputManager)
     {
-        _inputLock = inputLock;
+        _inputManager = inputManager;
         _cinemachineService = cinemachineService;
         _gameRunModelController = gameRunModelController;
         _entryPointRegistry = entryPointRegistry;
@@ -32,7 +32,7 @@ public class GameStartState : IStateEnter
     {
         var gameplay = _entryPointRegistry.Get<IGameplayEntryPoint>();
 
-        using (_inputLock.LockInputSystem())
+        using (_inputManager.LockInputSystem())
         {
             _gameRunModelController.StartRun();
 

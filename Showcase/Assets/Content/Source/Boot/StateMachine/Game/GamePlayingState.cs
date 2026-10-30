@@ -12,7 +12,7 @@ public class GamePlayingState : IStateEnter
 
     public StatesMachine StatesMachine { get; set; }
 
-    readonly IInputLock _inputLock;
+    readonly IInputManager _inputManager;
     readonly IGameCommands _gameCommands;
     readonly IGameRunModelController _gameRunModelController;
     readonly EntryPointRegistry _entryPointRegistry;
@@ -25,9 +25,9 @@ public class GamePlayingState : IStateEnter
     public GamePlayingState(IGameCommands gameCommands,
                             IGameRunModelController gameRunModelController,
                             EntryPointRegistry entryPointRegistry,
-                            IInputLock inputLock)
+                            IInputManager inputManager)
     {
-        _inputLock = inputLock;
+        _inputManager = inputManager;
         _gameCommands = gameCommands;
         _gameRunModelController = gameRunModelController;
         _entryPointRegistry = entryPointRegistry;
@@ -38,7 +38,7 @@ public class GamePlayingState : IStateEnter
         var gameEntryPoint = _entryPointRegistry.Get<IGameplayEntryPoint>();
 
         // After start the panel is already Game (no-op), after pause it switches back
-        using (_inputLock.LockInputSystem())
+        using (_inputManager.LockInputSystem())
             await gameEntryPoint.UIFacade.SelectPanel(EGamePanels.Game);
 
         _gameCommands.Stream
