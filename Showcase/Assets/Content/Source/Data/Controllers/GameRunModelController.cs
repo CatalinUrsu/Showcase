@@ -16,14 +16,16 @@ public class GameRunModelController : IGameRunModelController
     readonly GameRunModel _model;
     readonly IProgressModelController _progressModelController;
     readonly IItemsModelController _itemsModelController;
+    readonly GameBalanceSO _balance;
     readonly CompositeDisposable _disposables = new();
 
 #endregion
 
 #region Public methods
 
-    public GameRunModelController(IItemsModelController itemsModelController, IProgressModelController progressModelController)
+    public GameRunModelController(IItemsModelController itemsModelController, IProgressModelController progressModelController, GameBalanceSO balance)
     {
+        _balance = balance;
         _model = new GameRunModel();
         _itemsModelController = itemsModelController;
         _progressModelController = progressModelController;
@@ -77,11 +79,11 @@ public class GameRunModelController : IGameRunModelController
 
     void OnProgressChange_handler(float progress)
     {
-        if (progress >= ConstGameplay.PROGRESS_TARGET)
+        if (progress >= _balance.ProgressTarget)
             _progressModelController.AddLevel();
     }
 
-    void SetLvlCoinBonus(int lvl) => _lvlCoinBonus = lvl * ConstGameplay.COINS_LVL_BONUS_MULTIPLIER;
+    void SetLvlCoinBonus(int lvl) => _lvlCoinBonus = lvl * _balance.CoinsLvlBonusMultiplier;
 
 #endregion
 }

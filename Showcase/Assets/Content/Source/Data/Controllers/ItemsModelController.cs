@@ -14,11 +14,14 @@ public class ItemsModelController: IItemsModelController
     readonly Dictionary<Guid, ShipInitData> _initShipsData;
     readonly Guid[] _weaponsOrderedIds;
     readonly Guid[] _shipsOrderedIds;
+    readonly GameBalanceSO _balance;
 
     public ItemsModelController(ItemsModel model,
                                 Dictionary<Guid, WeaponInitData> initWeaponsData,
-                                Dictionary<Guid, ShipInitData> initShipsData)
+                                Dictionary<Guid, ShipInitData> initShipsData,
+                                GameBalanceSO balance)
     {
+        _balance = balance;
         Model = model;
         _initWeaponsData = initWeaponsData;
         _initShipsData = initShipsData;
@@ -108,19 +111,19 @@ public class ItemsModelController: IItemsModelController
 
     static void DeselectItem(ItemModel model) => model.IsSelected.Value = false;
 
-    static void UpdateWeapon(WeaponModel model)
+    void UpdateWeapon(WeaponModel model)
     {
-        model.UpgradePrice.Value *= ConstUpgradeItems.WEAPON_PRICE_MULTIPLIER;
-        model.FirePower.Value += ConstUpgradeItems.WEAPON_POWER_UPGRADE;
-        model.FireRate.Value = Mathf.Clamp(model.FireRate.Value + ConstUpgradeItems.WEAPON_FIRE_RATE_UPGRADE, ConstUpgradeItems.WEAPON_FIRE_RATE_MIN, 1);
+        model.UpgradePrice.Value *= _balance.WeaponPriceMultiplier;
+        model.FirePower.Value += _balance.WeaponPowerUpgrade;
+        model.FireRate.Value = Mathf.Clamp(model.FireRate.Value + _balance.WeaponFireRateUpgrade, _balance.WeaponFireRateMin, 1);
         
         model.UpgradePrice.ForceNotify();
     }
 
-    static void UpdateShip(ShipModel model)
+    void UpdateShip(ShipModel model)
     {
-        model.UpgradePrice.Value *= ConstUpgradeItems.SHIP_PRICE_MULTIPLIER;
-        model.EnemyCoinBonus.Value += ConstUpgradeItems.SHIP_BONUS_INCREASE;
+        model.UpgradePrice.Value *= _balance.ShipPriceMultiplier;
+        model.EnemyCoinBonus.Value += _balance.ShipBonusIncrease;
         
         model.UpgradePrice.ForceNotify();
     }

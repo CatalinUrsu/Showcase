@@ -12,9 +12,9 @@ public class EnemyHealth : MonoBehaviour
     
     public bool IsDead => _hpSlider.value <= 0;
 
-    public void Set(IdleNumber initHp, int lvl)
+    public void Set(IdleNumber initHp, int lvl, float hpMultiplier)
     {
-        _hp = new IdleNumber(initHp * Mathf.Pow(ConstGameplay.ENEMY_HP_MULTIPLIER, lvl));
+        _hp = new IdleNumber(initHp * Mathf.Pow(hpMultiplier, lvl));
 
         _hpSlider.maxValue = (float)_hp.Value;
         _hpSlider.value = _hpSlider.maxValue;

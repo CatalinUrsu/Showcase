@@ -84,10 +84,10 @@ public class GamePanelGameplay : GamePanel, IGameplayView
         _txtCoin.SetText($"{collectedCoins.AsString()} {ConstSpriteAssets.SPRITE_TEXT_COIN}");
     }
 
-    public void SetProgressSlider(float progress)
+    public void SetProgressSlider(float normalizedProgress)
     {
         _sliderTween.CheckAndEnd();
-        _sliderTween = _sliderProgress.DOValue(progress / ConstGameplay.PROGRESS_TARGET, LVL_TEXT_ANIM_DUR);
+        _sliderTween = _sliderProgress.DOValue(normalizedProgress, LVL_TEXT_ANIM_DUR);
     }
 
     public async UniTask PlayNewLvlAnimation(int newLvl)

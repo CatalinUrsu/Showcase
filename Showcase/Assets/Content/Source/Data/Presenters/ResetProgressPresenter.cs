@@ -21,11 +21,12 @@ public class ResetProgressPresenter : IDisposable
     readonly IProgressModelController _progressModelController;
     readonly IItemsModelController _itemsModelController;
     readonly ISessionService _sessionService;
+    readonly GameBalanceSO _balance;
     readonly EventReference _fmodEvent;
     readonly CompositeDisposable _disposables = new();
 
-    int LvlBonus => Mathf.RoundToInt(_progressModelController.IModel.LvlRef.CurrentValue * ConstUpgradeItems.RESET_PROGRESS_MULTIPLIER);
-    bool ReachedMinBonusLvl => _progressModelController.IModel.LvlRef.CurrentValue >= ConstUpgradeItems.RESET_PROGRESS_MIN_LVL;
+    int LvlBonus => Mathf.RoundToInt(_progressModelController.IModel.LvlRef.CurrentValue * _balance.ResetProgressMultiplier);
+    bool ReachedMinBonusLvl => _progressModelController.IModel.LvlRef.CurrentValue >= _balance.ResetProgressMinLvl;
 
 #endregion
 
@@ -35,12 +36,14 @@ public class ResetProgressPresenter : IDisposable
                                   IProgressModelController progressModelController,
                                   IItemsModelController itemsModelController,
                                   ISessionService sessionService,
-                                  FmodEventsSo fmodEventsSo)
+                                  FmodEventsSo fmodEventsSo,
+                                  GameBalanceSO balance)
     {
         _resetProgressView = resetProgressView;
         _progressModelController = progressModelController;
         _itemsModelController = itemsModelController;
         _sessionService = sessionService;
+        _balance = balance;
         _fmodEvent = fmodEventsSo.ResetProgress;
 
         _progressModelController.IModel.LvlRef.Subscribe(OnChangeLvl_handler).AddTo(_disposables);
@@ -62,7 +65,7 @@ public class ResetProgressPresenter : IDisposable
 
 #region Private methods
 
-    void OnChangeLvl_handler(int lvl) => _resetProgressView.OnChangeLvl_handler(ReachedMinBonusLvl, LvlBonus);
+    void OnChangeLvl_handler(int lvl) => _resetProgressView.OnChangeLvl_handler(ReachedMinBonusLvl, LvlBonus, _balance.ResetProgressMinLvl);
 
     void SaveProgress()
     {

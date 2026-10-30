@@ -50,6 +50,7 @@ public class EnemiesSpawner : MonoBehaviour, IEnemiesSpawner
     ICameraService _cameraService;
     
     FmodEventsSo _fmodEventsSo;
+    GameBalanceSO _balance;
     EnemiesInitConfig _enemiesInitConfig;
     readonly CompositeDisposable _disposable = new();
 
@@ -58,8 +59,9 @@ public class EnemiesSpawner : MonoBehaviour, IEnemiesSpawner
 #region Public methods
 
     [Inject]
-    public void Construct(ICameraService cameraService, FmodEventsSo fmodEventsSo)
+    public void Construct(ICameraService cameraService, FmodEventsSo fmodEventsSo, GameBalanceSO balance)
     {
+        _balance = balance;
         _cameraService = cameraService;
         _fmodEventsSo = fmodEventsSo;
     }
@@ -104,7 +106,7 @@ public class EnemiesSpawner : MonoBehaviour, IEnemiesSpawner
         _pool = new Factory.Builder(enemyFacade)
                              .SetConfig(_enemiesInitConfig)
                              .SetParents(_poolActive, _poolInactive)
-                             .SetPreloadCount(ConstGameplay.ENEMIES_SPAWN_COUNT)
+                             .SetPreloadCount(_balance.EnemiesSpawnCount)
                              .Build();
     }
 
@@ -140,7 +142,7 @@ public class EnemiesSpawner : MonoBehaviour, IEnemiesSpawner
     void SetSpawnLogic()
     {
         _disposable.Clear();
-        _spawnInterval = TimeSpan.FromSeconds(ConstGameplay.ENEMIES_SPAWN_FREQUENCY);
+        _spawnInterval = TimeSpan.FromSeconds(_balance.EnemiesSpawnFrequency);
 
         Observable.Interval(_spawnInterval)
                   .Where(_ => _spawnEnable)

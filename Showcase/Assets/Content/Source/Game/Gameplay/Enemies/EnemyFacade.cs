@@ -28,6 +28,7 @@ public class EnemyFacade : PooledObject
     EnemiesInitConfig _initConfig;
     IGameRunModelController _runModelController;
     IProgressModel _progressModel;
+    GameBalanceSO _balance;
 
 #endregion
 
@@ -46,8 +47,9 @@ public class EnemyFacade : PooledObject
 #region Public methods
     
     [Inject]
-    public void Construct(IGameRunModelController runModelController, IProgressModelController progressModelController)
+    public void Construct(IGameRunModelController runModelController, IProgressModelController progressModelController, GameBalanceSO balance)
     {
+        _balance = balance;
         _runModelController = runModelController;
         _progressModel = progressModelController.IModel;
     }
@@ -71,7 +73,7 @@ public class EnemyFacade : PooledObject
         _enemyDataSO = enemySo;
         _enemyAppearence.Set(_spriteRenderer, _enemyDataSO.EnemyAppearance);
         _enemyMovement.Set(enemySo.SpeedRadius);
-        _enemyHealth.Set(enemySo.HP, _progressModel.LvlRef.CurrentValue);
+        _enemyHealth.Set(enemySo.HP, _progressModel.LvlRef.CurrentValue, _balance.EnemyHpMultiplier);
     }
 
 #endregion

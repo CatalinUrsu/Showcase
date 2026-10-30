@@ -59,12 +59,12 @@ public class ResetProgressView : MonoBehaviour, IResetProgressView
         SetRawImageMovement();
     }
 
-    public void OnChangeLvl_handler(bool reachedMinBonusLvl, int progressResetBonus)
+    public void OnChangeLvl_handler(bool reachedMinBonusLvl, int progressResetBonus, int minBonusLvl)
     {
         _imgBg.color = reachedMinBonusLvl ? _colorActive : _colorInactive;
 
         SetRawImageSpeed(reachedMinBonusLvl);
-        SetText(reachedMinBonusLvl, progressResetBonus);
+        SetText(reachedMinBonusLvl, progressResetBonus, minBonusLvl);
     }
 
 #endregion
@@ -83,7 +83,7 @@ public class ResetProgressView : MonoBehaviour, IResetProgressView
         _speedChangeTween = DOTween.To(() => _rawImgSpeed, x => _rawImgSpeed = x, newSpeed, 1);
     }
 
-    void SetText(bool reachedMinBonusLvl, int progressResetBonus)
+    void SetText(bool reachedMinBonusLvl, int progressResetBonus, int minBonusLvl)
     {
         _localizedStringEventBonus.gameObject.SetActive(reachedMinBonusLvl);
         _localizedStringEventRequire.gameObject.SetActive(!reachedMinBonusLvl);
@@ -91,7 +91,7 @@ public class ResetProgressView : MonoBehaviour, IResetProgressView
         if (reachedMinBonusLvl)
             (_localizedStringEventBonus.StringReference["0"] as StringVariable)!.Value = $"{progressResetBonus} {ConstSpriteAssets.SPRITE_TEXT_DIAMOND}";
         else
-            (_localizedStringEventRequire.StringReference["0"] as StringVariable)!.Value = $"{ConstUpgradeItems.RESET_PROGRESS_MIN_LVL}";
+            (_localizedStringEventRequire.StringReference["0"] as StringVariable)!.Value = $"{minBonusLvl}";
     }
 
     void SetRawImageMovement()

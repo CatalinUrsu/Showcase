@@ -25,6 +25,7 @@ public class PlayerWeapons : MonoBehaviour
     bool _shootIsEnable;
     IdleNumber _firePower;
     EventReference _shootSfxRef;
+    int _bulletsSpawnCount;
     float _fireRate;
     
     Pool<PooledObject> _bulletsPool;
@@ -40,8 +41,10 @@ public class PlayerWeapons : MonoBehaviour
     public void Construct(IProgressModelController progressModelController,
                           IItemsModelController itemsModelController,
                           IGameRunModelController runModelController,
-                          FmodEventsSo fmodEventsSo)
+                          FmodEventsSo fmodEventsSo,
+                          GameBalanceSO balance)
     {
+        _bulletsSpawnCount = balance.BulletsSpawnCount;
         var usedWeaponIdx = progressModelController.IModel.UsedWeaponIdxRef.CurrentValue;
         var usedWeapon = itemsModelController.GetWeaponModel(usedWeaponIdx);
         _firePower = usedWeapon.FirePowerRef.CurrentValue;
@@ -78,14 +81,14 @@ public class PlayerWeapons : MonoBehaviour
         _bulletsPool = new Factory.Builder(_bullet)
                           .SetConfig(_firePower)
                           .SetParents(_poolActive, _poolInactive)
-                          .SetPreloadCount(ConstGameplay.BULLETS_SPAWN_COUNT)
-                          .SetMaxCount(ConstGameplay.BULLETS_SPAWN_COUNT + 5)
+                          .SetPreloadCount(_bulletsSpawnCount)
+                          .SetMaxCount(_bulletsSpawnCount + 5)
                           .Build();
 
         _shootFxPool = new Factory.Builder(_shootFx)
                           .SetParents(_poolActive, _poolInactive)
-                          .SetPreloadCount(ConstGameplay.BULLETS_SPAWN_COUNT)
-                          .SetMaxCount(ConstGameplay.BULLETS_SPAWN_COUNT + 5)
+                          .SetPreloadCount(_bulletsSpawnCount)
+                          .SetMaxCount(_bulletsSpawnCount + 5)
                           .Build();
 
         _shootingSoundsPool = new FactoryFmodEvents.Builder(_shootSfxRef)
