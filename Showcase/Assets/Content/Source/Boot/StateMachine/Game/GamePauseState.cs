@@ -12,6 +12,7 @@ public class GamePauseState : IStateEnter
 
     public StatesMachine StatesMachine { get; set; }
 
+    readonly IInputLock _inputLock;
     readonly IPauseService _pauseService;
     readonly IGameCommands _gameCommands;
     readonly EntryPointRegistry _entryPointRegistry;
@@ -23,8 +24,10 @@ public class GamePauseState : IStateEnter
 
     public GamePauseState(IPauseService pauseService,
                           IGameCommands gameCommands,
-                          EntryPointRegistry entryPointRegistry)
+                          EntryPointRegistry entryPointRegistry,
+                          IInputLock inputLock)
     {
+        _inputLock = inputLock;
         _pauseService = pauseService;
         _gameCommands = gameCommands;
         _entryPointRegistry = entryPointRegistry;
@@ -37,7 +40,7 @@ public class GamePauseState : IStateEnter
         _pauseService.Pause(EVolumeState.Pause, freezeTime: true);
         _gameCommands.Stream.Subscribe(OnGameCommand).AddTo(_subscriptions);
 
-        using (InputManager.Instance.LockInputSystem())
+        using (_inputLock.LockInputSystem())
             await gameEntryPoint.UIFacade.SelectPanel(EGamePanels.Pause);
     }
 

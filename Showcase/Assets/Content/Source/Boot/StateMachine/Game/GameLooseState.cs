@@ -12,6 +12,7 @@ public class GameLooseState : IStateEnter
 
     public StatesMachine StatesMachine { get; set; }
 
+    readonly IInputLock _inputLock;
     readonly IPauseService _pauseService;
     readonly ICinemachineService _cinemachineService;
     readonly IGameCommands _gameCommands;
@@ -25,8 +26,10 @@ public class GameLooseState : IStateEnter
     public GameLooseState(IPauseService pauseService,
                           ICinemachineService cinemachineService,
                           IGameCommands gameCommands,
-                          EntryPointRegistry entryPointRegistry)
+                          EntryPointRegistry entryPointRegistry,
+                          IInputLock inputLock)
     {
+        _inputLock = inputLock;
         _pauseService = pauseService;
         _cinemachineService = cinemachineService;
         _gameCommands = gameCommands;
@@ -41,7 +44,7 @@ public class GameLooseState : IStateEnter
         _cinemachineService.SetFollow(ECinemachineState.Game, null);
         _gameCommands.Stream.Subscribe(OnGameCommand).AddTo(_subscriptions);
 
-        using (InputManager.Instance.LockInputSystem())
+        using (_inputLock.LockInputSystem())
             await gameEntryPoint.UIFacade.SelectPanel(EGamePanels.Loose);
     }
 
