@@ -81,9 +81,14 @@ public class AppInit : MonoBehaviour
         
         var states = new IState[]
         {
-            _container.Instantiate<InitState>(),
             menuState,
-            _container.Instantiate<GameState>()
+            _container.Instantiate<InitState>(),
+            _container.Instantiate<GameLoadState>(),
+            _container.Instantiate<GameStartState>(),
+            _container.Instantiate<GamePlayingState>(),
+            _container.Instantiate<GamePauseState>(),
+            _container.Instantiate<GameLooseState>(),
+            _container.Instantiate<GameUnloadState>()
         };
             
         _stateMachine = new StatesMachine(menuState, states);

@@ -88,7 +88,7 @@ public class MenuState : IStateEnter
 
     async UniTask HideSplashScreen() => await _loadingEntryPoint.SplashScreen.Hide();
 
-    void GoToGameplay() => StatesMachine.Enter<GameState>();
+    void GoToGameplay() => StatesMachine.Enter<GameLoadState>();
 
 #endregion
 }

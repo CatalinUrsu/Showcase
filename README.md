@@ -25,7 +25,7 @@ https://github.com/user-attachments/assets/3a0edbf8-be96-42ff-b5b5-1bd159e958eb
 
 ## <b><u>Project Highlights</u></b>
 - Single-entry bootstrap through `Showcase/Assets/Content/Source/Boot/AppInit.cs`
-- <b><i>Async</i></b> state machine transitions (`InitState -> MenuState <-> GameState`)
+- <b><i>Async</i></b> state machine transitions with a transition queue (`InitState -> MenuState <-> Game* states`)
 - Explicit <b><i>DI composition root with Extenject</i></b> in `Showcase/Assets/Content/Source/Boot/Installers/ProjectInstaller.cs`
 - Scene-scoped DI: each scene installer binds its objects and an entry point (`IMenuEntryPoint`, `IGameplayEntryPoint`), found by states through `EntryPointRegistry`
 - Presenter-based UI flow with reactive state updates <b><i>(R3)</i></b>
@@ -54,12 +54,14 @@ https://github.com/user-attachments/assets/3a0edbf8-be96-42ff-b5b5-1bd159e958eb
 3. `InitState` initializes audio volumes from saved settings, loads loading scene, and shows splash.
 4. Transition to `MenuState`.
 5. `MenuState` loads menu scene content, hooks menu events, and waits for user actions.
-6. Start game transitions to `GameState`, which loads gameplay scene, initializes run state, configures camera, and activates gameplay UI.
+6. Start game transitions to `GameLoadState` (gameplay scene + camera), then `GameStartState` (new run, player spawn) and `GamePlayingState`.
 7. Returning to menu triggers cleanup, save, unload, and splash-driven transition.
 
 ### <b><u>State transitions (simplified)</u></b>
 ```text
-AppInit -> InitState -> MenuState <-> GameState
+AppInit -> InitState -> MenuState -> GameLoadState -> GameStartState -> GamePlayingState <-> GamePauseState
+GamePlayingState -> GameLooseState -> GameStartState (restart)
+GamePauseState / GameLooseState -> GameUnloadState -> MenuState
 ```
 Input is locked during transitions (`InputManager.Instance.LockInputSystem()`) to avoid race conditions and accidental double actions.
 <br/><br/>
@@ -72,7 +74,7 @@ Boot/
   AppInit.cs
   Installers/        (ProjectInstaller, MenuInstaller, GameplayInstaller, LoadingInstaller)
   EntryPoints/       (MenuEntryPoint, GameplayEntryPoint, LoadingEntryPoint, EntryPointRegistrar)
-  StateMachine/      (InitState, MenuState, GameState)
+  StateMachine/      (InitState, MenuState, Game/ - GameLoad, GameStart, GamePlaying, GamePause, GameLoose, GameUnload)
 
 Core/
   Common/            (constants, DDOL)
@@ -136,7 +138,9 @@ States live in `Showcase/Assets/Content/Source/Boot/StateMachine` and implement 
 
 - `InitState`: bootstrap services + loading scene setup.
 - `MenuState`: menu scene load/init, user entry flow.
-- `GameState`: gameplay scene load/init, runtime listeners, pause/resume, save on exit.
+- `GameLoadState` / `GameUnloadState`: gameplay scene load and unload, save on exit.
+- `GameStartState`: new run and player spawn (also used for restart).
+- `GamePlayingState`, `GamePauseState`, `GameLooseState`: one run mode each; pause is applied in `Enter` and removed in `Exit` through `IPauseService`.
 
 ### <b><u>3) Async-first orchestration</u></b>
 UniTask is used across scene loads, transitions, and content activation.
@@ -193,7 +197,7 @@ _musicVCA = RuntimeManager.GetVCA(ConstFMOD.VCA_Music);
 _soundVCA.setVolume(soundVolume);
 _musicVCA.setVolume(musicVolume);
 
-// Pause snapshot (example from GameState).
+// Pause snapshot (example from PauseService).
 _audioService.PauseSnapshot.start();
 _audioService.PauseSnapshot.stop(STOP_MODE.ALLOWFADEOUT);
 ```
@@ -222,7 +226,7 @@ _itemAppearPool.Get().Instance.start();
 - Runtime asset loading is used for gameplay content (for example enemy prefab key usage).
 
 ```csharp
-// Scene load through builder + lifecycle service (MenuState / GameState pattern).
+// Scene load through builder + lifecycle service (MenuState / GameLoadState pattern).
 var sceneLoadParams = new SceneLoadParams.Builder(ConstSceneNames.MENU_SCENE)
     .SetTip("Load Menu Scene")
     .SetIsAddressable(true)
