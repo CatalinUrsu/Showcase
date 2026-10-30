@@ -70,6 +70,7 @@ public class ProjectInstaller : MonoInstaller
         Container.Bind<IProgressTrackingService>().FromInstance(progressTrackingService).AsSingle();
         Container.Bind<ISceneLoaderService>().FromInstance(sceneLoaderService).AsSingle();
         Container.Bind<ISceneLifecycleService>().To<SceneLifecycleService>().AsSingle();
+        Container.Bind<IPauseService>().To<PauseService>().AsSingle();
     }
 
     void BindEntryPoints()
