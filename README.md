@@ -27,7 +27,7 @@ https://github.com/user-attachments/assets/3a0edbf8-be96-42ff-b5b5-1bd159e958eb
 - Single-entry bootstrap through `Showcase/Assets/Content/Source/Boot/AppInit.cs`
 - <b><i>Async</i></b> state machine transitions (`InitState -> MenuState <-> GameState`)
 - Explicit <b><i>DI composition root with Extenject</i></b> in `Showcase/Assets/Content/Source/Boot/Installers/ProjectInstaller.cs`
-- Scene-scoped runtime wiring via installers + context interfaces (`IMenuContext`, `ILoadingContext`, `IGameplayContext`)
+- Scene-scoped DI: each scene installer binds its objects and an entry point (`IMenuEntryPoint`, `IGameplayEntryPoint`), found by states through `EntryPointRegistry`
 - Presenter-based UI flow with reactive state updates <b><i>(R3)</i></b>
 - <b><i>FMOD banks</i></b> loading and scene-based audio behavior integrated with <b><i>Addressables</i></b>
 <br/><br/>
@@ -71,14 +71,14 @@ Main source root: `Showcase/Assets/Content/Source`
 Boot/
   AppInit.cs
   Installers/        (ProjectInstaller, MenuInstaller, GameplayInstaller, LoadingInstaller)
-  SceneContexts/     (MenuContext, GameplayContext, LoadingContext)
+  EntryPoints/       (MenuEntryPoint, GameplayEntryPoint, LoadingEntryPoint, EntryPointRegistrar)
   StateMachine/      (InitState, MenuState, GameState)
 
 Core/
   Common/            (constants, DDOL)
   Data/              (interfaces)
   Enums/
-  SceneContext/      (context interfaces)
+  EntryPoints/       (entry point interfaces)
   UI/                (view interfaces)
 
 Data/
@@ -229,7 +229,7 @@ var sceneLoadParams = new SceneLoadParams.Builder(ConstSceneNames.MENU_SCENE)
     .SetActiveOnLoad(true)
     .Build();
 
-await _sceneLifecycleService.LoadAndInitScene(sceneLoadParams, _menuContext);
+_menuEntryPoint = await _sceneLifecycleService.LoadAndInitScene<IMenuEntryPoint>(sceneLoadParams);
 ```
 
 ### <b><u>Localization</u></b>
@@ -273,4 +273,4 @@ This project is intentionally small, but performance practices are implemented a
 - **Interface-first DI bindings** to reduce coupling and make services replaceable.
 - **Reactive model-to-view updates** to keep UI consistent with gameplay/session state.
 - **Async scene orchestration** to avoid blocking operations and simplify transition sequencing.
-- **Context objects per scene** to isolate scene-level references from global scope.
+- **Entry point per scene**, built by the scene container and registered only while the scene is loaded, to isolate scene-level references from global scope.
