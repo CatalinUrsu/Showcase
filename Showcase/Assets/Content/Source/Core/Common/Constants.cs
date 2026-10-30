@@ -36,26 +36,8 @@ public static class ConstUIAnimation
     public static float GetAnimDuration(bool skipAnimation) => skipAnimation ? 0 : UI_ANIM_DUR;
 }
 
-public static class ConstUpgradeItems
-{
-    public const float SHIP_PRICE_MULTIPLIER = 1.2f;
-    public const float SHIP_BONUS_INCREASE = .25f;
-    public const float WEAPON_PRICE_MULTIPLIER = 1.2f;
-    public const float WEAPON_POWER_UPGRADE = 1;
-    public const float WEAPON_FIRE_RATE_UPGRADE = -.005f;
-    public const float WEAPON_FIRE_RATE_MIN = .2f;
-    public const float RESET_PROGRESS_MULTIPLIER = 2.36f;
-    public const int RESET_PROGRESS_MIN_LVL = 5;
-}
-
 public static class ConstGameplay
 {
-    public const int PROGRESS_TARGET = 10;
-    public const int BULLETS_SPAWN_COUNT = 20;
-    public const int ENEMIES_SPAWN_COUNT = 10;
-    public const float ENEMIES_SPAWN_FREQUENCY = .75f;
-    public const float ENEMY_HP_MULTIPLIER = 1.3f;
-    public const float COINS_LVL_BONUS_MULTIPLIER = .25f;
     public const string ENEMIES_LOCATION_KEY = "Enemy";
 }
 
