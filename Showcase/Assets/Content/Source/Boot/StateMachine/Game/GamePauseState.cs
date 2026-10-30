@@ -1,3 +1,4 @@
+using R3;
 using Helpers;
 using System.Threading;
 using Helpers.Services;
@@ -7,44 +8,60 @@ namespace Source.Boot
 {
 public class GamePauseState : IStateEnter
 {
+#region Fields
+
     public StatesMachine StatesMachine { get; set; }
 
     readonly IPauseService _pauseService;
-    readonly IGameRunModelController _gameRunModelController;
+    readonly IGameCommands _gameCommands;
     readonly EntryPointRegistry _entryPointRegistry;
+    readonly CompositeDisposable _subscriptions = new();
+
+#endregion
+
+#region Public methods
 
     public GamePauseState(IPauseService pauseService,
-                          IGameRunModelController gameRunModelController,
+                          IGameCommands gameCommands,
                           EntryPointRegistry entryPointRegistry)
     {
         _pauseService = pauseService;
-        _gameRunModelController = gameRunModelController;
+        _gameCommands = gameCommands;
         _entryPointRegistry = entryPointRegistry;
     }
 
     public async UniTask Enter(CancellationToken cancellationToken)
     {
-        var gameplay = _entryPointRegistry.Get<IGameplayEntryPoint>();
+        var gameEntryPoint = _entryPointRegistry.Get<IGameplayEntryPoint>();
 
         _pauseService.Pause(EVolumeState.Pause, freezeTime: true);
-        _gameRunModelController.OnContinueGame += Continue;
-        _gameRunModelController.OnClickGoHome += GoHome;
+        _gameCommands.Stream.Subscribe(OnGameCommand).AddTo(_subscriptions);
 
         using (InputManager.Instance.LockInputSystem())
-            await gameplay.UIFacade.SelectPanel(EGamePanels.Pause);
+            await gameEntryPoint.UIFacade.SelectPanel(EGamePanels.Pause);
     }
 
     // Pause is removed here, whatever state is next
     public UniTask Exit()
     {
-        _gameRunModelController.OnContinueGame -= Continue;
-        _gameRunModelController.OnClickGoHome -= GoHome;
+        _subscriptions.Clear();
         _pauseService.Resume();
         return UniTask.CompletedTask;
     }
 
-    void Continue() => StatesMachine.Enter<GamePlayingState>();
+#endregion
 
-    void GoHome() => StatesMachine.Enter<GameUnloadState>();
+#region Private methods
+
+    void OnGameCommand(EGameCommand command)
+    {
+        switch (command)
+        {
+            case EGameCommand.Continue: StatesMachine.Enter<GamePlayingState>(); break;
+            case EGameCommand.GoHome:   StatesMachine.Enter<GameUnloadState>();  break;
+        }
+    }
+
+#endregion
 }
 }

@@ -1,3 +1,4 @@
+using R3;
 using Helpers;
 using System.Threading;
 using Helpers.Services;
@@ -7,38 +8,54 @@ namespace Source.Boot
 {
 public class GamePlayingState : IStateEnter
 {
+#region Fields
+
     public StatesMachine StatesMachine { get; set; }
 
+    readonly IGameCommands _gameCommands;
     readonly IGameRunModelController _gameRunModelController;
     readonly EntryPointRegistry _entryPointRegistry;
+    readonly CompositeDisposable _subscriptions = new();
 
-    public GamePlayingState(IGameRunModelController gameRunModelController, EntryPointRegistry entryPointRegistry)
+#endregion
+
+#region Public methods
+
+    public GamePlayingState(IGameCommands gameCommands,
+                            IGameRunModelController gameRunModelController,
+                            EntryPointRegistry entryPointRegistry)
     {
+        _gameCommands = gameCommands;
         _gameRunModelController = gameRunModelController;
         _entryPointRegistry = entryPointRegistry;
     }
 
     public async UniTask Enter(CancellationToken cancellationToken)
     {
-        var gameplay = _entryPointRegistry.Get<IGameplayEntryPoint>();
+        var gameEntryPoint = _entryPointRegistry.Get<IGameplayEntryPoint>();
 
         // After start the panel is already Game (no-op), after pause it switches back
         using (InputManager.Instance.LockInputSystem())
-            await gameplay.UIFacade.SelectPanel(EGamePanels.Game);
+            await gameEntryPoint.UIFacade.SelectPanel(EGamePanels.Game);
 
-        _gameRunModelController.OnClickPause += OpenPause;
-        _gameRunModelController.OnPlayerLoose += OpenLoose;
+        _gameCommands.Stream
+                     .Where(command => command == EGameCommand.Pause && _gameRunModelController.CanPause)
+                     .Subscribe(_ => StatesMachine.Enter<GamePauseState>())
+                     .AddTo(_subscriptions);
+
+        // Emits current value on subscribe, so death during panel switch is not missed
+        _gameRunModelController.IModel.PlayerIsKilledRef
+                               .Where(isKilled => isKilled)
+                               .Subscribe(_ => StatesMachine.Enter<GameLooseState>())
+                               .AddTo(_subscriptions);
     }
 
     public UniTask Exit()
     {
-        _gameRunModelController.OnClickPause -= OpenPause;
-        _gameRunModelController.OnPlayerLoose -= OpenLoose;
+        _subscriptions.Clear();
         return UniTask.CompletedTask;
     }
 
-    void OpenPause() => StatesMachine.Enter<GamePauseState>();
-
-    void OpenLoose() => StatesMachine.Enter<GameLooseState>();
+#endregion
 }
 }

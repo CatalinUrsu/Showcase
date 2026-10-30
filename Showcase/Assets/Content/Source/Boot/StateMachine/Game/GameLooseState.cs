@@ -1,3 +1,4 @@
+using R3;
 using Helpers;
 using System.Threading;
 using Helpers.Services;
@@ -7,48 +8,64 @@ namespace Source.Boot
 {
 public class GameLooseState : IStateEnter
 {
+#region Fields
+
     public StatesMachine StatesMachine { get; set; }
 
     readonly IPauseService _pauseService;
     readonly ICinemachineService _cinemachineService;
-    readonly IGameRunModelController _gameRunModelController;
+    readonly IGameCommands _gameCommands;
     readonly EntryPointRegistry _entryPointRegistry;
+    readonly CompositeDisposable _subscriptions = new();
+
+#endregion
+
+#region Public methods
 
     public GameLooseState(IPauseService pauseService,
                           ICinemachineService cinemachineService,
-                          IGameRunModelController gameRunModelController,
+                          IGameCommands gameCommands,
                           EntryPointRegistry entryPointRegistry)
     {
         _pauseService = pauseService;
         _cinemachineService = cinemachineService;
-        _gameRunModelController = gameRunModelController;
+        _gameCommands = gameCommands;
         _entryPointRegistry = entryPointRegistry;
     }
 
     public async UniTask Enter(CancellationToken cancellationToken)
     {
-        var gameplay = _entryPointRegistry.Get<IGameplayEntryPoint>();
+        var gameEntryPoint = _entryPointRegistry.Get<IGameplayEntryPoint>();
 
         _pauseService.Pause(EVolumeState.Loose, freezeTime: false);
         _cinemachineService.SetFollow(ECinemachineState.Game, null);
-        _gameRunModelController.OnRestartRun += Restart;
-        _gameRunModelController.OnClickGoHome += GoHome;
+        _gameCommands.Stream.Subscribe(OnGameCommand).AddTo(_subscriptions);
 
         using (InputManager.Instance.LockInputSystem())
-            await gameplay.UIFacade.SelectPanel(EGamePanels.Loose);
+            await gameEntryPoint.UIFacade.SelectPanel(EGamePanels.Loose);
     }
 
     // Pause is removed here, whatever state is next
     public UniTask Exit()
     {
-        _gameRunModelController.OnRestartRun -= Restart;
-        _gameRunModelController.OnClickGoHome -= GoHome;
+        _subscriptions.Clear();
         _pauseService.Resume();
         return UniTask.CompletedTask;
     }
 
-    void Restart() => StatesMachine.Enter<GameStartState>();
+#endregion
 
-    void GoHome() => StatesMachine.Enter<GameUnloadState>();
+#region Private methods
+
+    void OnGameCommand(EGameCommand command)
+    {
+        switch (command)
+        {
+            case EGameCommand.Restart: StatesMachine.Enter<GameStartState>(); break;
+            case EGameCommand.GoHome:  StatesMachine.Enter<GameUnloadState>(); break;
+        }
+    }
+
+#endregion
 }
 }
