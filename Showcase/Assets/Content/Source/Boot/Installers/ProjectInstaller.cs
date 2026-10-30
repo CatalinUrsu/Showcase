@@ -14,6 +14,8 @@ public class ProjectInstaller : MonoInstaller
 #region Fields
 
     [SerializeField] FmodEventsSo _fmodEventsSO;
+    [SerializeField] GameBalanceSO _gameBalance;
+    [SerializeField] InputManager _inputManagerPrefab;
     
     [Space]
     [SerializeField] ItemInfoWeaponSO[] _weaponsSO;
@@ -41,7 +43,7 @@ public class ProjectInstaller : MonoInstaller
         var itemsModelController = GetItemsModelController();
         var progressModelController = GetProgressModelController();
         var settingsModelController = GetSettingsModelController();
-        var gameRunModelController = new GameRunModelController(itemsModelController, progressModelController);
+        var gameRunModelController = new GameRunModelController(itemsModelController, progressModelController, _gameBalance);
         var sessionService = new SessionService(itemsModelController, progressModelController, settingsModelController);
 
         // Bind Models 
@@ -55,6 +57,7 @@ public class ProjectInstaller : MonoInstaller
     void BindSoData()
     {
         Container.Bind<FmodEventsSo>().FromInstance(_fmodEventsSO).AsSingle();
+        Container.BindInstance(_gameBalance).AsSingle();
     }
 
     void BindServices()
@@ -72,6 +75,7 @@ public class ProjectInstaller : MonoInstaller
         Container.Bind<ISceneLifecycleService>().To<SceneLifecycleService>().AsSingle();
         Container.Bind<IPauseService>().To<PauseService>().AsSingle();
         Container.BindInterfacesTo<GameCommands>().AsSingle();
+        Container.Bind<IInputLock>().FromComponentInNewPrefab(_inputManagerPrefab).AsSingle().NonLazy();
     }
 
     void BindEntryPoints()
@@ -99,7 +103,7 @@ public class ProjectInstaller : MonoInstaller
         var initWeaponsData = _weaponsSO.ToDictionary(weaponSo => weaponSo.IdSo.Guid, weaponSo => weaponSo.InitData);
         var initShipsData = _ShipsSO.ToDictionary(shipSo => shipSo.IdSo.Guid, shipSo => shipSo.InitData);
         var itemsModel = SaveSystem.LoadOrCreate<ItemsModel>(ConstSavesPaths.ITEMS_PATH);
-        return new ItemsModelController(itemsModel, initWeaponsData, initShipsData);
+        return new ItemsModelController(itemsModel, initWeaponsData, initShipsData, _gameBalance);
     }
 
     ProgressModelController GetProgressModelController()

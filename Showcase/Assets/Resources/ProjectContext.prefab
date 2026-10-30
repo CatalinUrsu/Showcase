@@ -208,6 +208,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1d9415f90d0b8648a94cb4ebca675ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _fmodEventsSO: {fileID: 11400000, guid: aafaf79d7f4f39344a5a2ab150ea6dc0, type: 2}
+  _gameBalance: {fileID: 11400000, guid: b2ed2331be40cda469ae0e8192356257, type: 2}
+  _inputManagerPrefab: {fileID: 1533962472381684457, guid: 268daaa2804957945988940bb9aa22e7, type: 3}
   _weaponsSO:
   - {fileID: 11400000, guid: 9d5703454b105de4d891f31f7a7e21a0, type: 2}
   - {fileID: 11400000, guid: 7e92e494cbef878408e7fbfc1da75f56, type: 2}
@@ -223,7 +226,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 20a6acc0527e29b40b9f89a7727477a0, type: 2}
   - {fileID: 11400000, guid: c35686705347b2543bc4e0f22b799e6f, type: 2}
   - {fileID: 11400000, guid: ac7305313517dd74d8ad797c6fcb9a3e, type: 2}
-  _fmodEventsSO: {fileID: 11400000, guid: aafaf79d7f4f39344a5a2ab150ea6dc0, type: 2}
   _volumes:
   - State: 1
     Volume: {fileID: 7893700095550350476}
