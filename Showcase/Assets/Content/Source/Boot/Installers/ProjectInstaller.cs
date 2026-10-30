@@ -71,6 +71,7 @@ public class ProjectInstaller : MonoInstaller
         Container.Bind<ISceneLoaderService>().FromInstance(sceneLoaderService).AsSingle();
         Container.Bind<ISceneLifecycleService>().To<SceneLifecycleService>().AsSingle();
         Container.Bind<IPauseService>().To<PauseService>().AsSingle();
+        Container.BindInterfacesTo<GameCommands>().AsSingle();
     }
 
     void BindEntryPoints()

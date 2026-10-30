@@ -1,5 +1,4 @@
 ﻿using R3;
-using System;
 using IdleNumbers;
 
 namespace Source.Data
@@ -9,11 +8,7 @@ public class GameRunModelController : IGameRunModelController
 #region Fields
 
     public IGameRunModel IModel => _model;
-    public event Action OnClickPause;
-    public event Action OnClickGoHome;
-    public event Action OnContinueGame;
-    public event Action OnRestartRun;
-    public event Action OnPlayerLoose;
+    public bool CanPause => !_model.PlayerIsKilledRef.CurrentValue && !_model.IsPlayingNewLvlAnimRef.CurrentValue;
 
     float _lvlCoinBonus;
     float _shipCoinBonus;
@@ -47,11 +42,7 @@ public class GameRunModelController : IGameRunModelController
         _model.PlayerIsKilled.Value = false;
     }
 
-    public void KillPlayer()
-    {
-        _model.PlayerIsKilled.Value = true;
-        OnPlayerLoose?.Invoke();
-    }
+    public void KillPlayer() => _model.PlayerIsKilled.Value = true;
 
     public void AddCoinsReward(float rewardPoints, IdleNumber coins)
     {
@@ -63,18 +54,6 @@ public class GameRunModelController : IGameRunModelController
         _model.CollectedCoins.Value += rewardCoins;
         _model.Progress.Value += rewardPoints;
     }
-
-    public void OnClickPause_raise()
-    {
-        if (CanOpenPauseMenu())
-            OnClickPause?.Invoke();
-    }
-
-    public void OnClickGoHome_raise() => OnClickGoHome?.Invoke();
-    
-    public void OnClickContinue_raise() => OnContinueGame?.Invoke();
-    
-    public void OnClickRestartRun_raise() => OnRestartRun?.Invoke();
 
     public void StartNewLvlAnim() => _model.IsPlayingNewLvlAnim.Value = true;
     
@@ -101,8 +80,6 @@ public class GameRunModelController : IGameRunModelController
         if (progress >= ConstGameplay.PROGRESS_TARGET)
             _progressModelController.AddLevel();
     }
-    
-    bool CanOpenPauseMenu() => !_model.PlayerIsKilledRef.CurrentValue && !_model.IsPlayingNewLvlAnimRef.CurrentValue;
 
     void SetLvlCoinBonus(int lvl) => _lvlCoinBonus = lvl * ConstGameplay.COINS_LVL_BONUS_MULTIPLIER;
 
