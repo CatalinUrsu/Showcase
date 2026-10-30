@@ -53,9 +53,9 @@ public class VolumeSwitcherService : IVolumeSwitcherService
     void FadeIn(Volume volume)
     {
         _fadeInTween.CheckAndEnd();
-        _fadeOutTween = DOVirtual.Float(volume.weight, 1, TRANSITION_DURATION, weight => volume.weight = weight)
-                                 .SetEase(Ease.InOutSine)
-                                 .SetUpdate(true);
+        _fadeInTween = DOVirtual.Float(volume.weight, 1, TRANSITION_DURATION, weight => volume.weight = weight)
+                                .SetEase(Ease.InOutSine)
+                                .SetUpdate(true);
     }
 
     void FadeOut(Volume volume)
