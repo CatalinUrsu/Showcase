@@ -10,5 +10,7 @@ public interface ICinemachineService
     void RegisterStateDrivenAnimator(Animator animator);
     void AddStateDrivenCameraData(string state, StateDrivenCameraData data);
     void ChangeState(string state);
+    void SetFollow(ECinemachineState state, Transform target);
+    void SetConfiner(ECinemachineState state, Collider2D bounds);
 }
 }
