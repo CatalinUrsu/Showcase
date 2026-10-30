@@ -15,8 +15,9 @@ public class MenuState : IStateEnter
     readonly IAudioService _audioService;
     readonly ISceneLifecycleService _sceneLifecycleService;
     readonly ICinemachineService _cinemachineService;
-    readonly ILoadingContext _loadingContext;
-    readonly IMenuContext _menuContext;
+    readonly ILoadingEntryPoint _loadingEntryPoint;
+    
+    IMenuEntryPoint _menuEntryPoint;
 
 #endregion
 
@@ -25,14 +26,12 @@ public class MenuState : IStateEnter
     public MenuState(IAudioService audioService,
                      ISceneLifecycleService sceneLifecycleService,
                      ICinemachineService cinemachineService,
-                     ILoadingContext loadingContext,
-                     IMenuContext menuContext)
+                     ILoadingEntryPoint loadingEntryPoint)
     {
         _audioService = audioService;
         _sceneLifecycleService = sceneLifecycleService;
         _cinemachineService = cinemachineService;
-        _loadingContext = loadingContext;
-        _menuContext = menuContext;
+        _loadingEntryPoint = loadingEntryPoint;
     }
 
     public async UniTask Enter(CancellationToken cancellationToken)
@@ -45,9 +44,11 @@ public class MenuState : IStateEnter
             
             _cinemachineService.ChangeState(nameof(ECinemachineState.Menu));
             await HideSplashScreen();
-            await _menuContext.PlayerFacade.ShowPlayer().AttachExternalCancellation(cancellationToken);
+            await _menuEntryPoint.PlayerFacade
+                                 .ShowPlayer()
+                                 .AttachExternalCancellation(cancellationToken);
 
-            _menuContext.UIFacade.OnClickStartGame += GoToGameplay;
+            _menuEntryPoint.UIFacade.OnClickStartGame += GoToGameplay;
         }
     }
 
@@ -55,7 +56,7 @@ public class MenuState : IStateEnter
     {
         using (InputManager.Instance.LockInputSystem())
         {
-            _menuContext.UIFacade.OnClickStartGame -= GoToGameplay;
+            _menuEntryPoint.UIFacade.OnClickStartGame -= GoToGameplay;
 
             await ShowSplashScreen();
             await UnloadMenuScene();
@@ -74,14 +75,18 @@ public class MenuState : IStateEnter
                               .SetActiveOnLoad(true)
                               .Build();
 
-        await _sceneLifecycleService.LoadAndInitScene(sceneLoadParams, _menuContext);
+        _menuEntryPoint = await _sceneLifecycleService.LoadAndInitScene<IMenuEntryPoint>(sceneLoadParams);
     }
 
-    async UniTask UnloadMenuScene() => await _sceneLifecycleService.DeinitAndUnloadScene(ConstSceneNames.MENU_SCENE, _menuContext);
+    async UniTask UnloadMenuScene()
+    {
+        await _sceneLifecycleService.DeinitAndUnloadScene(ConstSceneNames.MENU_SCENE, _menuEntryPoint);
+        _menuEntryPoint = null;
+    }
 
-    async UniTask ShowSplashScreen() => await _loadingContext.SplashScreen.Show();
+    async UniTask ShowSplashScreen() => await _loadingEntryPoint.SplashScreen.Show();
 
-    async UniTask HideSplashScreen() => await _loadingContext.SplashScreen.Hide();
+    async UniTask HideSplashScreen() => await _loadingEntryPoint.SplashScreen.Hide();
 
     void GoToGameplay() => StatesMachine.Enter<GameState>();
 

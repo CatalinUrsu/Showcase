@@ -11,16 +11,15 @@ public class MenuInstaller : MonoInstaller
     [SerializeField] BankLoader _bankLoader;
     [SerializeField] PlayerFacade _playerFacade;
     [SerializeField] MenuUIFacade _menuUIFacade;
-    
-    IMenuContext _menuContext;
 
     public override void InstallBindings()
     {
-        _menuContext = Container.Resolve<IMenuContext>();
-        
-        _menuContext.RegisterBankLoader(_bankLoader);
-        _menuContext.RegisterPlayerFacade(_playerFacade);
-        _menuContext.RegisterUIMenuFacade(_menuUIFacade);
+        Container.Bind<IBankLoader>().FromInstance(_bankLoader);
+        Container.Bind<IPlayerFacade>().FromInstance(_playerFacade);
+        Container.Bind<IMenuUIFacade>().FromInstance(_menuUIFacade);
+
+        Container.Bind<IMenuEntryPoint>().To<MenuEntryPoint>().AsSingle();
+        Container.BindInterfacesTo<EntryPointRegistrar<IMenuEntryPoint>>().AsSingle().NonLazy();
     }
 }
 }
