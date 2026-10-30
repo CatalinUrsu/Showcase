@@ -8,18 +8,26 @@ public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] Slider _hpSlider;
 
-    IdleNumber _hp;
-    
-    public bool IsDead => _hpSlider.value <= 0;
+    IdleNumber _maxHp;
+    IdleNumber _currentHp;
+
+    public bool IsDead => _currentHp.Value <= 0;
 
     public void Set(IdleNumber initHp, int lvl, float hpMultiplier)
     {
-        _hp = new IdleNumber(initHp * Mathf.Pow(hpMultiplier, lvl));
+        _maxHp = new IdleNumber(initHp * Mathf.Pow(hpMultiplier, lvl));
+        _currentHp = _maxHp;
 
-        _hpSlider.maxValue = (float)_hp.Value;
-        _hpSlider.value = _hpSlider.maxValue;
+        _hpSlider.maxValue = 1;
+        _hpSlider.value = 1;
     }
 
-    public void TakeDamage(IdleNumber damage) => _hpSlider.value -= (float)damage.RoundToTargetValue(_hp.Lvl);
+    public void TakeDamage(IdleNumber damage)
+    {
+        _currentHp = _currentHp.IsEnough(damage) ? _currentHp - damage : new IdleNumber();
+
+        // Slider only shows the share: current HP in units of max HP order, divided by max
+        _hpSlider.value = (float)(_currentHp.RoundToTargetValue(_maxHp.Lvl) / _maxHp.Value);
+    }
 }
 }
