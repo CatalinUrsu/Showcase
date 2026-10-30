@@ -9,7 +9,7 @@ public class GamePanelPause : GamePanel
     [SerializeField] ButtonBase _buttonHome;
     [SerializeField] ButtonBase _buttonContinue;
 
-    [Inject] IGameRunModelController _gameRunModelController;
+    [Inject] IGameCommands _gameCommands;
 
     public override void Init()
     {
@@ -17,8 +17,8 @@ public class GamePanelPause : GamePanel
 
         _buttonHome.Init();
         _buttonContinue.Init();
-        _buttonHome.Btn.onClick.AddListener(() => _gameRunModelController.OnClickGoHome_raise());
-        _buttonContinue.Btn.onClick.AddListener(() => _gameRunModelController.OnClickContinue_raise());
+        _buttonHome.Btn.onClick.AddListener(() => _gameCommands.Send(EGameCommand.GoHome));
+        _buttonContinue.Btn.onClick.AddListener(() => _gameCommands.Send(EGameCommand.Continue));
     }
 }
 }

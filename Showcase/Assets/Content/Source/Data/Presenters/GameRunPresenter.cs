@@ -21,6 +21,7 @@ public class GameRunPresenter : IDisposable
     readonly IGameRunModelController _gameRunModelController;
     readonly IGameplayView _viewGameplay;
     readonly ISessionService _sessionService;
+    readonly IGameCommands _gameCommands;
 
 #endregion
 
@@ -29,11 +30,13 @@ public class GameRunPresenter : IDisposable
     public GameRunPresenter(IGameplayView viewGameplay,
                             IGameRunModelController gameRunModelController,
                             IProgressModelController progressModelController,
-                            ISessionService sessionService)
+                            ISessionService sessionService,
+                            IGameCommands gameCommands)
     {
         _viewGameplay = viewGameplay;
         _gameRunModelController = gameRunModelController;
         _sessionService = sessionService;
+        _gameCommands = gameCommands;
 
         _gameRunModelController.IModel.ProgressRef.Skip(1).Subscribe(OnProgressChange_handler).AddTo(_disposable);
         _gameRunModelController.IModel.CollectedCoinsRef.Skip(1).Subscribe(OnChangeCoinsAmount_handler).AddTo(_disposable);
@@ -42,7 +45,7 @@ public class GameRunPresenter : IDisposable
         _viewGameplay.SetNewGameInfo(progressModelController.IModel.LvlRef.CurrentValue);
     }
 
-    public void ClickPause() => _gameRunModelController.OnClickPause_raise();
+    public void ClickPause() => _gameCommands.Send(EGameCommand.Pause);
 
     public void Dispose() => _disposable.Clear();
 

@@ -22,6 +22,7 @@ public class GamePaneLoose : GamePanel
     readonly StringVariable _coinsStringVar = new();
     readonly StringVariable _totalStringVar = new();
     
+    [Inject] IGameCommands _gameCommands;
     [Inject] IGameRunModelController _gameRunModelController;
     [Inject] IProgressModelController _progressModelController;
 
@@ -39,8 +40,8 @@ public class GamePaneLoose : GamePanel
         _txtCollectedCoins.StringReference.Arguments = new[] { _coinsStringVar };
         _txtTotal.StringReference.Arguments = new[] { _totalStringVar };
 
-        _buttonHome.Btn.onClick.AddListener(() => _gameRunModelController.OnClickGoHome_raise());
-        _buttonRestart.Btn.onClick.AddListener(() => _gameRunModelController.OnClickRestartRun_raise());
+        _buttonHome.Btn.onClick.AddListener(() => _gameCommands.Send(EGameCommand.GoHome));
+        _buttonRestart.Btn.onClick.AddListener(() => _gameCommands.Send(EGameCommand.Restart));
         
         _gameRunModelController.IModel.CollectedCoinsRef
                                .Subscribe(UpdateCollectedCoinsValue)
