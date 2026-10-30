@@ -2,7 +2,7 @@
 
 namespace Source.Boot
 {
-public class LoadingContext : ILoadingContext
+public class LoadingEntryPoint : ILoadingEntryPoint
 {
     public ISplashScreen SplashScreen { get; private set; }
 

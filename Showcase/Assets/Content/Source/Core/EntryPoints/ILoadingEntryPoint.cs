@@ -2,7 +2,7 @@
 
 namespace Source
 {
-public interface ILoadingContext
+public interface ILoadingEntryPoint
 {
     ISplashScreen SplashScreen { get; }
 

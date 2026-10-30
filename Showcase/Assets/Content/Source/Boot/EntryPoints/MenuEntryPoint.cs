@@ -4,33 +4,31 @@ using Cysharp.Threading.Tasks;
 
 namespace Source.Boot
 {
-public class MenuContext : IMenuContext
+public class MenuEntryPoint : IMenuEntryPoint
 {
 #region Fields
 
-    public IBankLoader BankLoader { get; private set; }
-    public IPlayerFacade PlayerFacade { get; private set; }
-    public IMenuUIFacade UIFacade { get; private set; }
+    public IPlayerFacade PlayerFacade { get; }
+    public IMenuUIFacade UIFacade { get; }
 
-#endregion
-
-#region Fields Registration
-
-    public void RegisterBankLoader(IBankLoader bankLoader) => BankLoader = bankLoader;
-
-    public void RegisterPlayerFacade(IPlayerFacade playerFacade) => PlayerFacade = playerFacade;
-
-    public void RegisterUIMenuFacade(IMenuUIFacade menuUIFacade) => UIFacade = menuUIFacade;
+    readonly IBankLoader _bankLoader;
 
 #endregion
 
 #region Public methods
 
+    public MenuEntryPoint(IBankLoader bankLoader, IPlayerFacade playerFacade, IMenuUIFacade uiFacade)
+    {
+        _bankLoader = bankLoader;
+        PlayerFacade = playerFacade;
+        UIFacade = uiFacade;
+    }
+
     public async UniTask Init(IProgressTrackingService progressTrackingService, SceneLoadProgress sceneLoadProgress)
     {
         progressTrackingService.UpdateLoadingTip("Setup Menu Scene");
 
-        await BankLoader.Init();
+        await _bankLoader.Init();
         await UIFacade.Init(UpdateProgress);
 
         PlayerFacade.Init();
@@ -42,20 +40,12 @@ public class MenuContext : IMenuContext
             progressTrackingService.UpdateProgress();
         }
     }
+
     public async UniTask DeInit()
     {
-        BankLoader.Deinit();
+        _bankLoader.Deinit();
         PlayerFacade.Deinit();
         await UIFacade.Deinit();
-        
-        Clear();
-    }
-    
-    void Clear()
-    {
-        BankLoader = null;
-        PlayerFacade = null;
-        UIFacade = null;
     }
 
 #endregion
