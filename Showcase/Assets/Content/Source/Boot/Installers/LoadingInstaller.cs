@@ -10,9 +10,9 @@ public class LoadingInstaller : MonoInstaller
 
     public override void InstallBindings()
     {
-        var loadingContext = Container.Resolve<ILoadingContext>();
+        var loadingEntryPoint = Container.Resolve<ILoadingEntryPoint>();
         
-        loadingContext.RegisterSplashScreen(_splashScreen);
+        loadingEntryPoint.RegisterSplashScreen(_splashScreen);
     }
 }
 }

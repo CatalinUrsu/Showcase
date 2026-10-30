@@ -31,7 +31,7 @@ public class ProjectInstaller : MonoInstaller
         BindSessionModelsControllers();
         BindSoData();
         BindServices();
-        BindSceneContexts();
+        BindEntryPoints();
         BindFactories();
     }
 
@@ -72,11 +72,12 @@ public class ProjectInstaller : MonoInstaller
         Container.Bind<ISceneLifecycleService>().To<SceneLifecycleService>().AsSingle();
     }
 
-    void BindSceneContexts()
+    void BindEntryPoints()
     {
-        Container.Bind<IMenuContext>().FromInstance(new MenuContext()).AsSingle();
-        Container.Bind<ILoadingContext>().FromInstance(new LoadingContext()).AsSingle();
-        Container.Bind<IGameplayContext>().FromInstance(new GameplayContext()).AsSingle();
+        Container.Bind<EntryPointRegistry>().AsSingle();
+
+        // Loading scene lives whole game, so its entry point is global
+        Container.Bind<ILoadingEntryPoint>().FromInstance(new LoadingEntryPoint()).AsSingle();
     }
 
     void BindFactories()

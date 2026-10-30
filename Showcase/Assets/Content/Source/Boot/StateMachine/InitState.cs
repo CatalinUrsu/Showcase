@@ -12,7 +12,7 @@ public class InitState : IStateEnter
     public StatesMachine StatesMachine { get; set; }
 
     readonly ISceneLoaderService _sceneLoaderService;
-    readonly ILoadingContext _loadingContext;
+    readonly ILoadingEntryPoint _loadingEntryPoint;
     readonly IAudioService _audioService;
     readonly ISettingsModel _settingsModel;
 
@@ -21,12 +21,12 @@ public class InitState : IStateEnter
 #region Public methods
 
     public InitState(ISceneLoaderService sceneLoaderService,
-                     ILoadingContext loadingContext,
+                     ILoadingEntryPoint loadingEntryPoint,
                      IAudioService audioService,
                      ISettingsModelController settingsModelController)
     {
         _sceneLoaderService = sceneLoaderService;
-        _loadingContext = loadingContext;
+        _loadingEntryPoint = loadingEntryPoint;
         _audioService = audioService;
         _settingsModel = settingsModelController.IModel;
     }
@@ -58,7 +58,7 @@ public class InitState : IStateEnter
                                      .Build();
 
         await _sceneLoaderService.LoadScene(splashScreenLoadParams, new SceneLoadResult());
-        await _loadingContext.SplashScreen.Show(true);
+        await _loadingEntryPoint.SplashScreen.Show(true);
     }
 
     async UniTask UnloadInitScene()
