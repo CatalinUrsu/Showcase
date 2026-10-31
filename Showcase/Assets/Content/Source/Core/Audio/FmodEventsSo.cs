@@ -1,7 +1,7 @@
 using FMODUnity;
 using UnityEngine;
 
-namespace Source.Data
+namespace Source
 {
 [CreateAssetMenu(fileName = "FmodEvents", menuName = "SO/Fmod Events", order = 0)]
 public class FmodEventsSo : ScriptableObject

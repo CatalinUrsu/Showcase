@@ -61,8 +61,7 @@ public class ShopFeedback : IInitializable, IDisposable
         _fmodEvents.ResetProgress.PlayOneShot();
         SaveProgress();
     }
-
-    // shortcut: saves on every action, replaced by SaveService dirty flag in W5
+    
     void SaveProgress()
     {
         _sessionService.Save(ESaveFileType.Items);
