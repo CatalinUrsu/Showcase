@@ -1,6 +1,7 @@
 using R3;
 using System;
 using Zenject;
+using IdleNumbers;
 using Source.Data;
 
 namespace Source.UI
