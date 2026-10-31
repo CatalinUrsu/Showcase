@@ -1,5 +1,4 @@
 ﻿using R3;
-using System;
 using Zenject;
 using Source.Data;
 using System.Linq;
@@ -7,11 +6,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using UnityEngine.Localization.Settings;
 
 namespace Source.UI
 {
-public class TabPanelSettings : TabsPanelMenu
+public class TabPanelSettings : TabsPanelMenu, ISettingsView
 {
 #region Fields
 
@@ -27,136 +25,56 @@ public class TabPanelSettings : TabsPanelMenu
     [Space]
     [SerializeField] Transform[] _settingParts;
 
-    TimeSpan _delayTimeSpan = TimeSpan.FromSeconds(2);
-    CancellationTokenSource _saveTimerCTS;
-    SettingsModel _settings;
-    IAudioService _audioService;
-    ISessionService _sessionService;
+    SettingsPresenter.Factory _presenterFactory;
+    SettingsPresenter _presenter;
+    
+    public Observable<float> SoundVolumeChanged => _sliderSound.onValueChanged.AsObservable();
+    public Observable<float> MusicVolumeChanged => _sliderMusic.onValueChanged.AsObservable();
+    public Observable<Unit> SoundClicked => _buttonSound.Btn.OnClickAsObservable();
+    public Observable<Unit> MusicClicked => _buttonMusic.Btn.OnClickAsObservable();
+    public Observable<Unit> LanguageClicked => _buttonLanguage.Btn.OnClickAsObservable();
 
 #endregion
 
 #region Public methods
 
     [Inject]
-    public void Construct(IAudioService audioService, ISessionService sessionService, SettingsModel settings)
-    {
-        _audioService = audioService;
-        _sessionService = sessionService;
-        _settings = settings;
-    }
+    public void Construct(SettingsPresenter.Factory presenterFactory) => _presenterFactory = presenterFactory;
 
     public override async UniTask Init(CancellationToken cancelToken, object config = null)
     {
         await base.Init(cancelToken, config);
 
-        _saveTimerCTS = new CancellationTokenSource();
-        InitElements();
-        InitPanelAnimation();
-        SubscribeSettingsEvents();
+        _sliderSound.maxValue = 1;
+        _sliderMusic.maxValue = 1;
+        _buttonSound.Init();
+        _buttonMusic.Init();
+        _buttonLanguage.Init();
 
+        _itemsAnims = _settingParts.Select(part => part.GetComponent<MenuItemAnimation>()).ToList();
+        SetShowSequence();
+
+        _presenter = _presenterFactory.Create(this);
         await SetLayoutComponents(cancelToken);
+    }
+    
+    public void ShowSound(bool isEnabled, float volume)
+    {
+        _sliderSound.SetValueWithoutNotify(volume);
+        _buttonSound.OnToggleChange_handler(isEnabled);
+    }
+
+    public void ShowMusic(bool isEnabled, float volume)
+    {
+        _sliderMusic.SetValueWithoutNotify(volume);
+        _buttonMusic.OnToggleChange_handler(isEnabled);
     }
 
 #endregion
 
 #region Private methods
 
-    void OnDestroy()
-    {
-        _saveTimerCTS.Cancel();
-        _sessionService.Save(ESaveFileType.Settings);
-    }
-
-    void InitElements()
-    {
-        // Set Sliders
-        _sliderSound.maxValue = 1;
-        _sliderMusic.maxValue = 1;
-        _sliderSound.onValueChanged.AddListener(value => _settings.SetSoundVolume(value));
-        _sliderMusic.onValueChanged.AddListener(value => _settings.SetMusicVolume(value));
-
-        // Set buttons
-        _buttonSound.Init();
-        _buttonMusic.Init();
-        _buttonLanguage.Init();
-        _buttonSound.Btn.onClick.AddListener(() => _settings.SetSoundEnabled(!_settings.Sound.CurrentValue));
-        _buttonMusic.Btn.onClick.AddListener(() => _settings.SetMusicEnabled(!_settings.Music.CurrentValue));
-        _buttonLanguage.Btn.onClick.AddListener(OnClickLanguage_handler);
-        return;
-
-        void OnClickLanguage_handler()
-        {
-            var newLocaleIdx = (_settings.LocaleIdx.CurrentValue + 1) % LocalizationSettings.AvailableLocales.Locales.Count;
-
-            _settings.SetLocaleIdx(newLocaleIdx);
-            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[newLocaleIdx];
-        }
-    }
-
-    void InitPanelAnimation()
-    {
-        _itemsAnims = _settingParts.Select(part => part.GetComponent<MenuItemAnimation>()).ToList();
-        SetShowSequence();
-    }
-
-    void SubscribeSettingsEvents()
-    {
-        _settings.Sound.Subscribe(OnChangeSoundToggle_handler).AddTo(this);
-        _settings.SoundVolume.Subscribe(OnChangeSoundVolume_handler).AddTo(this);
-        _settings.Music.Subscribe(OnChangeMusicToggle_handler).AddTo(this);
-        _settings.MusicVolume.Subscribe(OnChangeMusicVolume_handler).AddTo(this);
-        return;
-
-        void OnChangeSoundToggle_handler(bool enable)
-        {
-            _sliderSound.value = enable ?
-                _sliderSound.value == 0 ?
-                    .5f :
-                    _sliderSound.value :
-                0;
-            _buttonSound.OnToggleChange_handler(enable);
-
-            SetSaveTimer().Forget();
-        }
-
-        void OnChangeSoundVolume_handler(float value)
-        {
-            _sliderSound.value = value;
-            _settings.SetSoundEnabled(_sliderSound.value > 0);
-
-            _audioService.SetSoundVolume(_sliderSound.value);
-            SetSaveTimer().Forget();
-        }
-
-        void OnChangeMusicToggle_handler(bool enable)
-        {
-            _sliderMusic.value = enable ?
-                _sliderMusic.value == 0 ?
-                    .5f :
-                    _sliderMusic.value :
-                0;
-            _buttonMusic.OnToggleChange_handler(enable);
-
-            SetSaveTimer().Forget();
-        }
-
-        void OnChangeMusicVolume_handler(float value)
-        {
-            _sliderMusic.value = value;
-            _settings.SetMusicEnabled(_sliderMusic.value > 0);
-
-            _audioService.SetMusicVolume(_sliderMusic.value);
-            SetSaveTimer().Forget();
-        }
-
-        async UniTaskVoid SetSaveTimer()
-        {
-            _saveTimerCTS.Cancel();
-            _saveTimerCTS = new CancellationTokenSource();
-            await UniTask.Delay(_delayTimeSpan, cancellationToken: _saveTimerCTS.Token);
-            _sessionService.Save(ESaveFileType.Settings);
-        }
-    }
+    void OnDestroy() => _presenter?.Dispose();
 
 #endregion
 }

@@ -69,6 +69,7 @@ public class ProjectInstaller : MonoInstaller
         Container.Bind<ISceneLoaderService>().FromInstance(sceneLoaderService).AsSingle();
         Container.Bind<ISceneLifecycleService>().To<SceneLifecycleService>().AsSingle();
         Container.Bind<IPauseService>().To<PauseService>().AsSingle();
+        Container.Bind<ILocaleService>().To<LocaleService>().AsSingle();
         Container.BindInterfacesTo<GameCommands>().AsSingle();
         Container.Bind<IInputManager>().FromComponentInNewPrefab(_inputManagerPrefab).AsSingle().NonLazy();
     }
@@ -87,6 +88,7 @@ public class ProjectInstaller : MonoInstaller
         Container.BindFactory<IWeaponView, Guid, WeaponPresenter, WeaponPresenter.Factory>().AsTransient();
         Container.BindFactory<IResetProgressView, ResetProgressPresenter, ResetProgressPresenter.Factory>().AsTransient();
         Container.BindFactory<IGameplayView, GameRunPresenter, GameRunPresenter.Factory>().AsTransient();
+        Container.BindFactory<ISettingsView, SettingsPresenter, SettingsPresenter.Factory>().AsTransient();
     }
 
 #endregion
