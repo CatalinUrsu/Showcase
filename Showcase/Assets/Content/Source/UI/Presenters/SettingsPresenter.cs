@@ -1,7 +1,7 @@
 using R3;
-using Source.Data;
 using System;
 using Zenject;
+using Source.Data;
 
 namespace Source.UI
 {

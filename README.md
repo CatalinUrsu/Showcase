@@ -77,6 +77,7 @@ Boot/
   StateMachine/      (InitState, MenuState, Game/ - GameLoad, GameStart, GamePlaying, GamePause, GameLoose, GameUnload)
 
 Core/
+  Audio/             (FmodEventsSo)
   Common/            (constants, DDOL)
   Data/              (presenter interfaces)
   Enums/
@@ -84,10 +85,10 @@ Core/
   UI/                (view interfaces)
 
 Data/
-  Models/            (XxxSaveData for save files + XxxModel for runtime)
-  Presenters/
+  Models/            (XxxModel for runtime)
+  SaveData/          (XxxSaveData for save files)
   SO/
-  Services/          (rules over several models, e.g. GameRunService)
+  Services/          (rules over several models: GameRunService, ShopService, ProgressionService; no FMOD)
 
 Services/
   Audio/
@@ -95,6 +96,7 @@ Services/
   Session/
 
 UI/
+  Presenters/        (thin presenters: view <-> models, actions go to Data services)
   MainMenu/
   Gameplay/
   Facades/
@@ -120,7 +122,7 @@ Use this pattern when introducing a new global service or persistent domain cont
 
 - Binds models as concrete singletons and services by interface.
 - Creates session models via `SaveSystem.LoadOrCreate(...)`.
-- Registers presenter factories (`ShipPresenter`, `WeaponPresenter`, `ResetProgressPresenter`, `GameRunPresenter`).
+- Registers presenter factories (`ShipPresenter`, `WeaponPresenter`, `ResetProgressPresenter`, `GameRunPresenter`, `SettingsPresenter`).
 
 ```csharp
 // Service binding: use this for audio, scene loading, camera service, etc..

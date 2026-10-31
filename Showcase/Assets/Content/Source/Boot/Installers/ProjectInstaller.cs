@@ -1,6 +1,7 @@
 using System;
 using Helpers;
 using Zenject;
+using Source.UI;
 using UnityEngine;
 using System.Linq;
 using Source.Data;
@@ -46,6 +47,9 @@ public class ProjectInstaller : MonoInstaller
         Container.Bind<GameRunModel>().AsSingle();
 
         Container.BindInterfacesTo<GameRunService>().AsSingle().NonLazy();
+        Container.BindInterfacesTo<ShopService>().AsSingle();
+        Container.BindInterfacesTo<ProgressionService>().AsSingle();
+        Container.BindInterfacesTo<ShopFeedback>().AsSingle().NonLazy();
         Container.Bind<ISessionService>().To<SessionService>().AsSingle();
     }
 
