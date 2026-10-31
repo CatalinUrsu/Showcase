@@ -78,16 +78,16 @@ Boot/
 
 Core/
   Common/            (constants, DDOL)
-  Data/              (interfaces)
+  Data/              (presenter interfaces)
   Enums/
   EntryPoints/       (entry point interfaces)
   UI/                (view interfaces)
 
 Data/
-  Controllers/
-  Models/
+  Models/            (XxxSaveData for save files + XxxModel for runtime)
   Presenters/
   SO/
+  Services/          (rules over several models, e.g. GameRunService)
 
 Services/
   Audio/
@@ -118,7 +118,7 @@ UI/
 Global bindings are defined in `Showcase/Assets/Content/Source/Boot/Installers/ProjectInstaller.cs`.
 Use this pattern when introducing a new global service or persistent domain controller that must be shared across states/scenes.
 
-- Binds model controllers and services as singletons by interface.
+- Binds models as concrete singletons and services by interface.
 - Creates session models via `SaveSystem.LoadOrCreate(...)`.
 - Registers presenter factories (`ShipPresenter`, `WeaponPresenter`, `ResetProgressPresenter`, `GameRunPresenter`).
 
@@ -126,11 +126,10 @@ Use this pattern when introducing a new global service or persistent domain cont
 // Service binding: use this for audio, scene loading, camera service, etc..
 Container.Bind<IAudioService>().To<AudioService>().AsSingle();
 
-// Model-controller binding: create controller after load/create save model,
-// then bind by interface so presenters/states depend on abstraction only.
-var progressModel = SaveSystem.LoadOrCreate<ProgressModel>(ConstSavesPaths.PROGRESS_PATH);
-var progressModelController = new ProgressModelController(progressModel);
-Container.Bind<IProgressModelController>().FromInstance(progressModelController).AsSingle();
+// Model binding: save file is loaded as plain SaveData, runtime model is built from it.
+// Model fields are private, outside code reads ReadOnlyReactiveProperty and calls rule methods (TrySpendCoins, Ascend...).
+var progress = new ProgressModel(SaveSystem.LoadOrCreate<ProgressSaveData>(ConstSavesPaths.PROGRESS_PATH));
+Container.BindInstance(progress).AsSingle();
 ```
 
 ### <b><u>2) Scene lifecycle via states</b></u>
@@ -160,11 +159,11 @@ R3 is used for observable state and UI updates.
 // Presenter subscribes to model changes once and stores subscriptions.
 readonly CompositeDisposable _disposable = new();
 
-_gameRunModelController.IModel.ProgressRef
+_gameRun.Progress
     .Subscribe(progress => _viewGameplay.SetProgressSlider(progress))
     .AddTo(_disposable);
 
-_gameRunModelController.IModel.CollectedCoinsRef
+_gameRun.CollectedCoins
     .Subscribe(coins => _viewGameplay.SetCollectedCoins(coins))
     .AddTo(_disposable);
 
