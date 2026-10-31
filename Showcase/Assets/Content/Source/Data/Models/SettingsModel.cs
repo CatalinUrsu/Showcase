@@ -19,6 +19,8 @@ public class SettingsModel
     readonly ReactiveProperty<float> _musicVolume;
     readonly ReactiveProperty<int> _localeIdx;
 
+    const float VOLUME_ON_ENABLE = .5f;
+
 #endregion
 
 #region Public methods
@@ -32,15 +34,24 @@ public class SettingsModel
         _localeIdx = new ReactiveProperty<int>(data.LocaleIdx);
     }
 
-    public void SetSoundEnabled(bool value) => _sound.Value = value;
+    // Volume is the source of truth, enabled flag is derived from it
+    public void SetSoundVolume(float value)
+    {
+        _soundVolume.Value = Mathf.Clamp01(value);
+        _sound.Value = _soundVolume.Value > 0;
+    }
 
-    public void SetMusicEnabled(bool value) => _music.Value = value;
+    public void SetMusicVolume(float value)
+    {
+        _musicVolume.Value = Mathf.Clamp01(value);
+        _music.Value = _musicVolume.Value > 0;
+    }
 
-    public void SetSoundVolume(float value) => _soundVolume.Value = Mathf.Clamp01(value);
+    public void ToggleSound() => SetSoundVolume(_sound.Value ? 0 : VOLUME_ON_ENABLE);
 
-    public void SetMusicVolume(float value) => _musicVolume.Value = Mathf.Clamp01(value);
+    public void ToggleMusic() => SetMusicVolume(_music.Value ? 0 : VOLUME_ON_ENABLE);
 
-    public void SetLocaleIdx(int value) => _localeIdx.Value = Mathf.Max(0, value);
+    public void SetNextLocale(int localesCount) => _localeIdx.Value = (_localeIdx.Value + 1) % localesCount;
 
     public SettingsSaveData ToSaveData()
     {
