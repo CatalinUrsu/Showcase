@@ -2,6 +2,7 @@ using Helpers;
 using System.Threading;
 using Helpers.Services;
 using Cysharp.Threading.Tasks;
+using Source.Data;
 
 namespace Source.Boot
 {
@@ -12,20 +13,20 @@ public class GameStartState : IStateEnter
 {
     public StatesMachine StatesMachine { get; set; }
 
+    readonly EntryPointRegistry _entryPointRegistry;
+    readonly GameRunModel _gameRun;
     readonly IInputManager _inputManager;
     readonly ICinemachineService _cinemachineService;
-    readonly IGameRunModelController _gameRunModelController;
-    readonly EntryPointRegistry _entryPointRegistry;
 
-    public GameStartState(ICinemachineService cinemachineService,
-                          IGameRunModelController gameRunModelController,
-                          EntryPointRegistry entryPointRegistry,
-                          IInputManager inputManager)
+    public GameStartState(EntryPointRegistry entryPointRegistry,
+                          GameRunModel gameRun,
+                          IInputManager inputManager,
+                          ICinemachineService cinemachineService)
     {
+        _entryPointRegistry = entryPointRegistry;
+        _gameRun = gameRun;
         _inputManager = inputManager;
         _cinemachineService = cinemachineService;
-        _gameRunModelController = gameRunModelController;
-        _entryPointRegistry = entryPointRegistry;
     }
 
     public async UniTask Enter(CancellationToken cancellationToken)
@@ -34,7 +35,7 @@ public class GameStartState : IStateEnter
 
         using (_inputManager.LockInputSystem())
         {
-            _gameRunModelController.StartRun();
+            _gameRun.StartRun();
 
             await UniTask.WhenAll(gameplay.UIFacade.SelectPanel(EGamePanels.Game),
                                   gameplay.PlayerFacade.ShowPlayer());

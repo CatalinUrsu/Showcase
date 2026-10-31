@@ -38,17 +38,17 @@ public class PlayerWeapons : MonoBehaviour
 #region Publie methods
     
     [Inject]
-    public void Construct(IProgressModelController progressModelController,
-                          IItemsModelController itemsModelController,
-                          IGameRunModelController runModelController,
+    public void Construct(ProgressModel progress,
+                          ItemsModel items,
+                          GameRunModel gameRun,
                           FmodEventsSo fmodEventsSo,
                           GameBalanceSO balance)
     {
         _bulletsSpawnCount = balance.BulletsSpawnCount;
-        var usedWeaponIdx = progressModelController.IModel.UsedWeaponIdxRef.CurrentValue;
-        var usedWeapon = itemsModelController.GetWeaponModel(usedWeaponIdx);
-        _firePower = usedWeapon.FirePowerRef.CurrentValue;
-        _fireRate = usedWeapon.FireRateRef.CurrentValue;
+        var usedWeaponIdx = progress.UsedWeaponIdx.CurrentValue;
+        var usedWeapon = items.GetWeapon(usedWeaponIdx);
+        _firePower = usedWeapon.FirePower.CurrentValue;
+        _fireRate = usedWeapon.FireRate.CurrentValue;
         _shootSfxRef = fmodEventsSo.Shoot;
     }
 

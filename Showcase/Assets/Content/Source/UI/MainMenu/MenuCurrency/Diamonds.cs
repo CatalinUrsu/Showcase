@@ -15,8 +15,8 @@ public class Diamonds : Currency
 
     void Awake()
     {
-        _currentDiamondsCount = _progressModel.DiamondsRef.CurrentValue;
-        _progressModel.DiamondsRef.Subscribe(UpdateDiamonsCount).AddTo(gameObject);
+        _currentDiamondsCount = _progressModel.Diamonds.CurrentValue;
+        _progressModel.Diamonds.Subscribe(UpdateDiamonsCount).AddTo(gameObject);
     }
 
     void OnDestroy() => _sequence.CheckAndEnd();

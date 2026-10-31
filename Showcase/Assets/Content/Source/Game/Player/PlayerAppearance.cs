@@ -15,12 +15,12 @@ public class PlayerAppearance : MonoBehaviour
     [SerializeField] SpriteRenderer _imgWeaponL;
     [SerializeField] SpriteRenderer _imgWeaponR;
 
-    [Inject] IProgressModelController _progressModelController;
+    [Inject] ProgressModel _progress;
 
     public void Init()
     {
-        _progressModelController.IModel.UsedShipIdxRef.Subscribe(SetShipSprite).AddTo(gameObject);
-        _progressModelController.IModel.UsedWeaponIdxRef.Subscribe(SetWeaponSprite).AddTo(gameObject);
+        _progress.UsedShipIdx.Subscribe(SetShipSprite).AddTo(gameObject);
+        _progress.UsedWeaponIdx.Subscribe(SetWeaponSprite).AddTo(gameObject);
     }
 
     public void ToggleAppearance(bool enable)

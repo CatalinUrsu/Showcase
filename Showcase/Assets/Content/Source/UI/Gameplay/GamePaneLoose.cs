@@ -2,6 +2,7 @@
 using Zenject;
 using UnityEngine;
 using IdleNumbers;
+using Source.Data;
 using UnityEngine.Localization.Components;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
 
@@ -23,8 +24,8 @@ public class GamePaneLoose : GamePanel
     readonly StringVariable _totalStringVar = new();
     
     [Inject] IGameCommands _gameCommands;
-    [Inject] IGameRunModelController _gameRunModelController;
-    [Inject] IProgressModelController _progressModelController;
+    [Inject] GameRunModel _gameRun;
+    [Inject] ProgressModel _progress;
 
 #endregion
 
@@ -43,11 +44,11 @@ public class GamePaneLoose : GamePanel
         _buttonHome.Btn.onClick.AddListener(() => _gameCommands.Send(EGameCommand.GoHome));
         _buttonRestart.Btn.onClick.AddListener(() => _gameCommands.Send(EGameCommand.Restart));
         
-        _gameRunModelController.IModel.CollectedCoinsRef
+        _gameRun.CollectedCoins
                                .Subscribe(UpdateCollectedCoinsValue)
                                .AddTo(this);
         
-        _progressModelController.IModel.CoinsRef
+        _progress.Coins
                                .Subscribe(UpdateTotalCoinsValue)
                                .AddTo(this);
     }

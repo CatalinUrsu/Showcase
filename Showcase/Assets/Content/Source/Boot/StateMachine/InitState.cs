@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Source.Data;
+using UnityEngine;
 using Helpers.Services;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -14,7 +15,7 @@ public class InitState : IStateEnter
     readonly ISceneLoaderService _sceneLoaderService;
     readonly ILoadingEntryPoint _loadingEntryPoint;
     readonly IAudioService _audioService;
-    readonly ISettingsModel _settingsModel;
+    readonly SettingsModel _settingsModel;
 
 #endregion
 
@@ -23,12 +24,12 @@ public class InitState : IStateEnter
     public InitState(ISceneLoaderService sceneLoaderService,
                      ILoadingEntryPoint loadingEntryPoint,
                      IAudioService audioService,
-                     ISettingsModelController settingsModelController)
+                     SettingsModel settings)
     {
         _sceneLoaderService = sceneLoaderService;
         _loadingEntryPoint = loadingEntryPoint;
         _audioService = audioService;
-        _settingsModel = settingsModelController.IModel;
+        _settingsModel = settings;
     }
 
     public async UniTask Enter(CancellationToken cancellationToken)
@@ -47,8 +48,8 @@ public class InitState : IStateEnter
     void InitAudioService()
     {
         _audioService.Init();
-        _audioService.SetSoundVolume(_settingsModel.SoundVolumeRef.CurrentValue);
-        _audioService.SetMusicVolume(_settingsModel.MusicVolumeRef.CurrentValue);
+        _audioService.SetSoundVolume(_settingsModel.SoundVolume.CurrentValue);
+        _audioService.SetMusicVolume(_settingsModel.MusicVolume.CurrentValue);
     }
 
     async UniTask LoadAndShowSplashScreen()

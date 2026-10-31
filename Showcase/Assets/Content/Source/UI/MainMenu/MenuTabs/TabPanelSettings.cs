@@ -1,6 +1,7 @@
 ﻿using R3;
 using System;
 using Zenject;
+using Source.Data;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,8 +29,7 @@ public class TabPanelSettings : TabsPanelMenu
 
     TimeSpan _delayTimeSpan = TimeSpan.FromSeconds(2);
     CancellationTokenSource _saveTimerCTS;
-    ISettingsModelController _settingsModelController;
-    ISettingsModel _settingsModel;
+    SettingsModel _settings;
     IAudioService _audioService;
     ISessionService _sessionService;
 
@@ -38,12 +38,11 @@ public class TabPanelSettings : TabsPanelMenu
 #region Public methods
 
     [Inject]
-    public void Construct(IAudioService audioService, ISessionService sessionService, ISettingsModelController settingsModelController)
+    public void Construct(IAudioService audioService, ISessionService sessionService, SettingsModel settings)
     {
         _audioService = audioService;
         _sessionService = sessionService;
-        _settingsModelController = settingsModelController;
-        _settingsModel = settingsModelController.IModel;
+        _settings = settings;
     }
 
     public override async UniTask Init(CancellationToken cancelToken, object config = null)
@@ -73,23 +72,23 @@ public class TabPanelSettings : TabsPanelMenu
         // Set Sliders
         _sliderSound.maxValue = 1;
         _sliderMusic.maxValue = 1;
-        _sliderSound.onValueChanged.AddListener(value => _settingsModelController.SetSoundVolume(value));
-        _sliderMusic.onValueChanged.AddListener(value => _settingsModelController.SetMusicVolume(value));
+        _sliderSound.onValueChanged.AddListener(value => _settings.SetSoundVolume(value));
+        _sliderMusic.onValueChanged.AddListener(value => _settings.SetMusicVolume(value));
 
         // Set buttons
         _buttonSound.Init();
         _buttonMusic.Init();
         _buttonLanguage.Init();
-        _buttonSound.Btn.onClick.AddListener(() => _settingsModelController.SetSoundEnabled(!_settingsModel.SoundRef.CurrentValue));
-        _buttonMusic.Btn.onClick.AddListener(() => _settingsModelController.SetMusicEnabled(!_settingsModel.MusicRef.CurrentValue));
+        _buttonSound.Btn.onClick.AddListener(() => _settings.SetSoundEnabled(!_settings.Sound.CurrentValue));
+        _buttonMusic.Btn.onClick.AddListener(() => _settings.SetMusicEnabled(!_settings.Music.CurrentValue));
         _buttonLanguage.Btn.onClick.AddListener(OnClickLanguage_handler);
         return;
 
         void OnClickLanguage_handler()
         {
-            var newLocaleIdx = (_settingsModel.LocaleIdxRef.CurrentValue + 1) % LocalizationSettings.AvailableLocales.Locales.Count;
+            var newLocaleIdx = (_settings.LocaleIdx.CurrentValue + 1) % LocalizationSettings.AvailableLocales.Locales.Count;
 
-            _settingsModelController.SetLocaleIdx(newLocaleIdx);
+            _settings.SetLocaleIdx(newLocaleIdx);
             LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[newLocaleIdx];
         }
     }
@@ -102,10 +101,10 @@ public class TabPanelSettings : TabsPanelMenu
 
     void SubscribeSettingsEvents()
     {
-        _settingsModel.SoundRef.Subscribe(OnChangeSoundToggle_handler).AddTo(this);
-        _settingsModel.SoundVolumeRef.Subscribe(OnChangeSoundVolume_handler).AddTo(this);
-        _settingsModel.MusicRef.Subscribe(OnChangeMusicToggle_handler).AddTo(this);
-        _settingsModel.MusicVolumeRef.Subscribe(OnChangeMusicVolume_handler).AddTo(this);
+        _settings.Sound.Subscribe(OnChangeSoundToggle_handler).AddTo(this);
+        _settings.SoundVolume.Subscribe(OnChangeSoundVolume_handler).AddTo(this);
+        _settings.Music.Subscribe(OnChangeMusicToggle_handler).AddTo(this);
+        _settings.MusicVolume.Subscribe(OnChangeMusicVolume_handler).AddTo(this);
         return;
 
         void OnChangeSoundToggle_handler(bool enable)
@@ -123,7 +122,7 @@ public class TabPanelSettings : TabsPanelMenu
         void OnChangeSoundVolume_handler(float value)
         {
             _sliderSound.value = value;
-            _settingsModelController.SetSoundEnabled(_sliderSound.value > 0);
+            _settings.SetSoundEnabled(_sliderSound.value > 0);
 
             _audioService.SetSoundVolume(_sliderSound.value);
             SetSaveTimer().Forget();
@@ -144,7 +143,7 @@ public class TabPanelSettings : TabsPanelMenu
         void OnChangeMusicVolume_handler(float value)
         {
             _sliderMusic.value = value;
-            _settingsModelController.SetMusicEnabled(_sliderMusic.value > 0);
+            _settings.SetMusicEnabled(_sliderMusic.value > 0);
 
             _audioService.SetMusicVolume(_sliderMusic.value);
             SetSaveTimer().Forget();

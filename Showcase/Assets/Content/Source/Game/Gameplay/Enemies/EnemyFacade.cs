@@ -26,8 +26,8 @@ public class EnemyFacade : PooledObject
     
     EnemySO _enemyDataSO;
     EnemiesInitConfig _initConfig;
-    IGameRunModelController _runModelController;
-    IProgressModel _progressModel;
+    GameRunService _gameRunService;
+    ProgressModel _progressModel;
     GameBalanceSO _balance;
 
 #endregion
@@ -47,11 +47,11 @@ public class EnemyFacade : PooledObject
 #region Public methods
     
     [Inject]
-    public void Construct(IGameRunModelController runModelController, IProgressModelController progressModelController, GameBalanceSO balance)
+    public void Construct(GameRunService gameRunService, ProgressModel progress, GameBalanceSO balance)
     {
         _balance = balance;
-        _runModelController = runModelController;
-        _progressModel = progressModelController.IModel;
+        _gameRunService = gameRunService;
+        _progressModel = progress;
     }
 
     public override PooledObject Init(Action<PooledObject> onReleaseToPool, object config = null)
@@ -73,7 +73,7 @@ public class EnemyFacade : PooledObject
         _enemyDataSO = enemySo;
         _enemyAppearence.Set(_spriteRenderer, _enemyDataSO.EnemyAppearance);
         _enemyMovement.Set(enemySo.SpeedRadius);
-        _enemyHealth.Set(enemySo.HP, _progressModel.LvlRef.CurrentValue, _balance.EnemyHpMultiplier);
+        _enemyHealth.Set(enemySo.HP, _progressModel.Lvl.CurrentValue, _balance.EnemyHpMultiplier);
     }
 
 #endregion
@@ -97,7 +97,7 @@ public class EnemyFacade : PooledObject
     void KillByBullet()
     {
         DestroyEnemy();
-        _runModelController.AddCoinsReward(_enemyDataSO.RewardPoints, _enemyDataSO.Coin);
+        _gameRunService.AddCoinsReward(_enemyDataSO.RewardPoints, _enemyDataSO.Coin);
     }
 
     void DestroyEnemy()

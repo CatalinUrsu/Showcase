@@ -1,8 +1,9 @@
 using R3; 
 using Zenject;
+using Source.Data;
 using UnityEngine;
-using Cysharp.Threading.Tasks;
 using Source.Game.Gameplay;
+using Cysharp.Threading.Tasks;
 
 namespace Source.Game.Player
 {
@@ -17,7 +18,7 @@ public class PlayerFacadeGameplay : PlayerFacade
     [SerializeField] PlayerWeapons _playerWeapons;
     [SerializeField] PlayerParallaxEffect _playerParallaxEffect;
     
-    IGameRunModelController  _runModelController;
+    GameRunModel  _gameRun;
 
 #endregion
     
@@ -34,14 +35,14 @@ public class PlayerFacadeGameplay : PlayerFacade
     }
 
     [Inject]
-    public void Construct(IGameRunModelController runModelController) => _runModelController = runModelController;
+    public void Construct(GameRunModel gameRun) => _gameRun = gameRun;
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.TryGetComponent(out EnemyHitTrigger enemyCollider)) return;
         
         DestroyPlayer();
-        _runModelController.KillPlayer();
+        _gameRun.KillPlayer();
         enemyCollider.OnHitPlayer_raise();
     }
 
@@ -52,7 +53,7 @@ public class PlayerFacadeGameplay : PlayerFacade
     public override void Init()
     {
         base.Init();
-        _runModelController.IModel.IsPlayingNewLvlAnimRef.Subscribe(PlayNewLvlEffect).AddTo(this);
+        _gameRun.IsPlayingNewLvlAnim.Subscribe(PlayNewLvlEffect).AddTo(this);
 
         _playerEffects.Init();
         _playerMovement.Init(_rb);
