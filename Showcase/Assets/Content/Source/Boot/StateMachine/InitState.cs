@@ -16,6 +16,7 @@ public class InitState : IStateEnter
     readonly ILoadingEntryPoint _loadingEntryPoint;
     readonly IAudioService _audioService;
     readonly SettingsModel _settingsModel;
+    readonly ILocaleService _localeService;
 
 #endregion
 
@@ -24,17 +25,20 @@ public class InitState : IStateEnter
     public InitState(ISceneLoaderService sceneLoaderService,
                      ILoadingEntryPoint loadingEntryPoint,
                      IAudioService audioService,
-                     SettingsModel settings)
+                     SettingsModel settings,
+                     ILocaleService localeService)
     {
         _sceneLoaderService = sceneLoaderService;
         _loadingEntryPoint = loadingEntryPoint;
         _audioService = audioService;
         _settingsModel = settings;
+        _localeService = localeService;
     }
 
     public async UniTask Enter(CancellationToken cancellationToken)
     {
         InitAudioService();
+        await ApplySavedLocale();
         await LoadAndShowSplashScreen();
         StatesMachine.Enter<MenuState>();
     }
@@ -50,6 +54,12 @@ public class InitState : IStateEnter
         _audioService.Init();
         _audioService.SetSoundVolume(_settingsModel.SoundVolume.CurrentValue);
         _audioService.SetMusicVolume(_settingsModel.MusicVolume.CurrentValue);
+    }
+
+    async UniTask ApplySavedLocale()
+    {
+        await _localeService.Init();
+        _localeService.SetLocale(_settingsModel.LocaleIdx.CurrentValue);
     }
 
     async UniTask LoadAndShowSplashScreen()
