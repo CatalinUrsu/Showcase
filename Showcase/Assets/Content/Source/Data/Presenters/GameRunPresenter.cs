@@ -18,7 +18,7 @@ public class GameRunPresenter : IDisposable
 
     bool _startNewSession;
     readonly CompositeDisposable _disposable = new();
-    readonly IGameRunModelController _gameRunModelController;
+    readonly GameRunModel _gameRun;
     readonly IGameplayView _viewGameplay;
     readonly ISessionService _sessionService;
     readonly IGameCommands _gameCommands;
@@ -29,23 +29,23 @@ public class GameRunPresenter : IDisposable
 #region Public methods
 
     public GameRunPresenter(IGameplayView viewGameplay,
-                            IGameRunModelController gameRunModelController,
-                            IProgressModelController progressModelController,
+                            GameRunModel gameRun,
+                            ProgressModel progress,
                             ISessionService sessionService,
                             IGameCommands gameCommands,
                             GameBalanceSO balance)
     {
         _viewGameplay = viewGameplay;
-        _gameRunModelController = gameRunModelController;
+        _gameRun = gameRun;
         _sessionService = sessionService;
         _gameCommands = gameCommands;
         _balance = balance;
 
-        _gameRunModelController.IModel.ProgressRef.Skip(1).Subscribe(OnProgressChange_handler).AddTo(_disposable);
-        _gameRunModelController.IModel.CollectedCoinsRef.Skip(1).Subscribe(OnChangeCoinsAmount_handler).AddTo(_disposable);
-        progressModelController.IModel.LvlRef.Skip(1).Subscribe(OnReachNewLvl_handler).AddTo(_disposable);
+        _gameRun.Progress.Skip(1).Subscribe(OnProgressChange_handler).AddTo(_disposable);
+        _gameRun.CollectedCoins.Skip(1).Subscribe(OnChangeCoinsAmount_handler).AddTo(_disposable);
+        progress.Lvl.Skip(1).Subscribe(OnReachNewLvl_handler).AddTo(_disposable);
 
-        _viewGameplay.SetNewGameInfo(progressModelController.IModel.LvlRef.CurrentValue);
+        _viewGameplay.SetNewGameInfo(progress.Lvl.CurrentValue);
     }
 
     public void ClickPause() => _gameCommands.Send(EGameCommand.Pause);
@@ -68,9 +68,9 @@ public class GameRunPresenter : IDisposable
 
         async UniTaskVoid PlayNewLvlAnim()
         {
-            _gameRunModelController.StartNewLvlAnim();
+            _gameRun.StartNewLvlAnim();
             await _viewGameplay.PlayNewLvlAnimation(lvl);
-            _gameRunModelController.FinishNewLvlAnim();
+            _gameRun.FinishNewLvlAnim();
         }
     }
 

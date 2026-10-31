@@ -1,29 +1,60 @@
 using R3;
-using System;
 using IdleNumbers;
-using System.Text.Json.Serialization;
+using UnityEngine;
 
 namespace Source.Data
 {
-[Serializable]
-public class WeaponModel : ItemModel, IWeaponModel
+public class WeaponModel : ItemModel
 {
-    [JsonIgnore] public ReadOnlyReactiveProperty<IdleNumber> FirePowerRef => FirePower;
-    [JsonIgnore] public ReadOnlyReactiveProperty<float> FireRateRef => FireRate;
+#region Fields
 
-    [JsonInclude] public ReactiveProperty<IdleNumber> FirePower { get; private set; }
-    [JsonInclude] public ReactiveProperty<float> FireRate { get; private set; }
+    public ReadOnlyReactiveProperty<IdleNumber> FirePower => _firePower;
+    public ReadOnlyReactiveProperty<float> FireRate => _fireRate;
 
-    public WeaponModel()
+    readonly ReactiveProperty<IdleNumber> _firePower;
+    readonly ReactiveProperty<float> _fireRate;
+
+#endregion
+
+#region Public methods
+
+    public WeaponModel(WeaponSaveData data) : base(data.IsBought, data.IsSelected, data.BuyPrice, data.UpgradePrice)
     {
-        FirePower = new ReactiveProperty<IdleNumber>(new IdleNumber());
-        FireRate = new ReactiveProperty<float>();
+        _firePower = new ReactiveProperty<IdleNumber>(data.FirePower);
+        _fireRate = new ReactiveProperty<float>(data.FireRate);
     }
 
-    public WeaponModel(WeaponInitData initData) : base(initData)
+    public WeaponModel(WeaponInitData initData) : base(initData.IsBought, initData.IsSelected, initData.BuyPrice, initData.UpgradePrice)
     {
-        FirePower = new ReactiveProperty<IdleNumber>(initData.FirePower);
-        FireRate = new ReactiveProperty<float>(initData.FireRate);
+        _firePower = new ReactiveProperty<IdleNumber>(initData.FirePower);
+        _fireRate = new ReactiveProperty<float>(initData.FireRate);
     }
+
+    public void Upgrade(GameBalanceSO balance)
+    {
+        _upgradePrice.Value *= balance.WeaponPriceMultiplier;
+        _firePower.Value += balance.WeaponPowerUpgrade;
+        _fireRate.Value = Mathf.Clamp(_fireRate.Value + balance.WeaponFireRateUpgrade, balance.WeaponFireRateMin, 1);
+
+        _upgradePrice.ForceNotify();
+    }
+
+    public void Reset(WeaponInitData initData)
+    {
+        ResetItem(initData);
+        _firePower.Value = initData.FirePower;
+        _fireRate.Value = initData.FireRate;
+
+        _upgradePrice.ForceNotify();
+    }
+
+    public WeaponSaveData ToSaveData()
+    {
+        var data = new WeaponSaveData { FirePower = _firePower.Value, FireRate = _fireRate.Value };
+        FillSaveData(data);
+        return data;
+    }
+
+#endregion
 }
 }

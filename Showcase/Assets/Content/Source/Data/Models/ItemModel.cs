@@ -1,38 +1,66 @@
 using R3;
-using System;
 using IdleNumbers;
-using System.Text.Json.Serialization;
 
 namespace Source.Data
 {
-[Serializable]
-public class ItemModel : IItemModel
+/// <summary>
+/// Common state of shop item: purchase, selection and prices.
+/// </summary>
+public abstract class ItemModel
 {
+#region Fields
 
-    [JsonIgnore] public ReadOnlyReactiveProperty<bool> IsBoughtRef => IsBought;
-    [JsonIgnore] public ReadOnlyReactiveProperty<bool> IsSelectedRef => IsSelected;
-    [JsonIgnore] public ReadOnlyReactiveProperty<IdleNumber> BuyPriceRef => BuyPrice;
-    [JsonIgnore] public ReadOnlyReactiveProperty<IdleNumber> UpgradePriceRef => UpgradePrice;
+    public ReadOnlyReactiveProperty<bool> IsBought => _isBought;
+    public ReadOnlyReactiveProperty<bool> IsSelected => _isSelected;
+    public ReadOnlyReactiveProperty<IdleNumber> BuyPrice => _buyPrice;
+    public ReadOnlyReactiveProperty<IdleNumber> UpgradePrice => _upgradePrice;
 
-    [JsonInclude] public ReactiveProperty<bool> IsBought { get; private set; }
-    [JsonInclude] public ReactiveProperty<bool> IsSelected { get; private set; }
-    [JsonInclude] public ReactiveProperty<IdleNumber> BuyPrice { get; private set; }
-    [JsonInclude] public ReactiveProperty<IdleNumber> UpgradePrice { get; private set; }
+    public IdleNumber CurrentPrice => _isBought.Value ? _upgradePrice.Value : _buyPrice.Value;
 
-    protected ItemModel()
+    protected readonly ReactiveProperty<IdleNumber> _upgradePrice;
+
+    readonly ReactiveProperty<bool> _isBought;
+    readonly ReactiveProperty<bool> _isSelected;
+    readonly ReactiveProperty<IdleNumber> _buyPrice;
+
+#endregion
+
+#region Public methods
+
+    protected ItemModel(bool isBought, bool isSelected, IdleNumber buyPrice, IdleNumber upgradePrice)
     {
-        IsBought = new ReactiveProperty<bool>(false);
-        IsSelected = new ReactiveProperty<bool>(false);
-        BuyPrice = new ReactiveProperty<IdleNumber>(new IdleNumber());
-        UpgradePrice = new ReactiveProperty<IdleNumber>(new IdleNumber());
+        _isBought = new ReactiveProperty<bool>(isBought);
+        _isSelected = new ReactiveProperty<bool>(isSelected);
+        _buyPrice = new ReactiveProperty<IdleNumber>(buyPrice);
+        _upgradePrice = new ReactiveProperty<IdleNumber>(upgradePrice);
     }
 
-    public ItemModel(ItemInitData initData)
+    public void Buy() => _isBought.Value = true;
+
+    public void Select() => _isSelected.Value = true;
+
+    public void Deselect() => _isSelected.Value = false;
+
+#endregion
+
+#region Private methods
+
+    protected void ResetItem(ItemInitData initData)
     {
-        IsBought = new ReactiveProperty<bool>(initData.IsBought);
-        IsSelected = new ReactiveProperty<bool>(initData.IsSelected);
-        BuyPrice = new ReactiveProperty<IdleNumber>(initData.BuyPrice);
-        UpgradePrice = new ReactiveProperty<IdleNumber>(initData.UpgradePrice);
+        _isBought.Value = initData.IsBought;
+        _isSelected.Value = initData.IsSelected;
+        _buyPrice.Value = initData.BuyPrice;
+        _upgradePrice.Value = initData.UpgradePrice;
     }
+
+    protected void FillSaveData(ItemSaveData data)
+    {
+        data.IsBought = _isBought.Value;
+        data.IsSelected = _isSelected.Value;
+        data.BuyPrice = _buyPrice.Value;
+        data.UpgradePrice = _upgradePrice.Value;
+    }
+
+#endregion
 }
 }

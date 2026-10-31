@@ -2,7 +2,6 @@
 using System;
 using IdleNumbers;
 using Helpers.Audio;
-using UnityEngine;
 
 namespace Source.Data
 {
@@ -12,12 +11,12 @@ public abstract class ItemPresenterBase : IPresenterItemBase
 
     protected int _idx;
     protected readonly Guid _key;
-    protected readonly IProgressModelController _progressController;
-    protected readonly IItemsModelController _itemsController;
-    protected readonly IProgressModel _progressModel;
+    protected readonly ProgressModel _progress;
+    protected readonly ItemsModel _items;
+    protected readonly GameBalanceSO _balance;
     protected readonly CompositeDisposable _disposables = new();
-    protected IItemModel _itemModel;
-    
+    protected ItemModel _itemModel;
+
     readonly ISessionService _sessionService;
     readonly FmodEventsSo _fmodEventsSo;
 
@@ -27,25 +26,22 @@ public abstract class ItemPresenterBase : IPresenterItemBase
 
     protected ItemPresenterBase(Guid key,
                                 ISessionService sessionService,
-                                IItemsModelController itemsModelController,
-                                IProgressModelController progressModelController,
+                                ItemsModel items,
+                                ProgressModel progress,
+                                GameBalanceSO balance,
                                 FmodEventsSo fmodEventsSo)
     {
         _key = key;
         _fmodEventsSo = fmodEventsSo;
         _sessionService = sessionService;
-
-        _itemsController = itemsModelController;
-        _progressController = progressModelController;
-
-        _progressModel = _progressController.IModel;
+        _items = items;
+        _progress = progress;
+        _balance = balance;
     }
 
     public void BuyOrUpgradeItem()
     {
-        if (!HasEnoughCurrency()) return;
-
-        if (!_itemModel.IsBoughtRef.CurrentValue)
+        if (!_itemModel.IsBought.CurrentValue)
             BuyItem();
         else
             UpgradeItem();
@@ -74,14 +70,14 @@ public abstract class ItemPresenterBase : IPresenterItemBase
         _fmodEventsSo.BtnBuy.PlayOneShot();
         SaveProgress();
     }
-    
+
     protected abstract void DeselectOnSelectOtherItem(int selectedItemIdx);
 
-    protected bool CanSelectItem() => _itemModel.IsBoughtRef.CurrentValue && !_itemModel.IsSelectedRef.CurrentValue;
+    protected bool CanSelectItem() => _itemModel.IsBought.CurrentValue && !_itemModel.IsSelected.CurrentValue;
 
-    protected virtual bool HasEnoughCurrency() => _progressModel.CoinsRef.CurrentValue.IsEnough(GetPrice());
+    protected virtual bool HasEnoughCurrency() => _progress.Coins.CurrentValue.IsEnough(GetPrice());
 
-    protected IdleNumber GetPrice() => _itemModel.IsBoughtRef.CurrentValue ? _itemModel.UpgradePriceRef.CurrentValue : _itemModel.BuyPriceRef.CurrentValue;
+    protected IdleNumber GetPrice() => _itemModel.CurrentPrice;
 
     protected void SaveProgress()
     {

@@ -1,16 +1,40 @@
 ﻿using R3;
-using System;
-using System.Text.Json.Serialization;
 
 namespace Source.Data
 {
-[Serializable]
-public class ShipModel : ItemModel, IShipModel
+public class ShipModel : ItemModel
 {
-    [JsonIgnore] public ReadOnlyReactiveProperty<float> EnemyCoinBonusRef => EnemyCoinBonus;
-    [JsonInclude] public ReactiveProperty<float> EnemyCoinBonus { get; private set; }
+#region Fields
 
-    public ShipModel() => EnemyCoinBonus = new ReactiveProperty<float>();
-    public ShipModel(ShipInitData initData) : base(initData) => EnemyCoinBonus = new ReactiveProperty<float>(initData.EnemyCoinBonus);
+    public ReadOnlyReactiveProperty<float> EnemyCoinBonus => _enemyCoinBonus;
+
+    readonly ReactiveProperty<float> _enemyCoinBonus;
+
+#endregion
+
+#region Public methods
+
+    public ShipModel(ShipSaveData data) : base(data.IsBought, data.IsSelected, data.BuyPrice, data.UpgradePrice) =>
+        _enemyCoinBonus = new ReactiveProperty<float>(data.EnemyCoinBonus);
+
+    public ShipModel(ShipInitData initData) : base(initData.IsBought, initData.IsSelected, initData.BuyPrice, initData.UpgradePrice) =>
+        _enemyCoinBonus = new ReactiveProperty<float>(initData.EnemyCoinBonus);
+
+    public void Upgrade(GameBalanceSO balance)
+    {
+        _upgradePrice.Value *= balance.ShipPriceMultiplier;
+        _enemyCoinBonus.Value += balance.ShipBonusIncrease;
+
+        _upgradePrice.ForceNotify();
+    }
+
+    public ShipSaveData ToSaveData()
+    {
+        var data = new ShipSaveData { EnemyCoinBonus = _enemyCoinBonus.Value };
+        FillSaveData(data);
+        return data;
+    }
+
+#endregion
 }
 }

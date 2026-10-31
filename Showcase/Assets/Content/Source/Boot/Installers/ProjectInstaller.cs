@@ -30,28 +30,23 @@ public class ProjectInstaller : MonoInstaller
 
     public override void InstallBindings()
     {
-        BindSessionModelsControllers();
+        BindModels();
         BindSoData();
         BindServices();
         BindEntryPoints();
         BindFactories();
     }
 
-    void BindSessionModelsControllers()
+    void BindModels()
     {
         // Load or Create save data for models
-        var itemsModelController = GetItemsModelController();
-        var progressModelController = GetProgressModelController();
-        var settingsModelController = GetSettingsModelController();
-        var gameRunModelController = new GameRunModelController(itemsModelController, progressModelController, _gameBalance);
-        var sessionService = new SessionService(itemsModelController, progressModelController, settingsModelController);
+        Container.BindInstance(GetItemsModel()).AsSingle();
+        Container.BindInstance(new ProgressModel(SaveSystem.LoadOrCreate<ProgressSaveData>(ConstSavesPaths.PROGRESS_PATH))).AsSingle();
+        Container.BindInstance(new SettingsModel(SaveSystem.LoadOrCreate<SettingsSaveData>(ConstSavesPaths.SETTINGS_PATH))).AsSingle();
+        Container.Bind<GameRunModel>().AsSingle();
 
-        // Bind Models 
-        Container.Bind<IItemsModelController>().FromInstance(itemsModelController).AsSingle();
-        Container.Bind<IProgressModelController>().FromInstance(progressModelController).AsSingle();
-        Container.Bind<ISettingsModelController>().FromInstance(settingsModelController).AsSingle();
-        Container.Bind<IGameRunModelController>().FromInstance(gameRunModelController).AsSingle();
-        Container.Bind<ISessionService>().FromInstance(sessionService).AsSingle();
+        Container.BindInterfacesAndSelfTo<GameRunService>().AsSingle().NonLazy();
+        Container.Bind<ISessionService>().To<SessionService>().AsSingle();
     }
 
     void BindSoData()
@@ -98,24 +93,12 @@ public class ProjectInstaller : MonoInstaller
 
 #region private methods
 
-    ItemsModelController GetItemsModelController()
+    ItemsModel GetItemsModel()
     {
         var initWeaponsData = _weaponsSO.ToDictionary(weaponSo => weaponSo.IdSo.Guid, weaponSo => weaponSo.InitData);
         var initShipsData = _ShipsSO.ToDictionary(shipSo => shipSo.IdSo.Guid, shipSo => shipSo.InitData);
-        var itemsModel = SaveSystem.LoadOrCreate<ItemsModel>(ConstSavesPaths.ITEMS_PATH);
-        return new ItemsModelController(itemsModel, initWeaponsData, initShipsData, _gameBalance);
-    }
-
-    ProgressModelController GetProgressModelController()
-    {
-        var progressModel = SaveSystem.LoadOrCreate<ProgressModel>(ConstSavesPaths.PROGRESS_PATH);
-        return new ProgressModelController(progressModel);
-    }
-
-    SettingsModelController GetSettingsModelController()
-    {
-        var settingsModel = SaveSystem.LoadOrCreate<SettingsModel>(ConstSavesPaths.SETTINGS_PATH);
-        return new SettingsModelController(settingsModel);
+        var itemsSaveData = SaveSystem.LoadOrCreate<ItemsSaveData>(ConstSavesPaths.ITEMS_PATH);
+        return new ItemsModel(itemsSaveData, initWeaponsData, initShipsData);
     }
 
 #endregion

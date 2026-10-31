@@ -16,7 +16,7 @@ public class WeaponPresenter : ItemPresenterBase
 #region Fields
 
     readonly IWeaponView _view;
-    readonly IWeaponModel _weaponModel;
+    readonly WeaponModel _weaponModel;
 
 #endregion
 
@@ -25,31 +25,32 @@ public class WeaponPresenter : ItemPresenterBase
     public WeaponPresenter(IWeaponView view,
                            Guid key,
                            ISessionService sessionService,
-                           IItemsModelController itemsModelController,
-                           IProgressModelController progressModelController,
+                           ItemsModel items,
+                           ProgressModel progress,
+                           GameBalanceSO balance,
                            FmodEventsSo fmodEventsSo) :
-        base(key, sessionService, itemsModelController, progressModelController, fmodEventsSo)
+        base(key, sessionService, items, progress, balance, fmodEventsSo)
     {
         _view = view;
-        _weaponModel = _itemsController.GetWeaponModel(key);
-        _idx = _itemsController.GetWeaponIdx(_key);
+        _weaponModel = _items.GetWeapon(key);
+        _idx = _items.GetWeaponIdx(_key);
         _itemModel = _weaponModel;
 
         // Subscribe to Properties value changing
-        _weaponModel.IsBoughtRef.Subscribe(isBought => _view.UpdateBoughtState(isBought, GetPrice())).AddTo(_disposables);
-        _weaponModel.IsSelectedRef.Subscribe(isSelect => _view.UpdateSelectState(_weaponModel.IsBoughtRef.CurrentValue, isSelect)).AddTo(_disposables);
-        _weaponModel.UpgradePriceRef.Subscribe(_ => SetWeaponsStats()).AddTo(_disposables);
+        _weaponModel.IsBought.Subscribe(isBought => _view.UpdateBoughtState(isBought, GetPrice())).AddTo(_disposables);
+        _weaponModel.IsSelected.Subscribe(isSelect => _view.UpdateSelectState(_weaponModel.IsBought.CurrentValue, isSelect)).AddTo(_disposables);
+        _weaponModel.UpgradePrice.Subscribe(_ => SetWeaponsStats()).AddTo(_disposables);
 
-        _progressModel.CoinsRef.Subscribe(_ => _view.UpdateSolvency(HasEnoughCurrency())).AddTo(_disposables);
-        _progressModel.UsedWeaponIdxRef.Subscribe(DeselectOnSelectOtherItem).AddTo(_disposables);
+        _progress.Coins.Subscribe(_ => _view.UpdateSolvency(HasEnoughCurrency())).AddTo(_disposables);
+        _progress.UsedWeaponIdx.Subscribe(DeselectOnSelectOtherItem).AddTo(_disposables);
     }
 
     public override void SelectItem()
     {
         if (!CanSelectItem()) return;
 
-        _itemsController.SelectWeapon(_key);
-        _progressController.SetUsedWeaponIdx(_idx);
+        _weaponModel.Select();
+        _progress.SetUsedWeaponIdx(_idx);
 
         base.SelectItem();
     }
@@ -60,8 +61,8 @@ public class WeaponPresenter : ItemPresenterBase
 
     protected override void BuyItem()
     {
-        _progressController.SpendCoins(_weaponModel.BuyPriceRef.CurrentValue);
-        _itemsController.BuyWeapon(_key);
+        if (!_progress.TrySpendCoins(_weaponModel.BuyPrice.CurrentValue)) return;
+        _weaponModel.Buy();
 
         base.BuyItem();
         SelectItem();
@@ -69,22 +70,22 @@ public class WeaponPresenter : ItemPresenterBase
 
     protected override void UpgradeItem()
     {
-        _progressController.SpendCoins(_weaponModel.UpgradePriceRef.CurrentValue);
-        _itemsController.UpdateWeapon(_key);
+        if (!_progress.TrySpendCoins(_weaponModel.UpgradePrice.CurrentValue)) return;
+        _weaponModel.Upgrade(_balance);
 
         base.UpgradeItem();
     }
 
     protected override void DeselectOnSelectOtherItem(int selectedItemIdx)
     {
-        if (selectedItemIdx == _idx || !_itemModel.IsSelectedRef.CurrentValue) return;
+        if (selectedItemIdx == _idx || !_itemModel.IsSelected.CurrentValue) return;
 
-        _itemsController.DeselectWeapon(_key);
+        _weaponModel.Deselect();
     }
 
     void SetWeaponsStats()
     {
-        _view.SetWeaponsStats(GetPrice(), _weaponModel.FirePowerRef.CurrentValue, _weaponModel.FireRateRef.CurrentValue);
+        _view.SetWeaponsStats(GetPrice(), _weaponModel.FirePower.CurrentValue, _weaponModel.FireRate.CurrentValue);
         _view.UpdateSolvency(HasEnoughCurrency());
     }
 

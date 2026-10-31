@@ -18,35 +18,35 @@ public class ResetProgressPresenter : IDisposable
 #region Fields
 
     readonly IResetProgressView _resetProgressView;
-    readonly IProgressModelController _progressModelController;
-    readonly IItemsModelController _itemsModelController;
+    readonly ProgressModel _progress;
+    readonly ItemsModel _items;
     readonly ISessionService _sessionService;
     readonly GameBalanceSO _balance;
     readonly EventReference _fmodEvent;
     readonly CompositeDisposable _disposables = new();
 
-    int LvlBonus => Mathf.RoundToInt(_progressModelController.IModel.LvlRef.CurrentValue * _balance.ResetProgressMultiplier);
-    bool ReachedMinBonusLvl => _progressModelController.IModel.LvlRef.CurrentValue >= _balance.ResetProgressMinLvl;
+    int LvlBonus => Mathf.RoundToInt(_progress.Lvl.CurrentValue * _balance.ResetProgressMultiplier);
+    bool ReachedMinBonusLvl => _progress.Lvl.CurrentValue >= _balance.ResetProgressMinLvl;
 
 #endregion
 
 #region Public methods
 
     public ResetProgressPresenter(IResetProgressView resetProgressView,
-                                  IProgressModelController progressModelController,
-                                  IItemsModelController itemsModelController,
+                                  ProgressModel progress,
+                                  ItemsModel items,
                                   ISessionService sessionService,
                                   FmodEventsSo fmodEventsSo,
                                   GameBalanceSO balance)
     {
         _resetProgressView = resetProgressView;
-        _progressModelController = progressModelController;
-        _itemsModelController = itemsModelController;
+        _progress = progress;
+        _items = items;
         _sessionService = sessionService;
         _balance = balance;
         _fmodEvent = fmodEventsSo.ResetProgress;
 
-        _progressModelController.IModel.LvlRef.Subscribe(OnChangeLvl_handler).AddTo(_disposables);
+        _progress.Lvl.Subscribe(OnChangeLvl_handler).AddTo(_disposables);
     }
 
     public void Dispose() => _disposables.Dispose();
@@ -56,8 +56,8 @@ public class ResetProgressPresenter : IDisposable
         if (!ReachedMinBonusLvl) return;
 
         _fmodEvent.PlayOneShot();
-        _progressModelController.AscendProgress(LvlBonus);
-        _itemsModelController.ResetOnAscending();
+        _progress.Ascend(LvlBonus);
+        _items.ResetOnAscending();
         SaveProgress();
     }
 

@@ -16,7 +16,7 @@ public class ShipPresenter : ItemPresenterBase
 #region Fields
 
     readonly IShipView _view;
-    readonly IShipModel _shipModel;
+    readonly ShipModel _shipModel;
 
 #endregion
 
@@ -25,31 +25,32 @@ public class ShipPresenter : ItemPresenterBase
     public ShipPresenter(IShipView view,
                          Guid key,
                          ISessionService sessionService,
-                         IItemsModelController itemsModelController,
-                         IProgressModelController progressModelController,
+                         ItemsModel items,
+                         ProgressModel progress,
+                         GameBalanceSO balance,
                          FmodEventsSo fmodEventsSo) :
-        base(key, sessionService, itemsModelController, progressModelController, fmodEventsSo)
+        base(key, sessionService, items, progress, balance, fmodEventsSo)
     {
         _view = view;
-        _shipModel = _itemsController.GetShipModel(key);
-        _idx = _itemsController.GetShipIdx(_key);
+        _shipModel = _items.GetShip(key);
+        _idx = _items.GetShipIdx(_key);
         _itemModel = _shipModel;
 
         // Subscribe to Properties value changing
-        _shipModel.IsBoughtRef.Subscribe(isBought => _view.UpdateBoughtState(isBought, GetPrice())).AddTo(_disposables);
-        _shipModel.IsSelectedRef.Subscribe(isSelect => _view.UpdateSelectState(_shipModel.IsBoughtRef.CurrentValue, isSelect)).AddTo(_disposables);
-        _shipModel.UpgradePriceRef.Subscribe(_ => SetShipStats()).AddTo(_disposables);
+        _shipModel.IsBought.Subscribe(isBought => _view.UpdateBoughtState(isBought, GetPrice())).AddTo(_disposables);
+        _shipModel.IsSelected.Subscribe(isSelect => _view.UpdateSelectState(_shipModel.IsBought.CurrentValue, isSelect)).AddTo(_disposables);
+        _shipModel.UpgradePrice.Subscribe(_ => SetShipStats()).AddTo(_disposables);
 
-        _progressModel.DiamondsRef.Subscribe(_ => _view.UpdateSolvency(HasEnoughCurrency())).AddTo(_disposables);
-        _progressModel.UsedShipIdxRef.Subscribe(DeselectOnSelectOtherItem).AddTo(_disposables);
+        _progress.Diamonds.Subscribe(_ => _view.UpdateSolvency(HasEnoughCurrency())).AddTo(_disposables);
+        _progress.UsedShipIdx.Subscribe(DeselectOnSelectOtherItem).AddTo(_disposables);
     }
 
     public override void SelectItem()
     {
         if (!CanSelectItem()) return;
 
-        _itemsController.SelectShip(_key);
-        _progressController.SetUsedShipIdx(_idx);
+        _shipModel.Select();
+        _progress.SetUsedShipIdx(_idx);
 
         base.SelectItem();
     }
@@ -60,8 +61,8 @@ public class ShipPresenter : ItemPresenterBase
 
     protected override void BuyItem()
     {
-        _progressController.SpendDiamonds(_shipModel.BuyPriceRef.CurrentValue);
-        _itemsController.BuyShip(_key);
+        if (!_progress.TrySpendDiamonds(_shipModel.BuyPrice.CurrentValue)) return;
+        _shipModel.Buy();
 
         base.BuyItem();
         SelectItem();
@@ -69,24 +70,24 @@ public class ShipPresenter : ItemPresenterBase
 
     protected override void UpgradeItem()
     {
-        _progressController.SpendDiamonds(_shipModel.UpgradePriceRef.CurrentValue);
-        _itemsController.UpdateShip(_key);
+        if (!_progress.TrySpendDiamonds(_shipModel.UpgradePrice.CurrentValue)) return;
+        _shipModel.Upgrade(_balance);
 
         base.UpgradeItem();
     }
 
     protected override void DeselectOnSelectOtherItem(int selectedItemIdx)
     {
-        if (selectedItemIdx == _idx || !_itemModel.IsSelectedRef.CurrentValue) return;
+        if (selectedItemIdx == _idx || !_itemModel.IsSelected.CurrentValue) return;
 
-        _itemsController.DeselectShip(_key);
+        _shipModel.Deselect();
     }
 
-    protected override bool HasEnoughCurrency() => _progressModel.DiamondsRef.CurrentValue.IsEnough(GetPrice());
+    protected override bool HasEnoughCurrency() => _progress.Diamonds.CurrentValue.IsEnough(GetPrice());
     
     void SetShipStats()
     {
-        _view.SetShipStats(GetPrice(), _shipModel.EnemyCoinBonusRef.CurrentValue);
+        _view.SetShipStats(GetPrice(), _shipModel.EnemyCoinBonus.CurrentValue);
         _view.UpdateSolvency(HasEnoughCurrency());
     }
 
