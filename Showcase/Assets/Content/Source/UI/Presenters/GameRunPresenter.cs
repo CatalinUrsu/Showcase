@@ -1,10 +1,11 @@
 ﻿using R3;
+using Source.Data;
 using System;
 using Zenject;
 using IdleNumbers;
 using Cysharp.Threading.Tasks;
 
-namespace Source.Data
+namespace Source.UI
 {
 public class GameRunPresenter : IDisposable
 {

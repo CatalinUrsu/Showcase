@@ -1,8 +1,9 @@
 using R3;
+using Source.Data;
 using System;
 using Zenject;
 
-namespace Source.Data
+namespace Source.UI
 {
 public class SettingsPresenter : IDisposable
 {
