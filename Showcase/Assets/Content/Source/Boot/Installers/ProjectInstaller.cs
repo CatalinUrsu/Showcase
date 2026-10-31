@@ -45,7 +45,7 @@ public class ProjectInstaller : MonoInstaller
         Container.BindInstance(new SettingsModel(SaveSystem.LoadOrCreate<SettingsSaveData>(ConstSavesPaths.SETTINGS_PATH))).AsSingle();
         Container.Bind<GameRunModel>().AsSingle();
 
-        Container.BindInterfacesAndSelfTo<GameRunService>().AsSingle().NonLazy();
+        Container.BindInterfacesTo<GameRunService>().AsSingle().NonLazy();
         Container.Bind<ISessionService>().To<SessionService>().AsSingle();
     }
 

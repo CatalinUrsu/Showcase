@@ -26,7 +26,7 @@ public class EnemyFacade : PooledObject
     
     EnemySO _enemyDataSO;
     EnemiesInitConfig _initConfig;
-    GameRunService _gameRunService;
+    IGameRunService _gameRunService;
     ProgressModel _progressModel;
     GameBalanceSO _balance;
 
@@ -47,7 +47,7 @@ public class EnemyFacade : PooledObject
 #region Public methods
     
     [Inject]
-    public void Construct(GameRunService gameRunService, ProgressModel progress, GameBalanceSO balance)
+    public void Construct(IGameRunService gameRunService, ProgressModel progress, GameBalanceSO balance)
     {
         _balance = balance;
         _gameRunService = gameRunService;

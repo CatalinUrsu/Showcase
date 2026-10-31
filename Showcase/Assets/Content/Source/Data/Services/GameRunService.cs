@@ -7,7 +7,7 @@ namespace Source.Data
 /// <summary>
 /// Run rules that touch several models: coins reward with level and ship bonuses, level up by run progress.
 /// </summary>
-public class GameRunService : IDisposable
+public class GameRunService : IGameRunService, IDisposable
 {
 #region Fields
 
