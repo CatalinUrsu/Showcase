@@ -54,9 +54,9 @@ public class ShopService : IShopService, IDisposable
         var ship = _items.GetShip(id);
         if (!ship.IsBought.CurrentValue || ship.IsSelected.CurrentValue) return false;
 
-        _items.GetShip(_progress.UsedShipIdx.CurrentValue).Deselect();
+        _items.GetShip(_progress.UsedShipId.CurrentValue).Deselect();
         ship.Select();
-        _progress.SetUsedShipIdx(_items.GetShipIdx(id));
+        _progress.SetUsedShipId(id);
 
         _actions.OnNext(EShopAction.Selected);
         return true;
@@ -87,9 +87,9 @@ public class ShopService : IShopService, IDisposable
         var weapon = _items.GetWeapon(id);
         if (!weapon.IsBought.CurrentValue || weapon.IsSelected.CurrentValue) return false;
 
-        _items.GetWeapon(_progress.UsedWeaponIdx.CurrentValue).Deselect();
+        _items.GetWeapon(_progress.UsedWeaponId.CurrentValue).Deselect();
         weapon.Select();
-        _progress.SetUsedWeaponIdx(_items.GetWeaponIdx(id));
+        _progress.SetUsedWeaponId(id);
 
         _actions.OnNext(EShopAction.Selected);
         return true;

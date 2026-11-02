@@ -45,8 +45,7 @@ public class PlayerWeapons : MonoBehaviour
                           GameBalanceSO balance)
     {
         _bulletsSpawnCount = balance.BulletsSpawnCount;
-        var usedWeaponIdx = progress.UsedWeaponIdx.CurrentValue;
-        var usedWeapon = items.GetWeapon(usedWeaponIdx);
+        var usedWeapon = items.GetWeapon(progress.UsedWeaponId.CurrentValue);
         _firePower = usedWeapon.FirePower.CurrentValue;
         _fireRate = usedWeapon.FireRate.CurrentValue;
         _shootSfxRef = fmodEventsSo.Shoot;

@@ -12,7 +12,7 @@ public class ProgressSaveData
     public int Lvl = 1;
     public IdleNumber Coins;
     public IdleNumber Diamonds;
-    public int UsedShipIdx;
-    public int UsedWeaponIdx;
+    public Guid UsedShipId;
+    public Guid UsedWeaponId;
 }
 }

@@ -13,6 +13,8 @@ public class SettingsModel
     public ReadOnlyReactiveProperty<float> MusicVolume => _musicVolume;
     public ReadOnlyReactiveProperty<int> LocaleIdx => _localeIdx;
 
+    public Observable<Unit> Changed { get; }
+
     readonly ReactiveProperty<bool> _sound;
     readonly ReactiveProperty<bool> _music;
     readonly ReactiveProperty<float> _soundVolume;
@@ -32,6 +34,10 @@ public class SettingsModel
         _soundVolume = new ReactiveProperty<float>(data.SoundVolume);
         _musicVolume = new ReactiveProperty<float>(data.MusicVolume);
         _localeIdx = new ReactiveProperty<int>(data.LocaleIdx);
+
+        Changed = Observable.Merge(_soundVolume.Skip(1).AsUnitObservable(),
+                                   _musicVolume.Skip(1).AsUnitObservable(),
+                                   _localeIdx.Skip(1).AsUnitObservable());
     }
 
     // Volume is the source of truth, enabled flag is derived from it

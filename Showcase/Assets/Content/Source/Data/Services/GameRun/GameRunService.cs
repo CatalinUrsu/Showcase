@@ -34,7 +34,7 @@ public class GameRunService : IGameRunService, IDisposable
         SetLvlCoinBonus(_progress.Lvl.CurrentValue);
 
         _gameRun.Progress.Skip(1).Subscribe(OnProgressChange_handler).AddTo(_disposables);
-        _progress.UsedShipIdx.Subscribe(SetShipCoinBonus).AddTo(_disposables);
+        _progress.UsedShipId.Subscribe(SetShipCoinBonus).AddTo(_disposables);
         _progress.Lvl.Skip(1).Subscribe(OnReachNewLvl_handler).AddTo(_disposables);
     }
 
@@ -54,7 +54,7 @@ public class GameRunService : IGameRunService, IDisposable
 
 #region Private methods
 
-    void SetShipCoinBonus(int usedShipIdx) => _shipCoinBonus = _items.GetShip(usedShipIdx).EnemyCoinBonus.CurrentValue / 100 + 1;
+    void SetShipCoinBonus(Guid usedShipId) => _shipCoinBonus = _items.GetShip(usedShipId).EnemyCoinBonus.CurrentValue / 100 + 1;
 
     void OnReachNewLvl_handler(int lvl)
     {

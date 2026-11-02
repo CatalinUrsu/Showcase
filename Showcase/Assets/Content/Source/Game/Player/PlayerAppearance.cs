@@ -1,5 +1,7 @@
 ﻿using R3;
+using System;
 using Zenject;
+using System.Linq;
 using Source.Data;
 using UnityEngine;
 
@@ -19,8 +21,8 @@ public class PlayerAppearance : MonoBehaviour
 
     public void Init()
     {
-        _progress.UsedShipIdx.Subscribe(SetShipSprite).AddTo(gameObject);
-        _progress.UsedWeaponIdx.Subscribe(SetWeaponSprite).AddTo(gameObject);
+        _progress.UsedShipId.Subscribe(SetShipSprite).AddTo(gameObject);
+        _progress.UsedWeaponId.Subscribe(SetWeaponSprite).AddTo(gameObject);
     }
 
     public void ToggleAppearance(bool enable)
@@ -30,12 +32,16 @@ public class PlayerAppearance : MonoBehaviour
         _imgWeaponR.enabled = enable;
     }
 
-    void SetShipSprite(int shipIdx) => _imgShip.sprite = _shipsSkins[shipIdx].ItemSprite;
+    void SetShipSprite(Guid shipId) => _imgShip.sprite = GetSkin(_shipsSkins, shipId).ItemSprite;
 
-    void SetWeaponSprite(int weaponIdx)
+    void SetWeaponSprite(Guid weaponId)
     {
-        _imgWeaponL.sprite = _weaponsSkins[weaponIdx].ItemSprite;
-        _imgWeaponR.sprite = _weaponsSkins[weaponIdx].ItemSprite;
+        var sprite = GetSkin(_weaponsSkins, weaponId).ItemSprite;
+        _imgWeaponL.sprite = sprite;
+        _imgWeaponR.sprite = sprite;
     }
+
+    // Guid.Empty (nothing selected yet) -> first skin, same as ItemsModel
+    static ItemLookSO GetSkin(ItemLookSO[] skins, Guid id) => skins.FirstOrDefault(skin => skin.IdSo.Guid == id) ?? skins[0];
 }
 }

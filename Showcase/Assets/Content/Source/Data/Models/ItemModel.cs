@@ -17,6 +17,8 @@ public abstract class ItemModel
 
     public IdleNumber CurrentPrice => _isBought.Value ? _upgradePrice.Value : _buyPrice.Value;
 
+    public Observable<Unit> Changed { get; }
+
     protected readonly ReactiveProperty<IdleNumber> _upgradePrice;
 
     readonly ReactiveProperty<bool> _isBought;
@@ -33,6 +35,12 @@ public abstract class ItemModel
         _isSelected = new ReactiveProperty<bool>(isSelected);
         _buyPrice = new ReactiveProperty<IdleNumber>(buyPrice);
         _upgradePrice = new ReactiveProperty<IdleNumber>(upgradePrice);
+
+        // Upgrade and reset always notify UpgradePrice (ForceNotify), so own fields of subclasses are covered
+        Changed = Observable.Merge(_isBought.Skip(1).AsUnitObservable(),
+                                   _isSelected.Skip(1).AsUnitObservable(),
+                                   _buyPrice.Skip(1).AsUnitObservable(),
+                                   _upgradePrice.Skip(1).AsUnitObservable());
     }
 
     public void Buy() => _isBought.Value = true;

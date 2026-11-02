@@ -1,4 +1,5 @@
 using R3;
+using System;
 using IdleNumbers;
 
 namespace Source.Data
@@ -10,14 +11,17 @@ public class ProgressModel
     public ReadOnlyReactiveProperty<int> Lvl => _lvl;
     public ReadOnlyReactiveProperty<IdleNumber> Coins => _coins;
     public ReadOnlyReactiveProperty<IdleNumber> Diamonds => _diamonds;
-    public ReadOnlyReactiveProperty<int> UsedShipIdx => _usedShipIdx;
-    public ReadOnlyReactiveProperty<int> UsedWeaponIdx => _usedWeaponIdx;
+    public ReadOnlyReactiveProperty<Guid> UsedShipId => _usedShipId;
+    public ReadOnlyReactiveProperty<Guid> UsedWeaponId => _usedWeaponId;
+
+    /// <summary>Emits on any change after creation, used by SaveService to mark save dirty.</summary>
+    public Observable<Unit> Changed { get; }
 
     readonly ReactiveProperty<int> _lvl;
     readonly ReactiveProperty<IdleNumber> _coins;
     readonly ReactiveProperty<IdleNumber> _diamonds;
-    readonly ReactiveProperty<int> _usedShipIdx;
-    readonly ReactiveProperty<int> _usedWeaponIdx;
+    readonly ReactiveProperty<Guid> _usedShipId;
+    readonly ReactiveProperty<Guid> _usedWeaponId;
 
 #endregion
 
@@ -28,8 +32,14 @@ public class ProgressModel
         _lvl = new ReactiveProperty<int>(data.Lvl);
         _coins = new ReactiveProperty<IdleNumber>(data.Coins);
         _diamonds = new ReactiveProperty<IdleNumber>(data.Diamonds);
-        _usedShipIdx = new ReactiveProperty<int>(data.UsedShipIdx);
-        _usedWeaponIdx = new ReactiveProperty<int>(data.UsedWeaponIdx);
+        _usedShipId = new ReactiveProperty<Guid>(data.UsedShipId);
+        _usedWeaponId = new ReactiveProperty<Guid>(data.UsedWeaponId);
+
+        Changed = Observable.Merge(_lvl.Skip(1).AsUnitObservable(),
+                                   _coins.Skip(1).AsUnitObservable(),
+                                   _diamonds.Skip(1).AsUnitObservable(),
+                                   _usedShipId.Skip(1).AsUnitObservable(),
+                                   _usedWeaponId.Skip(1).AsUnitObservable());
     }
 
     public void AddLevel() => _lvl.Value++;
@@ -54,15 +64,15 @@ public class ProgressModel
         return true;
     }
 
-    public void SetUsedShipIdx(int idx) => _usedShipIdx.Value = idx;
+    public void SetUsedShipId(Guid id) => _usedShipId.Value = id;
 
-    public void SetUsedWeaponIdx(int idx) => _usedWeaponIdx.Value = idx;
+    public void SetUsedWeaponId(Guid id) => _usedWeaponId.Value = id;
 
     public void Ascend(int diamondsBonus)
     {
         _lvl.Value = 1;
         _coins.Value = 0;
-        _usedWeaponIdx.Value = 0;
+        _usedWeaponId.Value = Guid.Empty;
         _diamonds.Value += diamondsBonus;
     }
 
@@ -73,8 +83,8 @@ public class ProgressModel
             Lvl = _lvl.Value,
             Coins = _coins.Value,
             Diamonds = _diamonds.Value,
-            UsedShipIdx = _usedShipIdx.Value,
-            UsedWeaponIdx = _usedWeaponIdx.Value
+            UsedShipId = _usedShipId.Value,
+            UsedWeaponId = _usedWeaponId.Value
         };
     }
 

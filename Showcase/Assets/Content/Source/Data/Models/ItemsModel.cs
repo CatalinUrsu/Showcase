@@ -1,3 +1,4 @@
+using R3;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace Source.Data
 public class ItemsModel
 {
 #region Fields
+
+    public Observable<Unit> Changed { get; }
 
     readonly Dictionary<Guid, WeaponModel> _weapons;
     readonly Dictionary<Guid, ShipModel> _ships;
@@ -38,19 +41,17 @@ public class ItemsModel
                                             pair => data.ShipsData.TryGetValue(pair.Key, out var saved)
                                                         ? new ShipModel(saved)
                                                         : new ShipModel(pair.Value));
+
+        Changed = Observable.Merge(_weapons.Values.Cast<ItemModel>()
+                                           .Concat(_ships.Values)
+                                           .Select(item => item.Changed)
+                                           .ToArray());
     }
 
-    public WeaponModel GetWeapon(Guid key) => _weapons[key];
+    // Guid.Empty (nothing selected yet) or item removed from game -> first in list
+    public WeaponModel GetWeapon(Guid key) => _weapons.TryGetValue(key, out var weapon) ? weapon : _weapons[_weaponsOrderedIds[0]];
 
-    public WeaponModel GetWeapon(int idx) => _weapons[_weaponsOrderedIds[idx]];
-
-    public int GetWeaponIdx(Guid key) => Array.IndexOf(_weaponsOrderedIds, key);
-
-    public ShipModel GetShip(Guid key) => _ships[key];
-
-    public ShipModel GetShip(int idx) => _ships[_shipsOrderedIds[idx]];
-
-    public int GetShipIdx(Guid key) => Array.IndexOf(_shipsOrderedIds, key);
+    public ShipModel GetShip(Guid key) => _ships.TryGetValue(key, out var ship) ? ship : _ships[_shipsOrderedIds[0]];
 
     // Ships stay after ascending by design, only weapons are reset
     public void ResetOnAscending()
