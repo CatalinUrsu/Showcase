@@ -79,29 +79,42 @@ Boot/
 Core/
   Audio/             (FmodEventsSo)
   Common/            (constants, DDOL)
-  Data/              (presenter interfaces)
   Enums/
   EntryPoints/       (entry point interfaces)
-  UI/                (view interfaces)
+  Game/              (IPlayerFacade, IEnemiesSpawner)
+  Services/          (application service interfaces: audio, save, pause, locale, commands...)
+  UI/                (facade interfaces)
 
 Data/
   Models/            (XxxModel for runtime)
   SaveData/          (XxxSaveData for save files)
-  SO/
-  Services/          (rules over several models: GameRunService, ShopService, ProgressionService; no FMOD)
+  SO/                (balance, items, enemies; InitData/)
+  Services/          (rules over several models: GameRun, Shop, Progression; no FMOD)
 
-Services/
-  Audio/
-  Cinemachine/
-  Session/
+Services/            (implementations: Audio, Save, Pause, Locale, Cinemachine, ShopFeedback...)
 
 UI/
   Presenters/        (thin presenters: view <-> models, actions go to Data services)
+    Interfaces/      (presenter <-> view contracts: IShipView, IItemView...)
   MainMenu/
   Gameplay/
   Facades/
   Views/
 ```
+
+### <b><u>Layers</u></b>
+Each folder is an assembly (asmdef). Dependencies go only down the table, so Gameplay and UI cannot reach service implementations.
+
+| Assembly | Layer | Contains | References |
+|---|---|---|---|
+| `Source.Data` | Domain | models, save data, game rules (services + their interfaces), balance SO | IdleNumbers, R3 |
+| `Source.Core` | Contracts | interfaces of application services, entry points, gameplay contracts, enums, constants | Helpers, FMOD |
+| `Source.Game` | Gameplay | player, enemies, spawner | Data, Core |
+| `Source.UI` | Presentation | presenters, views, presenter-view interfaces | Data, Core |
+| `Source.Services` | Infrastructure | service implementations (FMOD, files, camera, localization) | Data, Core |
+| `Source.Boot` | Composition root | installers, states, app bootstrap | all |
+
+Rules: a method that changes only own fields lives in the model, a rule over several models is a Data service; presenters have no rules; views inject only their presenter factory.
 <br/><br/>
 
 ## <b><u>Quick Start</u></b>
