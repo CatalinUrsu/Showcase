@@ -121,7 +121,7 @@ Global bindings are defined in `Showcase/Assets/Content/Source/Boot/Installers/P
 Use this pattern when introducing a new global service or persistent domain controller that must be shared across states/scenes.
 
 - Binds models as concrete singletons and services by interface.
-- Creates session models via `SaveSystem.LoadOrCreate(...)`.
+- Loads one `SaveData` (`save.json`) via `SaveSystem.LoadOrCreate(...)` and builds models from it.
 - Registers presenter factories (`ShipPresenter`, `WeaponPresenter`, `ResetProgressPresenter`, `GameRunPresenter`, `SettingsPresenter`).
 
 ```csharp
@@ -130,8 +130,8 @@ Container.Bind<IAudioService>().To<AudioService>().AsSingle();
 
 // Model binding: save file is loaded as plain SaveData, runtime model is built from it.
 // Model fields are private, outside code reads ReadOnlyReactiveProperty and calls rule methods (TrySpendCoins, Ascend...).
-var progress = new ProgressModel(SaveSystem.LoadOrCreate<ProgressSaveData>(ConstSavesPaths.PROGRESS_PATH));
-Container.BindInstance(progress).AsSingle();
+var saveData = SaveSystem.LoadOrCreate<SaveData>(ConstSavesPaths.SAVE_PATH, SaveData.VERSION);
+Container.BindInstance(new ProgressModel(saveData.Progress)).AsSingle();
 ```
 
 ### <b><u>2) Scene lifecycle via states</b></u>
@@ -176,10 +176,11 @@ public void Dispose() => _disposable.Clear();
 Implementation note: subscribe in presenter constructor/init, dispose in presenter `Dispose()` or scene deinit.
 
 ### <b><u>5) Persistent session mode</u></b>
-Project uses JSON save files for core progression and settings.
+One JSON save file (`save.json`) for progress, items and settings.
 
-- Paths centralized in `Showcase/Assets/Content/Source/Core/Common/Constants.cs` (`settings.json`, `progress.json`, `items.json`)
-- Save/load operations coordinated through `SessionService`
+- Nobody calls save directly: every model exposes `Changed`, `SaveService` marks save dirty and writes it every 10 s (real time), on app pause/quit (`AppLifecycleListener`) and on dispose.
+- Save file keeps format `Version` and a hash of the stored JSON, so a new field in a model does not reset the save; old formats go through a `migrate` callback.
+- Item selection is stored as `Guid`, not as index in the inspector list.
 <br/><br/>
 
 ## <b><u>Integrations</u></b>
