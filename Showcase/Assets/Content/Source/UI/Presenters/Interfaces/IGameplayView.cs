@@ -1,7 +1,7 @@
 ﻿using IdleNumbers;
 using Cysharp.Threading.Tasks;
 
-namespace Source
+namespace Source.UI
 {
 public interface IGameplayView
 {

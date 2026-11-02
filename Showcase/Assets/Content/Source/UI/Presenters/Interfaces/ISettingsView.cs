@@ -1,6 +1,6 @@
 using R3;
 
-namespace Source
+namespace Source.UI
 {
 public interface ISettingsView
 {

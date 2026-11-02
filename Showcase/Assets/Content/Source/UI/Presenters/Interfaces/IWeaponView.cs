@@ -1,6 +1,6 @@
 ﻿using IdleNumbers;
 
-namespace Source
+namespace Source.UI
 {
 public interface IWeaponView : IItemView
 {
