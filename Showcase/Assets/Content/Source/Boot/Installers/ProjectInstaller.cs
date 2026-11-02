@@ -41,16 +41,19 @@ public class ProjectInstaller : MonoInstaller
     void BindModels()
     {
         // Load or Create save data for models
-        Container.BindInstance(GetItemsModel()).AsSingle();
-        Container.BindInstance(new ProgressModel(SaveSystem.LoadOrCreate<ProgressSaveData>(ConstSavesPaths.PROGRESS_PATH))).AsSingle();
-        Container.BindInstance(new SettingsModel(SaveSystem.LoadOrCreate<SettingsSaveData>(ConstSavesPaths.SETTINGS_PATH))).AsSingle();
+        var saveData = SaveSystem.LoadOrCreate<SaveData>(ConstSavesPaths.SAVE_PATH, SaveData.VERSION);
+        
+        Container.BindInstance(GetItemsModel(saveData.Items)).AsSingle();
+        Container.BindInstance(new ProgressModel(saveData.Progress)).AsSingle();
+        Container.BindInstance(new SettingsModel(saveData.Settings)).AsSingle();
         Container.Bind<GameRunModel>().AsSingle();
 
         Container.BindInterfacesTo<GameRunService>().AsSingle().NonLazy();
         Container.BindInterfacesTo<ShopService>().AsSingle();
         Container.BindInterfacesTo<ProgressionService>().AsSingle();
         Container.BindInterfacesTo<ShopFeedback>().AsSingle().NonLazy();
-        Container.Bind<ISessionService>().To<SessionService>().AsSingle();
+        Container.BindInterfacesTo<SaveService>().AsSingle().NonLazy();
+        Container.Bind<AppLifecycleListener>().FromNewComponentOnNewGameObject().AsSingle().NonLazy();
     }
 
     void BindSoData()
@@ -99,11 +102,10 @@ public class ProjectInstaller : MonoInstaller
 
 #region private methods
 
-    ItemsModel GetItemsModel()
+    ItemsModel GetItemsModel(ItemsSaveData itemsSaveData)
     {
         var initWeaponsData = _weaponsSO.ToDictionary(weaponSo => weaponSo.IdSo.Guid, weaponSo => weaponSo.InitData);
         var initShipsData = _ShipsSO.ToDictionary(shipSo => shipSo.IdSo.Guid, shipSo => shipSo.InitData);
-        var itemsSaveData = SaveSystem.LoadOrCreate<ItemsSaveData>(ConstSavesPaths.ITEMS_PATH);
         return new ItemsModel(itemsSaveData, initWeaponsData, initShipsData);
     }
 

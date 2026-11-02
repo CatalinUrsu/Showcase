@@ -7,7 +7,7 @@ using Helpers.Audio;
 namespace Source.Services
 {
 /// <summary>
-/// Effects of shop and ascend results: sound and save.
+/// Sound feedback of shop and ascend results.
 /// </summary>
 public class ShopFeedback : IInitializable, IDisposable
 {
@@ -16,7 +16,6 @@ public class ShopFeedback : IInitializable, IDisposable
     readonly IShopService _shopService;
     readonly IProgressionService _progressionService;
     readonly FmodEventsSo _fmodEvents;
-    readonly ISessionService _sessionService;
     readonly CompositeDisposable _subscriptions = new();
 
 #endregion
@@ -25,13 +24,11 @@ public class ShopFeedback : IInitializable, IDisposable
 
     public ShopFeedback(IShopService shopService,
                         IProgressionService progressionService,
-                        FmodEventsSo fmodEvents,
-                        ISessionService sessionService)
+                        FmodEventsSo fmodEvents)
     {
         _shopService = shopService;
         _progressionService = progressionService;
         _fmodEvents = fmodEvents;
-        _sessionService = sessionService;
     }
 
     public void Initialize()
@@ -52,21 +49,9 @@ public class ShopFeedback : IInitializable, IDisposable
             _fmodEvents.SelectItem.PlayOneShot();
         else
             _fmodEvents.BtnBuy.PlayOneShot();
-
-        SaveProgress();
     }
 
-    void OnAscended()
-    {
-        _fmodEvents.ResetProgress.PlayOneShot();
-        SaveProgress();
-    }
-    
-    void SaveProgress()
-    {
-        _sessionService.Save(ESaveFileType.Items);
-        _sessionService.Save(ESaveFileType.Progress);
-    }
+    void OnAscended() => _fmodEvents.ResetProgress.PlayOneShot();
 
 #endregion
 }

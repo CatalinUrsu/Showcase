@@ -21,7 +21,6 @@ public class GameRunPresenter : IDisposable
     readonly CompositeDisposable _disposable = new();
     readonly GameRunModel _gameRun;
     readonly IGameplayView _viewGameplay;
-    readonly ISessionService _sessionService;
     readonly IGameCommands _gameCommands;
     readonly GameBalanceSO _balance;
 
@@ -32,13 +31,11 @@ public class GameRunPresenter : IDisposable
     public GameRunPresenter(IGameplayView viewGameplay,
                             GameRunModel gameRun,
                             ProgressModel progress,
-                            ISessionService sessionService,
                             IGameCommands gameCommands,
                             GameBalanceSO balance)
     {
         _viewGameplay = viewGameplay;
         _gameRun = gameRun;
-        _sessionService = sessionService;
         _gameCommands = gameCommands;
         _balance = balance;
 
@@ -63,7 +60,6 @@ public class GameRunPresenter : IDisposable
 
     void OnReachNewLvl_handler(int lvl)
     {
-        _sessionService.Save(ESaveFileType.Progress);
         PlayNewLvlAnim().Forget();
         return;
 
