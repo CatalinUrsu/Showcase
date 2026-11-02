@@ -2,7 +2,6 @@
     "name": "Source.Data",
     "rootNamespace": "",
     "references": [
-        "GUID:f52b90c4f9d38b54da9dff0bc8b21f8f",
         "GUID:a4c8c8a2b89dd7748844668af4cb3e47",
         "GUID:febaf25a60dafbd44941357b21678606",
         "GUID:77221876cc6b8244180b96e320b1bcd4",

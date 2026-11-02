@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Source
+namespace Source.Data
 {
 [Serializable]
 public class ShipInitData : ItemInitData

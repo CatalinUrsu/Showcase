@@ -2,7 +2,7 @@ using System;
 using IdleNumbers;
 using UnityEngine;
 
-namespace Source
+namespace Source.Data
 {
 [Serializable]
 public class WeaponInitData : ItemInitData

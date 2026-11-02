@@ -1,7 +1,7 @@
 using System;
 using IdleNumbers;
 
-namespace Source
+namespace Source.Data
 {
 [Serializable]
 public class ItemInitData
